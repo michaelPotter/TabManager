@@ -5,42 +5,45 @@
  value "popup.html".
  -->
 <html>
-  <head>
-    <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        /*text-overflow: ellipsis; */
-        overflow: hidden;
-        max-width: 400px;
-      }
-	  .div {
-		  white-space: nowrap;
-	  }
-	  .div:hover { 
-		  background: lightblue; 
-		  cursor: pointer;
-	  }
-    </style>
+	<head>
+		<title>Getting Started Extension's Popup</title>
+		<style>
+			body {
+				font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+				font-size: 100%;
+			}
+			#status {
+				/* avoid an excessively wide status text */
+				white-space: pre;
+				/*text-overflow: ellipsis; */
+				overflow: hidden;
+				max-width: 400px;
+			}
+		.div {
+			white-space: nowrap;
+		}
+		.div:hover { 
+			background: lightblue; 
+			cursor: pointer;
+		}
+	.trash {
+		text-align:right;
+	}
+		</style>
 
-    <!--
-      - JavaScript and HTML must be in separate files: see our Content Security
-      - Policy documentation[1] for details and explanation.
-      -
-      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-     -->
-    <script src="popup.js"></script>
+		<!--
+			- JavaScript and HTML must be in separate files: see our Content Security
+			- Policy documentation[1] for details and explanation.
+			-
+			- [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+		 -->
+		<script src="popup.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-	      rel="stylesheet">
-  </head>
-  <body>
-    <div id="status"></div>
-    <img id="image-result" hidden>
-  </body>
+				rel="stylesheet">
+	</head>
+	<body>
+		<div id="status"></div>
+		<img id="image-result" hidden>
+	</body>
 </html>
 
