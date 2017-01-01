@@ -130,6 +130,17 @@ function mouseClick(id, event) {
 
 }
 
+// clicking on a trash should close that tab
+function trashClick(id, event) {
+	switch (event.button) {
+		case 0:
+			//chrome.tabs.remove(id);
+			var elem = document.getElementById(id); 
+			elem.parentNode.removeChild(elem);
+			break;
+	}
+}
+
 function addTabView(tab) {
 	var row = document.createElement("div");
 	row.id = tab.id;
@@ -140,8 +151,9 @@ function addTabView(tab) {
 	row.appendChild(newContent);
 
 	var trash = document.createElement("i");
-	trash.className = 'material-icons';
+	trash.className = "material-icons trash";
 	trash.innerHTML = 'delete';
+	trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 	row.append(trash);
 
 	row.className = "div";
