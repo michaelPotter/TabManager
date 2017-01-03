@@ -134,7 +134,7 @@ function mouseClick(id, event) {
 function trashClick(id, event) {
 	switch (event.button) {
 		case 0:
-			//chrome.tabs.remove(id);
+			chrome.tabs.remove(id);
 			var elem = document.getElementById(id); 
 			elem.parentNode.removeChild(elem);
 			break;
@@ -143,20 +143,25 @@ function trashClick(id, event) {
 
 function addTabView(tab) {
 	var row = document.createElement("div");
-	row.id = tab.id;
-	row.addEventListener("click", function(){mouseClick(tab.id, event)}, true);
-	var newContent = document.createTextNode(" " + tab.title );
-	//var newContent = document.createTextNode(" " + tab.title + '');
-	row.appendChild(getPicture(tab));
-	row.appendChild(newContent);
-
+	var main = document.createElement("div");
 	var trash = document.createElement("i");
+	var tabTitle = document.createTextNode(" " + tab.title );
+	row.id = tab.id;
+
+
 	trash.className = "material-icons trash";
 	trash.innerHTML = 'delete';
 	trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
+
+	main.addEventListener("click", function(){mouseClick(tab.id, event)}, true);
+	main.appendChild(getPicture(tab));
+	main.appendChild(tabTitle);
+
+	row.append(main);
 	row.append(trash);
 
-	row.className = "div";
+	main.className = "row-content div";
+	row.className = "row div";
 	var currentDiv = document.getElementById('status');
 	document.body.insertBefore(row, currentDiv);
 }

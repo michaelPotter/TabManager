@@ -11,6 +11,7 @@
 			body {
 				font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
 				font-size: 100%;
+				max-width: 500px;
 			}
 			#status {
 				/* avoid an excessively wide status text */
@@ -19,6 +20,9 @@
 				overflow: hidden;
 				max-width: 400px;
 			}
+		.row-content {
+			display:inline-block;
+		}
 		.div {
 			white-space: nowrap;
 		}
@@ -28,7 +32,6 @@
 		}
 		.trash {
 			float:right;
-			text-align:right;
 			color: rgba(0, 0, 0, 0.26);
 		}
 		.trash:hover {
