@@ -157,8 +157,8 @@ function addTabView(tab) {
 	main.appendChild(getPicture(tab));
 	main.appendChild(tabTitle);
 
-	row.append(main);
 	row.append(trash);
+	row.append(main);
 
 	main.className = "row-content div";
 	row.className = "row div";
