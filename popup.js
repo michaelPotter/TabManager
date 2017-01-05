@@ -172,40 +172,32 @@ function addSpacer() {
 	document.body.insertBefore(newDiv, currentDiv);
 }
 
-function addAllTabs(tabs) {
-	// for every tab
-	for (var j = 0; j < tabs.length; j++) {
-		// get its output
-		addTabView(tabs[j]);
-	}
-	addSpacer();
+function addAllTabs(w) {
+	chrome.tabs.query({windowId: w.id}, function(tabs) {
+		for (var j = 0; j < tabs.length; j++) {
+			// get its output
+			addTabView(tabs[j]);
+		}
+		addSpacer();
+	});
 }
 
 
 document.addEventListener('DOMContentLoaded', function() {
 	// get all windows
 	chrome.windows.getAll(null, function(windows) {
+		console.log(windows);
 		getCurrentTabId( function(id) {
-			// for every window
-			var lastFocusedId = -1;
-			chrome.windows.getLastFocused(null, function(window) {
-				lastFocusedId = window.id;
-				console.log("lastfocused:" + lastFocusedId);
-				// get its tabs
-				chrome.tabs.query({windowId: window.id}, function(tabs) {
-					addAllTabs(tabs);
-				});
-				for (var i = 0; i < windows.length; i++) {
-					// get its tabs
-					chrome.tabs.query({windowId: windows[i].id}, function(tabs) {
-
-						console.log("i:" + i);
-						console.log("lastfocused:" + lastFocusedId);
-						if ( i !== lastFocusedId )
-							addAllTabs(tabs);
-					});
+			for (var i = 0; i < windows.length; i++) {
+				if (windows[i].focused == true) {
+					addAllTabs(windows[i]);
 				}
-			});
+			}
+			for (var i = 0; i < windows.length; i++) {
+				if (windows[i].focused == false) {
+					addAllTabs(windows[i]);
+				}
+			}
 		});
 	});
 });
