@@ -116,19 +116,10 @@ function getPicture(tab) {
 // left click opens that tab
 // middle click closes it
 function mouseClick(id, event) {
-	// if left click
-	console.log(event);
-	/*
-	switch (event.button) {
-		case 0:
-			chrome.tabs.update(id,{active: true}, null);
-			break;
-		case 1:
-			chrome.tabs.remove(id);
-			var elem = document.getElementById(id); 
-			elem.parentNode.removeChild(elem);
-			break;
-	} /* */
+	chrome.tabs.update(id,{active: true}, null);
+	chrome.tabs.get(id, function(tab) { 
+		chrome.windows.update(tab.windowId, {focused: true});
+	});
 
 }
 
