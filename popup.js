@@ -117,6 +117,8 @@ function getPicture(tab) {
 // middle click closes it
 function mouseClick(id, event) {
 	// if left click
+	console.log(event);
+	/*
 	switch (event.button) {
 		case 0:
 			chrome.tabs.update(id,{active: true}, null);
@@ -126,7 +128,7 @@ function mouseClick(id, event) {
 			var elem = document.getElementById(id); 
 			elem.parentNode.removeChild(elem);
 			break;
-	}
+	} /* */
 
 }
 
@@ -134,10 +136,11 @@ function mouseClick(id, event) {
 function trashClick(id, event) {
 	switch (event.button) {
 		case 0:
-			chrome.tabs.remove(id);
-			var elem = document.getElementById(id); 
-			elem.parentNode.removeChild(elem);
-			break;
+		case 1:
+		chrome.tabs.remove(id);
+		var elem = document.getElementById(id); 
+		elem.parentNode.removeChild(elem);
+		break;
 	}
 }
 
@@ -154,6 +157,7 @@ function addTabView(tab) {
 	trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 
 	main.addEventListener("click", function(){mouseClick(tab.id, event)}, true);
+	main.addEventListener("auxclick", function(){trashClick(tab.id, event)}, true);
 	main.appendChild(getPicture(tab));
 	main.appendChild(tabTitle);
 
