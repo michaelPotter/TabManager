@@ -31,12 +31,34 @@
 			background: lightblue; 
 			cursor: pointer;
 		}
+		img {
+			position:relative;
+			/*height:1.20em; */
+		}
+
+		.star {
+			float:right;
+		}
+		.star_filled {
+			color: rgba(0, 0, 0, 0.26);
+		}
+		.star_filled:hover {
+			color: rgba(255, 193, 7, 1.0);
+		}
+		.star_border {
+			color: rgba(0, 0, 0, 0.26);
+		}
+		.star_border:hover {
+			color: rgba(0, 0, 0, 1.0);
+		}
+
 		.trash {
 			float:right;
 			color: rgba(0, 0, 0, 0.26);
 		}
 		.trash:hover {
 			color:rgba(0, 0, 0, 1.0);
+		}
 		
 		</style>
 
@@ -47,6 +69,7 @@
 			- [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
 		 -->
 		<script src="popup.js"></script>
+		<script src="jquery-3.1.1.min.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 				rel="stylesheet">
 	</head>

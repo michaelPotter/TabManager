@@ -135,6 +135,26 @@ function trashClick(id, event) {
 	}
 }
 
+/* Takes a tab. Returns a star button with bookmarking behavior
+ * if given tab is bookmarked, star is filled. 
+ */
+function bookmarkStar(tab) {
+	var star = document.createElement("i");
+	var bookmarked = true;
+	chrome.bookmarks.search({"url":tab.url}, function(array) { 
+		if (array.length > 0) {
+		//if (bookmarked) {
+			star.className = "material-icons star star_filled";
+			star.innerHTML = 'star';
+		} else {
+			star.className = "material-icons star star_border";
+			star.innerHTML = 'star_border';
+		}
+	});
+	//trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
+	return star
+}
+
 function addTabView(tab) {
 	var row = document.createElement("div");
 	var main = document.createElement("div");
@@ -153,6 +173,7 @@ function addTabView(tab) {
 	main.appendChild(tabTitle);
 
 	row.append(trash);
+	row.append(bookmarkStar(tab));
 	row.append(main);
 
 	main.className = "row-content div";
