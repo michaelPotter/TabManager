@@ -128,9 +128,13 @@ function trashClick(id, event) {
 	switch (event.button) {
 		case 0:
 		case 1:
-		chrome.tabs.remove(id);
-		var elem = document.getElementById(id); 
-		elem.parentNode.removeChild(elem);
+			chrome.tabs.get(id, function(tab) {
+				if (!tab.active) {
+					chrome.tabs.remove(id);
+					var elem = document.getElementById(id);
+					elem.parentNode.removeChild(elem);
+				}
+			});
 		break;
 	}
 }
