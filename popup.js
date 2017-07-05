@@ -185,14 +185,12 @@ function addTabView(tab) {
 	if (tab.active) {
 		row.className += " active";
 	}
-	var currentDiv = document.getElementById('status');
-	document.body.insertBefore(row, currentDiv);
+	$('#main').append(row);
 }
 
 function addSpacer() {
 	var newDiv = document.createElement("hr");
-	var currentDiv = document.getElementById('status');
-	document.body.insertBefore(newDiv, currentDiv);
+	$('#main').append(newDiv);
 }
 
 function addAllTabs(w) {
@@ -223,4 +221,5 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	});
+	Sortable.create(document.getElementById('main'));
 });
