@@ -221,5 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	});
-	Sortable.create(document.getElementById('main'));
+	Sortable.create(document.getElementById('main'), {
+		animation: 150
+	});
 });
