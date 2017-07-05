@@ -178,6 +178,9 @@ function addTabView(tab) {
 
 	main.className = "row-content div";
 	row.className = "row div";
+	if (tab.active) {
+		row.className += " active";
+	}
 	var currentDiv = document.getElementById('status');
 	document.body.insertBefore(row, currentDiv);
 }
