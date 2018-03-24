@@ -125,9 +125,11 @@ function mouseClick(id, event) {
 
 function onDragEnd(evt) {
 	var itemEl = evt.item;
-	console.log(itemEl);
-	console.log(evt.oldIndex);
-	console.log(evt.newIndex);
+	chrome.tabs.move(
+		parseInt(itemEl.id),
+		{index:evt.newIndex},
+		function(tab) {}
+	);
 }
 
 // clicking on a trash should close that tab
