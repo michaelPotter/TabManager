@@ -123,6 +123,13 @@ function mouseClick(id, event) {
 
 }
 
+function onDragEnd(evt) {
+	var itemEl = evt.item;
+	console.log(itemEl);
+	console.log(evt.oldIndex);
+	console.log(evt.newIndex);
+}
+
 // clicking on a trash should close that tab
 function trashClick(id, event) {
 	switch (event.button) {
@@ -222,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 	Sortable.create(document.getElementById('main'), {
-		animation: 150
+		animation: 150,
+		onEnd: onDragEnd
 	});
 });
