@@ -47,8 +47,6 @@ class tabView {
 			row.className += " active";
 		}
 		this.view = row;
-		// var currentDiv = document.getElementById('status');
-		// document.body.insertBefore(row, currentDiv);
 	}
 
 }
@@ -105,10 +103,8 @@ function trashClick(id, event) {
  */
 function bookmarkStar(tab) {
 	var star = document.createElement("i");
-	var bookmarked = true;
 	chrome.bookmarks.search({"url":tab.url}, function(array) { 
 		if (array.length > 0) {
-		//if (bookmarked) {
 			star.className = "material-icons star star_filled";
 			star.innerHTML = 'star';
 		} else {
@@ -116,7 +112,6 @@ function bookmarkStar(tab) {
 			star.innerHTML = 'star_border';
 		}
 	});
-	//trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 	return star
 }
 
@@ -142,6 +137,8 @@ function addAllTabs(w) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+	// console.log(window.localStorage.setItem("michael", "potter"));
+	// console.log(window.localStorage.getItem("michael"));
 	// get all windows
 	chrome.windows.getAll(null, function(windows) {
 		console.log(windows);
