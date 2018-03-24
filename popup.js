@@ -82,6 +82,15 @@ function mouseClick(id, event) {
 
 }
 
+function onDragEnd(evt) {
+	var itemEl = evt.item;
+	chrome.tabs.move(
+		parseInt(itemEl.id),
+		{index:evt.newIndex},
+		function(tab) {}
+	);
+}
+
 // clicking on a trash should close that tab
 function trashClick(id, event) {
 	switch (event.button) {
@@ -115,14 +124,14 @@ function bookmarkStar(tab) {
 	return star
 }
 
-function addSpacer() {
-	var newDiv = document.createElement("hr");
-	append(newDiv);
-}
-
 function append(element) {
 	var currentDiv = document.getElementById('status');
 	document.body.insertBefore(element, currentDiv);
+}
+
+function addSpacer() {
+	var newDiv = document.createElement("hr");
+	$('#main').append(newDiv);
 }
 
 function addAllTabs(w) {
@@ -154,5 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
+	});
+	Sortable.create(document.getElementById('main'), {
+		animation: 150,
+		onEnd: onDragEnd
 	});
 });

@@ -70,6 +70,13 @@
 		.active {
 			font-weight:bold;
 		}
+		.sortable-ghost,
+		.sortable-ghost .trash,
+		.sortable-ghost img,
+		.sortable-ghost .star_border {
+			color: rgba(0, 0, 0, 0);
+			opacity: 0;
+		}
 
 		i {
 			max-height: .5em;
@@ -85,12 +92,12 @@
 		 -->
 		<script src="popup.js"></script>
 		<script src="jquery-3.1.1.min.js"></script>
+		<script src="Sortable.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 				rel="stylesheet">
 	</head>
 	<body>
-		<div id="status"></div>
-		<img id="image-result" hidden>
+		<div id="main"></div>
 	</body>
 </html>
 
