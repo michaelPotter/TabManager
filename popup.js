@@ -84,9 +84,11 @@ function mouseClick(id, event) {
 
 function onDragEnd(evt) {
 	var itemEl = evt.item;
+	// console.log(evt);
 	chrome.tabs.move(
 		parseInt(itemEl.id),
-		{index:evt.newIndex},
+		{windowId:parseInt(evt.to.id),
+			index:evt.newIndex},
 		function(tab) {}
 	);
 }
@@ -124,11 +126,6 @@ function bookmarkStar(tab) {
 	return star
 }
 
-function append(element) {
-	var currentDiv = document.getElementById('status');
-	document.body.insertBefore(element, currentDiv);
-}
-
 function addSpacer() {
 	var newDiv = document.createElement("hr");
 	$('#main').append(newDiv);
@@ -136,12 +133,20 @@ function addSpacer() {
 
 function addAllTabs(w) {
 	chrome.tabs.query({windowId: w.id}, function(tabs) {
+		windowDiv = $("<div>").attr("id", w.id);
+		$('#main').append(windowDiv);
 		for (var j = 0; j < tabs.length; j++) {
 			// get its output
 			var tv = new tabView(tabs[j]);
-			append(tv.getView());
+			windowDiv.append(tv.getView());
 		}
-		addSpacer();
+		windowDiv.append("<hr>");
+		Sortable.create(document.getElementById(w.id), {
+			group: "shared",
+			animation: 150,
+			onEnd: onDragEnd
+		});
+		// addSpacer();
 	});
 }
 
@@ -164,8 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	});
-	Sortable.create(document.getElementById('main'), {
-		animation: 150,
-		onEnd: onDragEnd
-	});
+	// Sortable.create(document.getElementById('main'), {
+	// 	animation: 150,
+	// 	onEnd: onDragEnd
+	// });
 });
