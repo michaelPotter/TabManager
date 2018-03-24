@@ -206,36 +206,6 @@ function bookmarkStar(tab) {
 	return star
 }
 
-function addTabView(tab) {
-	var row = document.createElement("div");
-	var main = document.createElement("div");
-	var trash = document.createElement("i");
-	var tabTitle = document.createTextNode(" " + tab.title );
-	row.id = tab.id;
-
-
-	trash.className = "material-icons trash";
-	trash.innerHTML = 'delete';
-	trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
-
-	main.addEventListener("click", function(){mouseClick(tab.id, event)}, true);
-	main.addEventListener("auxclick", function(){trashClick(tab.id, event)}, true);
-	main.appendChild(getPicture(tab));
-	main.appendChild(tabTitle);
-
-	row.append(trash);
-	row.append(bookmarkStar(tab));
-	row.append(main);
-
-	main.className = "row-content div";
-	row.className = "row div";
-	if (tab.active) {
-		row.className += " active";
-	}
-	var currentDiv = document.getElementById('status');
-	document.body.insertBefore(row, currentDiv);
-}
-
 function addSpacer() {
 	var newDiv = document.createElement("hr");
 	append(newDiv);
