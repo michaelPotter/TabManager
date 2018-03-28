@@ -173,4 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	// 	animation: 150,
 	// 	onEnd: onDragEnd
 	// });
+
+	// var popupWindow = window.open(
+	// 	chrome.extension.getURL("popup.html"),
+	// 	"exampleName",
+	// 	"width=400, height=400"
+	// );
+	// window.close();
 });
