@@ -6,7 +6,7 @@ class tabView {
 		this.tab = tab;
 		this.view = null;
 	}
-	
+
 	/* returns the view for this tab
 	 */
 	getView() {
@@ -76,7 +76,7 @@ function getPicture(tab) {
 // middle click closes it
 function mouseClick(id, event) {
 	chrome.tabs.update(id,{active: true}, null);
-	chrome.tabs.get(id, function(tab) { 
+	chrome.tabs.get(id, function(tab) {
 		chrome.windows.update(tab.windowId, {focused: true});
 	});
 
@@ -110,11 +110,11 @@ function trashClick(id, event) {
 }
 
 /* Takes a tab. Returns a star button with bookmarking behavior
- * if given tab is bookmarked, star is filled. 
+ * if given tab is bookmarked, star is filled.
  */
 function bookmarkStar(tab) {
 	var star = document.createElement("i");
-	chrome.bookmarks.search({"url":tab.url}, function(array) { 
+	chrome.bookmarks.search({"url":tab.url}, function(array) {
 		if (array.length > 0) {
 			star.className = "material-icons star star_filled";
 			star.innerHTML = 'star';
