@@ -1,6 +1,36 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+/* chrome tab type wrapper
+ * https://developer.chrome.com/extensions/tabs#type-Tab
+ */
+class Tab {
+	constructor(tab) {
+		this.tab = tab;
+	}
+
+	// Wrapper functions for easy compatibility
+	get id()              { return this.tab.id; }
+	get index()           { return this.tab.index; }
+	get windowId()        { return this.tab.windowId; }
+	get openerTabId()     { return this.tab.openerTabId; }
+	get highlighted()     { return this.tab.highlighted; }
+	get active()          { return this.tab.active; }
+	get pinned()          { return this.tab.pinned; }
+	get audible()         { return this.tab.audible; }
+	get discarded()       { return this.tab.discarded; }
+	get autoDiscardable() { return this.tab.autoDiscardable; }
+	get mutedInfo()       { return this.tab.mutedInfo; }
+	get url()             { return this.tab.url; }
+	get title()           { return this.tab.title; }
+	get faviconUrl()      { return this.tab.faviconUrl; }
+	get status()          { return this.tab.status; }
+	get incognito()       { return this.tab.incognito; }
+	get width()           { return this.tab.width; }
+	get height()          { return this.tab.height; }
+	get sessionId()       { return this.tab.sessionId; }
+}
+
 class tabView {
 	constructor(tab) {
 		this.tab = tab;
@@ -20,7 +50,7 @@ class tabView {
 	 */
 	generateView() {
 		var tab = this.tab;
-		console.log("generating view");
+		// console.log("generating view");
 		var row = document.createElement("div");
 		var main = document.createElement("div");
 		var trash = document.createElement("i");
@@ -155,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	// console.log(window.localStorage.getItem("michael"));
 	// get all windows
 	chrome.windows.getAll(null, function(windows) {
-		console.log(windows);
+		// console.log(windows);
 		getCurrentTabId( function(id) {
 			for (var i = 0; i < windows.length; i++) {
 				if (windows[i].focused == true) {
