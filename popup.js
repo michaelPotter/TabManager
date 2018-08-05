@@ -9,6 +9,14 @@ class Tab {
 		this.tab = tab;
 	}
 
+	getTabView() {
+		if (! this.tabView) {
+			tv = new tabView(this);
+			this.tabView = tv;
+		}
+		return this.tabView;
+	}
+
 	// Wrapper functions for easy compatibility
 	get id()              { return this.tab.id; }
 	get index()           { return this.tab.index; }
