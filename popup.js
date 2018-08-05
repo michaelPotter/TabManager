@@ -62,17 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	chrome.windows.getAll(null, function(windows) {
 		// console.log(windows);
 		getCurrentTabId( function(id) {
+			// first add the window that is focused
 			for (var i = 0; i < windows.length; i++) {
 				if (windows[i].focused == true) {
 					addAllTabs(windows[i]);
 				}
 			}
+			// then add all other windows
 			for (var i = 0; i < windows.length; i++) {
 				if (windows[i].focused == false) {
 					addAllTabs(windows[i]);
 				}
 			}
 		});
+		// tb = new TabManager();
+		// tb.loadAllTabs()
 	});
 	// Sortable.create(document.getElementById('main'), {
 	// 	animation: 150,
