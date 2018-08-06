@@ -90,8 +90,6 @@ function bookmarkStar(tab) {
 	var star = document.createElement("i");
 	chrome.bookmarks.search({"url":tab.url}, function(array) {
 		if (array.length > 0) {
-	// tab.is_bookmarked(function(is_bookmarked) {
-		// if (tab.bookmarked()) {
 			star.className = "material-icons star star_filled";
 			star.innerHTML = 'star';
 		} else {
