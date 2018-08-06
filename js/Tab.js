@@ -1,6 +1,8 @@
 class Tab {
 	constructor(tab) {
 		this.tab = tab;
+		this.bookmarked = null;
+		this.__is_bookmarked();
 	}
 
 	getTabView() {
@@ -10,6 +12,19 @@ class Tab {
 		}
 		return this.tabView;
 	}
+
+	bookmark() {
+
+	}
+
+	__is_bookmarked() {
+		chrome.bookmarks.search({"url":this.tab.url}, function(array) {
+			this.bookmarked = array.length > 0;
+		});
+	}
+
+	get bookmarked() { return this.bookmarked }
+	set bookmarked(x) { this.bookmarked = x }
 
 	// Wrapper functions for easy compatibility
 	get id()              { return this.tab.id; }
