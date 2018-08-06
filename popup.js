@@ -42,7 +42,8 @@ function addAllTabs(w) {
 		$('#main').append(windowDiv);
 		for (var j = 0; j < tabs.length; j++) {
 			// get its output
-			var tv = new tabView(tabs[j]);
+			var tab = new Tab(tabs[j]);
+			var tv = new tabView(tab);
 			windowDiv.append(tv.getView());
 		}
 		windowDiv.append("<hr>");
@@ -75,8 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
-		// tb = new TabManager();
-		// tb.loadAllTabs()
+		tb = new TabManager();
 	});
 	// Sortable.create(document.getElementById('main'), {
 	// 	animation: 150,

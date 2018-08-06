@@ -1,8 +1,8 @@
 class Tab {
 	constructor(tab) {
 		this.tab = tab;
-		this.bookmarked = null;
-		this.__is_bookmarked();
+		// this.bookmarked = null;
+		// this.__is_bookmarked();
 	}
 
 	getTabView() {
@@ -40,7 +40,7 @@ class Tab {
 	get mutedInfo()       { return this.tab.mutedInfo; }
 	get url()             { return this.tab.url; }
 	get title()           { return this.tab.title; }
-	get faviconUrl()      { return this.tab.faviconUrl; }
+	get favIconUrl()      { return this.tab.favIconUrl; }
 	get status()          { return this.tab.status; }
 	get incognito()       { return this.tab.incognito; }
 	get width()           { return this.tab.width; }
