@@ -42,7 +42,9 @@ class TabManager {
 	}
 
 	getTab(id) {
-		loadTab(id)
+		if (this.tabs.id == undefined) {
+			loadTab(id)
+		}
 		return tabs.id
 	}
 }
