@@ -3,6 +3,18 @@ class Tab {
 		this.tab = tab;
 	}
 
+	// store this tab in storage
+	__store() {
+		key = "tab_" + this.tab.id;
+		chrome.storage.local.set({key: this});
+	}
+
+	// build a tab object from storage
+	static from_storage(tab_id, callback) {
+		key = "tab_" + this.tab.id;
+		chrome.storage.local.get(key, callback);
+	}
+
 	getTabView() {
 		if (! this.tabView) {
 			tv = new tabView(this);
