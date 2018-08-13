@@ -56,9 +56,19 @@ function addAllTabs(w) {
 	});
 }
 
+function open_in_window() {
+	win = {
+		url:"popup.html",
+		type:"popup"
+	}
+	chrome.windows.create(win);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-	// console.log(window.localStorage.setItem("michael", "potter"));
-	// console.log(window.localStorage.getItem("michael"));
+	tb = new TabManager();
+
+	$("#popout_button").click(open_in_window);
+
 	// get all windows
 	chrome.windows.getAll(null, function(windows) {
 		// console.log(windows);
@@ -76,17 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
-		tb = new TabManager();
 	});
-	// Sortable.create(document.getElementById('main'), {
-	// 	animation: 150,
-	// 	onEnd: onDragEnd
+
+	// chrome.tabs.onActivated.addListener(function (activeInfo) {
+	// 	console.log("tabid: " + activeInfo.tabId);
+	// 	console.log("winid: " + activeInfo.windowId);
 	// });
 
-	// var popupWindow = window.open(
-	// 	chrome.extension.getURL("popup.html"),
-	// 	"exampleName",
-	// 	"width=400, height=400"
-	// );
-	// window.close();
 });
