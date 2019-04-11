@@ -1,13 +1,26 @@
+/**
+ * Wrapper class for chrome.windows.Window
+ *
+ * Create instances of this class by calling Window.get() or Window.getAll().
+ * Any two Windows with the same id will have the same properties. If you use
+ * the get and getAll functions, data will automatically be propagated to
+ * future instances of this Window. For example:
+ *
+ * Window.get(
+ *
+ *
+ */
 class Window {
 	/**
 	 * Synchronously create a Window.
 	 *
-	 * Will not pull data from storage. When async creations are available, avoid this
+	 * Will not pull data from storage. Use Window.get or Window.getAll
+	 * instead, so that data can be pulled out of storage if it exists.
 	 */
 	constructor(window, data) {
 		this.window = window;
 		if (data != undefined && data != null) {
-			this.last_accessed = data.last_accessed;
+			this._last_accessed = data.last_accessed;
 		}
 	}
 
@@ -50,8 +63,12 @@ class Window {
 	 * Data may be null or undefined. Calls the given callback on the created Window.
 	 */
 	static inflate(id, data, callback) {
-		chrome.tabs.get(id, function(cwin) {
-			callback(new Window(cwin, data))
+		chrome.windows.get(id, function(cwin) {
+			var w = new Window(cwin, data)
+			if (data == undefined) {
+				w.store();
+			}
+			callback(w)
 		});
 	}
 
@@ -64,7 +81,7 @@ class Window {
 	static from_storage(win_id, callback) {
 		var key = "win_" + win_id;
 		chrome.storage.local.get(key, function(data) {
-			Window.inflate(win_id, item[key], callback);
+			Window.inflate(win_id, data[key], callback);
 		});
 	}
 
@@ -78,9 +95,35 @@ class Window {
 	 */
 	flatten(callback) {
 		var k = this.key
-		var flat = {k: this.data};
+		var flat = {};
+		flat[k] = this.data;
 		runCallback(callback, flat);
 		return flat;
+	}
+
+	store() {
+		chrome.storage.local.set(this.flatten());
+	}
+
+	/**
+	 * Pass to Array.Sort to order Windows by access time.
+	 *
+	 * Returns an int < 0 if a was accessed more recently than b,
+	 * returns > 0 if b more recently than a,
+	 * returns 0 if we can't tell
+	 */
+	static accessCompare(a, b) {
+		var atime = a.last_accessed;
+		var btime = b.last_accessed;
+		if (atime == undefined && btime == undefined) {
+			return 0
+		} else if (atime == undefined) {
+			return 1
+		} else if (btime == undefined) {
+			return -1
+		} else {
+			return btime - atime
+		}
 	}
 
 	/**
@@ -92,7 +135,7 @@ class Window {
 	 * Returns data to be stored for this window
 	 */
 	get data() {
-		data = {
+		var data = {
 			"id": this.id,
 			"last_accessed": this.last_accessed
 		};
@@ -101,4 +144,15 @@ class Window {
 
 	get id()      { return this.window.id; }
 	get focused() { return this.window.focused; }
+	get last_accessed() { return this._last_accessed; }
+
+	/**
+	 * Set the last access time for this window.
+	 *
+	 * Will also modify the stored data.
+	 */
+	set last_accessed(last_accessed) {
+		this._last_accessed = last_accessed;
+		this.store()
+	}
 }
