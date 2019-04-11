@@ -70,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	$("#popout_button").click(open_in_window);
 
 	// get all windows
-	chrome.windows.getAll(null, function(windows) {
+	// chrome.windows.getAll(null, function(windows) {
+	Window.getAll(function(windows) {
 		// console.log(windows);
 		getCurrentTabId( function(id) {
 			// first add the window that is focused
