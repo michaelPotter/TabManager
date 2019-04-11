@@ -11,3 +11,13 @@ function runCallback(callback) {
 		callback(...pass_thru_args);
 	}
 }
+
+/**
+ * counts the number of tabs and passes as an int to callback
+ */
+function countTabs(callback) {
+	chrome.tabs.query({}, function(tabs) {
+		callback(tabs.length);
+	});
+}
+
