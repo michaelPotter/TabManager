@@ -81,6 +81,7 @@ class Window {
 	static from_storage(win_id, callback) {
 		var key = "win_" + win_id;
 		chrome.storage.local.get(key, function(data) {
+			// even if there was no data in storage, we'll just get a fresh Window
 			Window.inflate(win_id, data[key], callback);
 		});
 	}
@@ -101,6 +102,9 @@ class Window {
 		return flat;
 	}
 
+	/**
+	 * Performs the actual data storage
+	 */
 	store() {
 		chrome.storage.local.set(this.flatten());
 	}
