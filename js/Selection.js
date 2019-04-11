@@ -8,9 +8,9 @@ class Selection {
 	}
 
 	// applies function to all tabs in selection
-	applyFunction(function) {
-		for (var i = 0; i < this.tabs.length) {
-			function(this.tabs[i]);
+	applyFunction(func) {
+		for (var i = 0; i < this.tabs.length; i++) {
+			func(this.tabs[i]);
 		}
 	}
 }
