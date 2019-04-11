@@ -65,33 +65,14 @@ function open_in_window() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-	tb = new TabManager();
 
 	$("#popout_button").click(open_in_window);
 
 	// get all windows
-	// chrome.windows.getAll(null, function(windows) {
 	Window.getAll(function(windows) {
-		// console.log(windows);
-		getCurrentTabId( function(id) {
-			// first add the window that is focused
-			for (var i = 0; i < windows.length; i++) {
-				if (windows[i].focused == true) {
-					addAllTabs(windows[i]);
-				}
-			}
-			// then add all other windows
-			for (var i = 0; i < windows.length; i++) {
-				if (windows[i].focused == false) {
-					addAllTabs(windows[i]);
-				}
-			}
-		});
+		var sorted = windows.sort(Window.accessCompare)
+		for (var w of sorted) {
+			addAllTabs(w)
+		}
 	});
-
-	// chrome.tabs.onActivated.addListener(function (activeInfo) {
-	// 	console.log("tabid: " + activeInfo.tabId);
-	// 	console.log("winid: " + activeInfo.windowId);
-	// });
-
 });
