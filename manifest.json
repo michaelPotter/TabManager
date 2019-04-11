@@ -10,7 +10,11 @@
 		"default_popup": "popup.html"
 	},
 	"background": {
-		"scripts": ["js/background.js"],
+		"scripts": [
+			"js/util.js",
+			"js/Window.js",
+			"js/background.js"
+		],
 		"persistent": false
 	},
 	"permissions": [
