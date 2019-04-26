@@ -6,6 +6,18 @@
  */
 
 
+chrome.tabs.onCreated.addListener(function(tab) {
+	// $('#main').css('background-color', 'red');
+});
+
+chrome.tabs.onRemoved.addListener(function(tab) {
+	removeTab(tab);
+});
+
+function removeTab(tabid) {
+	var selector = '#' + tabid
+	$(selector).remove();
+}
 
 function getCurrentTabId(callback) {
 	var queryInfo = {
