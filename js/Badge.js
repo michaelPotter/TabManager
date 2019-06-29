@@ -7,6 +7,7 @@ class Badge {
 	constructor() {
 		this.n = -1
 		this.recount()
+		chrome.browserAction.setBadgeBackgroundColor({"color":"teal"})
 	}
 
 	/**
