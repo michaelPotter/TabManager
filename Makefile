@@ -8,5 +8,5 @@ debug: debug.zip
 debug.zip: debug_icon $(files) icon_debug.png
 	zip -r debug.zip $(files) icon_debug.png
 
-debug_icon:
+ic_debug:
 	sed -i 's/icon.png/icon_debug.png/g' manifest.json
