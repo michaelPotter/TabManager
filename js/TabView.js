@@ -89,6 +89,7 @@ function trashClick(id, event) {
 function bookmarkStar(tab) {
 	var star = document.createElement("i");
 	try {
+		// This has errors on special firefox tabs like about:home or about:config
 		chrome.bookmarks.search({"url":tab.url}, function(array) {
 			if (array.length > 0) {
 				star.className = "material-icons star star_filled";
