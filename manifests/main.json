@@ -3,7 +3,7 @@
 
 	"name": "Tab Manager",
 	"description": "A simple tab manager",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"icons": {
 		"48": "icon.png",
 		"96": "icon.png",
