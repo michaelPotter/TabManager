@@ -1,0 +1,35 @@
+{
+	"manifest_version": 2,
+
+	"name": "Tab Manager",
+	"description": "A simple tab manager",
+	"version": "1.0.2",
+	"icons": {
+		"48": "icon_debug.png",
+		"96": "icon_debug.png",
+		"192": "icon_debug.png"
+	},
+
+	"browser_action": {
+		"default_icon": "icon_debug.png",
+		"default_popup": "popup.html"
+	},
+
+	"background": {
+		"scripts": [
+			"js/util.js",
+			"js/Badge.js",
+			"js/Window.js",
+			"js/background.js"
+		],
+		"persistent": false
+	},
+
+	"permissions": [
+		"activeTab",
+		"https://ajax.googleapis.com/",
+		"tabs",
+		"storage",
+		"bookmarks"
+	]
+}
