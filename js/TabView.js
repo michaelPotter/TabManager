@@ -88,14 +88,21 @@ function trashClick(id, event) {
  */
 function bookmarkStar(tab) {
 	var star = document.createElement("i");
-	chrome.bookmarks.search({"url":tab.url}, function(array) {
-		if (array.length > 0) {
-			star.className = "material-icons star star_filled";
-			star.innerHTML = 'star';
-		} else {
-			star.className = "material-icons star star_border";
-			star.innerHTML = 'star_border';
-		}
-	});
+	try {
+		chrome.bookmarks.search({"url":tab.url}, function(array) {
+			if (array.length > 0) {
+				star.className = "material-icons star star_filled";
+				star.innerHTML = 'star';
+			} else {
+				star.className = "material-icons star star_border";
+				star.innerHTML = 'star_border';
+			}
+		});
+	} catch (e) {
+		// console.log("error at tab: " + tab.url);
+		// console.log(e);
+		star.className = "material-icons star star_border";
+		star.innerHTML = 'star_border';
+	}
 	return star
 }
