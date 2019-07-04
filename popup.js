@@ -70,7 +70,7 @@ function addAllTabs(w) {
 
 function open_in_window() {
 	win = {
-		url:"popup.html",
+		url:"popup.html?type=popout",
 		type:"popup"
 	}
 	chrome.windows.create(win);
@@ -78,7 +78,14 @@ function open_in_window() {
 
 document.addEventListener('DOMContentLoaded', function() {
 
+	// var url = new URL(window.location.href)
+	// if (url.searchParams.get("type") != "popout") {
+	// 	open_in_window()
+	// }
+
 	$("#popout_button").click(open_in_window);
+	$("#refresh_button").click(() => location.reload(true));
+
 
 	// get all windows
 	Window.getAll(function(windows) {
