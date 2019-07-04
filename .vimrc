@@ -1,1 +1,1 @@
-au! BufWrite *.js,*.json :silent Make! debug
+au! BufWrite *.html,*.js,*.json :silent Make! debug
