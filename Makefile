@@ -9,3 +9,5 @@ debug: debug.zip
 debug.zip: $(files) icon_debug.png manifests/debug.json
 	cp manifests/debug.json ./manifest.json
 	zip -r debug.zip $(files) icon_debug.png
+
+manifest.json:
