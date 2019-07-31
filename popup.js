@@ -5,6 +5,12 @@
  * https://developer.chrome.com/extensions/tabs#type-Tab
  */
 
+import util from './js/util';
+import Window from './js/Window';
+import Tab from './js/Tab';
+import tabView from './js/TabView';
+import $ from './jquery-3.4.1.min';
+import Sortable from './Sortable';
 
 chrome.tabs.onCreated.addListener(function(tab) {
 	// $('#main').css('background-color', 'red');
@@ -50,7 +56,7 @@ function addSpacer() {
 // adds all tabs from a single window
 function addAllTabs(w) {
 	chrome.tabs.query({windowId: w.id}, function(tabs) {
-		windowDiv = $("<div>").attr("id", w.id);
+		var windowDiv = $("<div>").attr("id", w.id);
 		$('#main').append(windowDiv);
 		for (var j = 0; j < tabs.length; j++) {
 			// get its output

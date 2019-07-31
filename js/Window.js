@@ -10,7 +10,10 @@
  *
  *
  */
-class Window {
+
+import util from './util.js';
+
+export default class Window {
 	/**
 	 * Synchronously create a Window.
 	 *

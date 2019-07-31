@@ -1,5 +1,8 @@
 // Tab.js
-class Tab {
+
+import TabView from './TabView.js';
+
+export default class Tab {
 	/**
 	 * wrapper class for chrome.tabs
 	 *

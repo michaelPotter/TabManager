@@ -1,0 +1,28 @@
+{
+  "name": "tabmanager",
+  "version": "1.0.0",
+  "description": "A simple tab manager. See your tabs in a list",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.6"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.6",
+    "webpack": "^4.38.0"
+  },
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "build": "./node_modules/.bin/webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelpotter/tabmanager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaelpotter/tabmanager/issues"
+  },
+  "homepage": "https://github.com/michaelpotter/tabmanager#readme"
+}

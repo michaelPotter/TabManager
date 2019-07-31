@@ -4,3 +4,6 @@ tmp
 TabManager.zip
 debug.zip
 manifest.json
+node_modules
+dist/popup.js
+dist/popup.js.map

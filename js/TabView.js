@@ -1,5 +1,6 @@
+// import RTab from '../components/Tab'
 
-class tabView {
+export default class tabView {
 	constructor(tab) {
 		this.tab = tab;
 		this.view = null;
@@ -10,6 +11,7 @@ class tabView {
 	getView() {
 		if (this.view == null) {
 			this.generateView();
+			// this.view = RTab({});
 		}
 		return this.view;
 	}
