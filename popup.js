@@ -9,8 +9,8 @@ import util from './js/util';
 import Window from './js/Window';
 import Tab from './js/Tab';
 import tabView from './js/TabView';
-import $ from './jquery-3.4.1.min';
-import Sortable from './Sortable';
+import $ from './lib/jquery-3.4.1.min';
+import Sortable from './lib/Sortable';
 
 chrome.tabs.onCreated.addListener(function(tab) {
 	// $('#main').css('background-color', 'red');
