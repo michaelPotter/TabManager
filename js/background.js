@@ -1,3 +1,6 @@
+
+import Window from './Window.js';
+
 var badge = new Badge()
 
 /**

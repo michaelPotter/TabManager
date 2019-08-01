@@ -17,8 +17,8 @@ class Badge {
 		chrome.browserAction.setBadgeText({"text": this.n.toString()});
 	}
 
-	/** 
-	 * Recounts the number of tabs and updates the badge. 
+	/**
+	 * Recounts the number of tabs and updates the badge.
 	 *
 	 * Use this if the count becomes out of sync somehow. This operation is
 	 * more expensive than just keeping track; use sparingly. Runs the optional

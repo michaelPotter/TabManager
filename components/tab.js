@@ -1,7 +1,7 @@
 'use strict';
 
-const e = React.createElement;
-class RTab extends React.Component {
+// const e = React.createElement;
+export default class RTab extends React.Component {
 	constructor(props) {
 		super(props);
 	}
