@@ -29,11 +29,11 @@ export default class TabView {
 		row.id = tab.id;
 
 
-		var trash = <Trash onClick={function (e) { trashClick(tab.id, event)}}/>
+		var trash = <Trash onClick={function (e) { trashClick(tab, event)}}/>
 		// trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 
 		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
-		main.addEventListener("auxclick", function(){trashClick(tab.id, event)}, true);
+		main.addEventListener("auxclick", function(){trashClick(tab, event)}, true);
 		main.appendChild(getPicture(tab));
 		main.appendChild(tabTitle);
 
@@ -70,23 +70,19 @@ function rowClick(id, event) {
 
 }
 
-function closeTab(id) {
-	chrome.tabs.get(id, function(tab) {
-		if (!tab.active) {
-			chrome.tabs.remove(id);
-			var elem = document.getElementById(id);
-			elem.parentNode.removeChild(elem);
-		}
-	});
+function closeTab(tab) {
+	tab.close();
+	var elem = document.getElementById(tab.id);
+	elem.parentNode.removeChild(elem);
 }
 
 // clicking on a trash should close that tab
-function trashClick(id, event) {
+function trashClick(tab, event) {
 	console.log("clicking trash");
 	switch (event.button) {
 		case 0:
 		case 1:
-			closeTab(id);
+			closeTab(tab);
 		break;
 	}
 }

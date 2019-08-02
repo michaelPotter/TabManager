@@ -17,6 +17,17 @@ export default class Tab {
 		}
 	}
 
+	/**
+	 * Closes this tab
+	 *
+	 * Does nothing if the tab is currently active
+	 */
+	close() {
+		if (!this.active) {
+			chrome.tabs.remove(this.id);
+		}
+	}
+
 	// store this tab in storage
 	__store() {
 		chrome.storage.local.set(this.flatten());
