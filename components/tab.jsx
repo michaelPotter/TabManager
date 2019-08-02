@@ -4,15 +4,15 @@
 import React from 'react';
 
 export function StarBorder(props) {
-	return <i class="material-icons star star_border">star_border</i>
+	return <i className="material-icons star star_border">star_border</i>
 }
 
 export function StarFilled(props) {
-	return <i class="material-icons star star_filled">star_filled</i>
+	return <i className="material-icons star star_filled">star_filled</i>
 }
 
 export function Trash(props) {
-	return <i class="material-icons trash">delete</i>
+	return <i className="material-icons trash">delete</i>
 }
 
 export class RTab extends React.Component {
@@ -21,10 +21,9 @@ export class RTab extends React.Component {
 	}
 
 	render() {
-
 		return (
-			<div class="row div">
-				<div class="row-content div">
+			<div className="row div">
+				<div className="row-content div">
 					<trash/>
 					<star_border/>
 					"title"

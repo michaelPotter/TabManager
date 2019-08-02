@@ -4,7 +4,7 @@
  * The extension badge shows how many tabs are currently open.
  */
 
-import util from 'util';
+import util from './util.js';
 
 export default class Badge {
 	constructor() {
