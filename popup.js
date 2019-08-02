@@ -75,7 +75,7 @@ function addAllTabs(w) {
 }
 
 function open_in_window() {
-	win = {
+	var win = {
 		url:"popup.html?type=popout",
 		type:"popup"
 	}

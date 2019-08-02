@@ -1,6 +1,7 @@
 // Tab.js
 
 import TabView from './TabView.js';
+import util from './util.js';
 
 export default class Tab {
 	/**
@@ -11,6 +12,7 @@ export default class Tab {
 	constructor(tab, data) {
 		this.tab = tab;
 		if (data != undefined && data != null) {
+			this.data = data;
 			// set extra properties here
 		}
 	}
@@ -48,13 +50,13 @@ export default class Tab {
 		var key = "tab_" + tab_id;
 		chrome.storage.local.get(key, function(item) {
 			// even if there was no data in storage, we'll just get a fresh Tab
-			Tab.inflate(tab_id, data[key], callback);
+			Tab.inflate(tab_id, this.data[key], callback);
 		});
 	}
 
 	getTabView() {
 		if (! this.tabView) {
-			tv = new tabView(this);
+			var tv = new TabView(this);
 			this.tabView = tv;
 		}
 		return this.tabView;
@@ -72,7 +74,7 @@ export default class Tab {
 		var k = this.key
 		var flat = {};
 		flat[k] = this.data;
-		runCallback(callback, flat);
+		util.runCallback(callback, flat);
 		return flat;
 	}
 
@@ -92,7 +94,7 @@ export default class Tab {
 	 * Returns data to be stored for this tab
 	 */
 	get data() {
-		data = {"id": this.id};
+		var data = {"id": this.id};
 		return data;
 	}
 

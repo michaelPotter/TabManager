@@ -101,7 +101,7 @@ export default class Window {
 		var k = this.key
 		var flat = {};
 		flat[k] = this.data;
-		runCallback(callback, flat);
+		util.runCallback(callback, flat);
 		return flat;
 	}
 

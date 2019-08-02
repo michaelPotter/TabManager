@@ -3,7 +3,10 @@
  *
  * The extension badge shows how many tabs are currently open.
  */
-class Badge {
+
+import util from 'util';
+
+export default class Badge {
 	constructor() {
 		this.n = -1
 		this.recount()
@@ -26,10 +29,10 @@ class Badge {
 	 */
 	recount(callback) {
 		var b = this;
-		countTabs(function(number) {
+		util.countTabs(function(number) {
 			b.n = number;
 			b.refresh();
-			runCallback(callback, number);
+			util.runCallback(callback, number);
 		});
 	}
 

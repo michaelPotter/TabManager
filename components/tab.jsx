@@ -3,23 +3,24 @@
 // const e = React.createElement;
 import React from 'react';
 
-export default class RTab extends React.Component {
+export function StarBorder(props) {
+	return <i class="material-icons star star_border">star_border</i>
+}
+
+export function StarFilled(props) {
+	return <i class="material-icons star star_filled">star_filled</i>
+}
+
+export function Trash(props) {
+	return <i class="material-icons trash">delete</i>
+}
+
+export class RTab extends React.Component {
 	constructor(props) {
 		super(props);
 	}
 
 	render() {
-		function star_border(props) {
-			return <i class="material-icons star star_border">star_border</i>
-		}
-
-		function star_filled(props) {
-			return <i class="material-icons star star_filled">star_filled</i>
-		}
-
-		function trash(props) {
-			return <i class="material-icons trash">delete</i>
-		}
 
 		return (
 			<div class="row div">

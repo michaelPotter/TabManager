@@ -17,10 +17,7 @@
 
 	"background": {
 		"scripts": [
-			"js/util.js",
-			"js/Badge.js",
-			"js/Window.js",
-			"js/background.js"
+			"dist/background.js"
 		],
 		"persistent": false
 	},

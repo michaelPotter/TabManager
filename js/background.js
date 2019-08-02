@@ -1,5 +1,6 @@
 
 import Window from './Window.js';
+import Badge from './Badge.js';
 
 var badge = new Badge()
 

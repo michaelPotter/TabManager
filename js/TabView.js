@@ -1,6 +1,7 @@
-import RTab from '../components/tab.jsx';
+import {RTab, Trash, StarFilled} from '../components/tab.jsx';
+import ReactDOM from 'react';
 
-export default class tabView {
+export default class TabView {
 	constructor(tab) {
 		this.tab = tab;
 		this.view = null;
@@ -38,7 +39,9 @@ export default class tabView {
 		main.appendChild(tabTitle);
 
 		row.append(trash);
-		row.append(bookmarkStar(tab));
+		// row.append(bookmarkStar(tab));
+		row.append(StarFilled);
+		ReactDOM.render(StarFilled, row);
 		row.append(main);
 
 		main.className = "row-content div";
