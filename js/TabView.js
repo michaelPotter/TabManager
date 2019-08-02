@@ -25,22 +25,20 @@ export default class TabView {
 		// console.log("generating view");
 		var row = document.createElement("div");
 		var main = document.createElement("div");
-		var trash = document.createElement("i");
 		var tabTitle = document.createTextNode(" " + tab.title );
 		row.id = tab.id;
 
 
-		trash.className = "material-icons trash";
-		trash.innerHTML = 'delete';
-		trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
+		var trash = <Trash onClick={function (e) { trashClick(tab.id, event)}}/>
+		// trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 
-		main.addEventListener("click", function(){mouseClick(tab.id, event)}, true);
+		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
 		main.addEventListener("auxclick", function(){trashClick(tab.id, event)}, true);
 		main.appendChild(getPicture(tab));
 		main.appendChild(tabTitle);
 
 		// row.append(trash);
-		ReactDOM.render(<Trash/>, row);
+		ReactDOM.render(trash, row);
 		row.append(bookmarkStar(tab));
 		row.append(main);
 
@@ -64,7 +62,7 @@ function getPicture(tab) {
 
 // left click opens that tab
 // middle click closes it
-function mouseClick(id, event) {
+function rowClick(id, event) {
 	chrome.tabs.update(id,{active: true}, null);
 	chrome.tabs.get(id, function(tab) {
 		chrome.windows.update(tab.windowId, {focused: true});
@@ -72,18 +70,23 @@ function mouseClick(id, event) {
 
 }
 
+function closeTab(id) {
+	chrome.tabs.get(id, function(tab) {
+		if (!tab.active) {
+			chrome.tabs.remove(id);
+			var elem = document.getElementById(id);
+			elem.parentNode.removeChild(elem);
+		}
+	});
+}
+
 // clicking on a trash should close that tab
 function trashClick(id, event) {
+	console.log("clicking trash");
 	switch (event.button) {
 		case 0:
 		case 1:
-			chrome.tabs.get(id, function(tab) {
-				if (!tab.active) {
-					chrome.tabs.remove(id);
-					var elem = document.getElementById(id);
-					elem.parentNode.removeChild(elem);
-				}
-			});
+			closeTab(id);
 		break;
 	}
 }
