@@ -28,6 +28,30 @@ export default class Tab {
 		}
 	}
 
+	isBookmarked() {
+		// searching for certain sites causes errors
+		var avoid_these_sites = [
+			/^about\:.*/,
+			/view-source:moz-extension:.*/
+		]
+
+		var bad_site = false
+		for (var re of avoid_these_sites) {
+			if (re.test(tab.url)) {
+				bad_site = true
+			}
+		}
+
+		if (! bad_site) {
+			chrome.bookmarks.search({"url":tab.url}, function(array) {
+				if (array.length > 0) {
+					return true
+				}
+			});
+		}
+		return false
+	}
+
 	// store this tab in storage
 	__store() {
 		chrome.storage.local.set(this.flatten());

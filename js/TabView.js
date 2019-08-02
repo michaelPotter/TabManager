@@ -96,29 +96,15 @@ function trashClick(tab, event) {
  */
 function bookmarkStar(tab) {
 	var star = document.createElement("i");
-	try {
-		// This has errors on special firefox tabs like about:home or about:config
-		var avoid_these_sites = [
-			/about:.*/,
-			/view-source:moz-extension:.*/
-		]
+
+	if (tab.isBookmarked()) {
 		star.className = "material-icons star star_border";
 		star.innerHTML = 'star_border';
-		for (var site of avoid_these_sites) {
-			if (! re.test(tab.url)) {
-				chrome.bookmarks.search({"url":tab.url}, function(array) {
-					if (array.length > 0) {
-						star.className = "material-icons star star_filled";
-						star.innerHTML = 'star';
-					}
-				});
-			}
-		}
-	} catch (e) {
-		// console.log("error at tab: " + tab.url);
-		// console.log(e);
-		star.className = "material-icons star star_border";
-		star.innerHTML = 'star_border';
+	} else {
+		star.className = "material-icons star star_filled";
+		star.innerHTML = 'star';
 	}
+
 	return star
 }
+
