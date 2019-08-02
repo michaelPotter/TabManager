@@ -19,6 +19,7 @@ module.exports = {
 				use: {
 					loader: 'eslint-loader',
 					options: {
+						cache: true,
 						presets: ['@babel/preset-env', '@babel/preset-react']
 					}
 				}
@@ -29,6 +30,7 @@ module.exports = {
 				use: {
 					loader: 'babel-loader',
 					options: {
+						cacheDirectory: true,
 						presets: ['@babel/preset-env', '@babel/preset-react']
 					}
 				}
