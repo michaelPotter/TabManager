@@ -29,7 +29,8 @@ export default class TabView {
 		row.id = tab.id;
 
 
-		var trash = <Trash onClick={function (e) { trashClick(tab, event)}}/>
+		var f = function (e) { trashClick(tab, event)}
+		var trash = <Trash onClick={f}/>
 		// trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 
 		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
@@ -54,7 +55,10 @@ export default class TabView {
 // given a tab, returns an element containing the favicon
 function getPicture(tab) {
 	var elem = document.createElement("img");
-	elem.setAttribute("src", tab.favIconUrl);
+	var re_avoid = /^chrome:\/\/.*\.svg$/
+	if (! re_avoid.test(tab.favIconUrl)) {
+		elem.setAttribute("src", tab.favIconUrl);
+	}
 	elem.setAttribute("height", "20em");
 	//elem.setAttribute("max-height", 100%);
 	return elem;
@@ -94,15 +98,22 @@ function bookmarkStar(tab) {
 	var star = document.createElement("i");
 	try {
 		// This has errors on special firefox tabs like about:home or about:config
-		chrome.bookmarks.search({"url":tab.url}, function(array) {
-			if (array.length > 0) {
-				star.className = "material-icons star star_filled";
-				star.innerHTML = 'star';
-			} else {
-				star.className = "material-icons star star_border";
-				star.innerHTML = 'star_border';
+		var avoid_these_sites = [
+			/about:.*/,
+			/view-source:moz-extension:.*/
+		]
+		star.className = "material-icons star star_border";
+		star.innerHTML = 'star_border';
+		for (var site of avoid_these_sites) {
+			if (! re.test(tab.url)) {
+				chrome.bookmarks.search({"url":tab.url}, function(array) {
+					if (array.length > 0) {
+						star.className = "material-icons star star_filled";
+						star.innerHTML = 'star';
+					}
+				});
 			}
-		});
+		}
 	} catch (e) {
 		// console.log("error at tab: " + tab.url);
 		// console.log(e);
