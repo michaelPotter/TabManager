@@ -1,6 +1,8 @@
-'use strict';
+// 'use strict';
 
 // const e = React.createElement;
+import React from 'react';
+
 export default class RTab extends React.Component {
 	constructor(props) {
 		super(props);
@@ -19,7 +21,7 @@ export default class RTab extends React.Component {
 			return <i class="material-icons trash">delete</i>
 		}
 
-		return ( 
+		return (
 			<div class="row div">
 				<div class="row-content div">
 					<trash/>

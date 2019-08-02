@@ -1,4 +1,4 @@
-// import RTab from '../components/Tab'
+import RTab from '../components/tab.jsx';
 
 export default class tabView {
 	constructor(tab) {
