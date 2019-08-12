@@ -38,6 +38,7 @@ class tabView {
 		row.append(trash);
 		row.append(bookmarkStar(tab));
 		row.append(main);
+		this.setBackgroundToTabId(row);
 
 		main.className = "row-content div";
 		row.className = "row div";
@@ -46,7 +47,16 @@ class tabView {
 		}
 		this.view = row;
 	}
+
+	setBackgroundToTabId(elem) {
+		var tt = this.tab;
+		var prom = this.tab.get_container();
+		prom.then( id => {elem.setBackground(id.color)});
+		// prom.then( id => {elem.css('background-color', id.color)});
+
+	}
 }
+
 
 // given a tab, returns an element containing the favicon
 function getPicture(tab) {

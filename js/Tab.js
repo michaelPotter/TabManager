@@ -12,6 +12,14 @@ class Tab {
 		}
 	}
 
+	/**
+	 * returns a promise w/contextual id
+	 */
+	get_container() {
+		var id = this.tab.cookieStoreId
+		return browser.contextualIdentities.get(id)
+	}
+
 	// store this tab in storage
 	__store() {
 		chrome.storage.local.set(this.flatten());

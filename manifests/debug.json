@@ -30,6 +30,8 @@
 		"https://ajax.googleapis.com/",
 		"tabs",
 		"storage",
+		"contextualIdentities",
+		"cookies",
 		"bookmarks"
 	]
 }
