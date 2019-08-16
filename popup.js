@@ -6,6 +6,11 @@
  */
 
 
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+	$('.active').removeClass('active');
+	$('#' + activeInfo.tabId).addClass('active');
+});
+
 chrome.tabs.onCreated.addListener(function(tab) {
 	// $('#main').css('background-color', 'red');
 });
