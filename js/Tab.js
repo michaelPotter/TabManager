@@ -28,6 +28,9 @@ export default class Tab {
 		}
 	}
 
+	focus() {
+	}
+
 	isBookmarked() {
 		// searching for certain sites causes errors
 		var avoid_these_sites = [
