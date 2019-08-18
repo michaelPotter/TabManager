@@ -12,7 +12,7 @@ export function StarFilled(props) {
 }
 
 export function Trash(props) {
-	return <i className="material-icons trash">delete</i>
+	return <i className="material-icons trash" onClick={props.onClick}>delete</i>
 }
 
 export class RTab extends React.Component {

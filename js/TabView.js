@@ -28,10 +28,7 @@ export default class TabView {
 		var tabTitle = document.createTextNode(" " + tab.title );
 		row.id = tab.id;
 
-
-		var f = function (e) { trashClick(tab, event)}
-		var trash = <Trash onClick={f}/>
-		// trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
+		var trash = <Trash onClick={e => {trashClick(tab, event)}}/>
 
 		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
 		main.addEventListener("auxclick", function(){trashClick(tab, event)}, true);
