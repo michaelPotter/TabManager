@@ -55,7 +55,7 @@ export default class TabView {
 	setBackgroundToTabId(elem) {
 		var tt = this.tab;
 		var prom = this.tab.get_container();
-		prom.then( id => {elem.setBackground(id.color)});
+		prom.then( id => {elem.style.backgroundColor = id.color});
 		// prom.then( id => {elem.css('background-color', id.color)});
 
 	}
