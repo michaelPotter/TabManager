@@ -1,1 +1,1 @@
-au! BufWrite *.html,*.js,*.json :Make! debug
+au! BufWrite *.html,*.js,*.json,*.jsx :Make! debug
