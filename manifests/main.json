@@ -12,15 +12,12 @@
 
 	"browser_action": {
 		"default_icon": "icon.png",
-		"default_popup": "popup.html"
+		"default_popup": "dist/popup.html"
 	},
 
 	"background": {
 		"scripts": [
-			"js/util.js",
-			"js/Badge.js",
-			"js/Window.js",
-			"js/background.js"
+			"dist/background.js"
 		],
 		"persistent": false
 	},

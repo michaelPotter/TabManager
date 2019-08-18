@@ -1,5 +1,8 @@
+import {RTab, Trash, StarFilled} from '../components/tab.jsx';
+import ReactDOM from 'react-dom';
+import React from 'react';
 
-class tabView {
+export default class TabView {
 	constructor(tab) {
 		this.tab = tab;
 		this.view = null;
@@ -10,6 +13,7 @@ class tabView {
 	getView() {
 		if (this.view == null) {
 			this.generateView();
+			// this.view = RTab({});
 		}
 		return this.view;
 	}
@@ -21,21 +25,21 @@ class tabView {
 		// console.log("generating view");
 		var row = document.createElement("div");
 		var main = document.createElement("div");
-		var trash = document.createElement("i");
 		var tabTitle = document.createTextNode(" " + tab.title );
 		row.id = tab.id;
 
 
-		trash.className = "material-icons trash";
-		trash.innerHTML = 'delete';
-		trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
+		var f = function (e) { trashClick(tab, event)}
+		var trash = <Trash onClick={f}/>
+		// trash.addEventListener("click", function(){trashClick(tab.id, event)}, true);
 
-		main.addEventListener("click", function(){mouseClick(tab.id, event)}, true);
-		main.addEventListener("auxclick", function(){trashClick(tab.id, event)}, true);
+		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
+		main.addEventListener("auxclick", function(){trashClick(tab, event)}, true);
 		main.appendChild(getPicture(tab));
 		main.appendChild(tabTitle);
 
-		row.append(trash);
+		// row.append(trash);
+		ReactDOM.render(trash, row);
 		row.append(bookmarkStar(tab));
 		row.append(main);
 		this.setBackgroundToTabId(row);
@@ -61,7 +65,10 @@ class tabView {
 // given a tab, returns an element containing the favicon
 function getPicture(tab) {
 	var elem = document.createElement("img");
-	elem.setAttribute("src", tab.favIconUrl);
+	var re_avoid = /^chrome:\/\/.*\.svg$/
+	if (! re_avoid.test(tab.favIconUrl)) {
+		elem.setAttribute("src", tab.favIconUrl);
+	}
 	elem.setAttribute("height", "20em");
 	//elem.setAttribute("max-height", 100%);
 	return elem;
@@ -69,7 +76,7 @@ function getPicture(tab) {
 
 // left click opens that tab
 // middle click closes it
-function mouseClick(id, event) {
+function rowClick(id, event) {
 	chrome.tabs.update(id,{active: true}, null);
 	chrome.tabs.get(id, function(tab) {
 		chrome.windows.update(tab.windowId, {focused: true});
@@ -77,18 +84,19 @@ function mouseClick(id, event) {
 
 }
 
+function closeTab(tab) {
+	tab.close();
+	var elem = document.getElementById(tab.id);
+	elem.parentNode.removeChild(elem);
+}
+
 // clicking on a trash should close that tab
-function trashClick(id, event) {
+function trashClick(tab, event) {
+	console.log("clicking trash");
 	switch (event.button) {
 		case 0:
 		case 1:
-			chrome.tabs.get(id, function(tab) {
-				if (!tab.active) {
-					chrome.tabs.remove(id);
-					var elem = document.getElementById(id);
-					elem.parentNode.removeChild(elem);
-				}
-			});
+			closeTab(tab);
 		break;
 	}
 }
@@ -98,22 +106,15 @@ function trashClick(id, event) {
  */
 function bookmarkStar(tab) {
 	var star = document.createElement("i");
-	try {
-		// This has errors on special firefox tabs like about:home or about:config
-		chrome.bookmarks.search({"url":tab.url}, function(array) {
-			if (array.length > 0) {
-				star.className = "material-icons star star_filled";
-				star.innerHTML = 'star';
-			} else {
-				star.className = "material-icons star star_border";
-				star.innerHTML = 'star_border';
-			}
-		});
-	} catch (e) {
-		// console.log("error at tab: " + tab.url);
-		// console.log(e);
+
+	if (tab.isBookmarked()) {
 		star.className = "material-icons star star_border";
 		star.innerHTML = 'star_border';
+	} else {
+		star.className = "material-icons star star_filled";
+		star.innerHTML = 'star';
 	}
+
 	return star
 }
+

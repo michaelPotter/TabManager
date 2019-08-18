@@ -10,7 +10,10 @@
  *
  *
  */
-class Window {
+
+import util from './util.js';
+
+export default class Window {
 	/**
 	 * Synchronously create a Window.
 	 *
@@ -98,7 +101,7 @@ class Window {
 		var k = this.key
 		var flat = {};
 		flat[k] = this.data;
-		runCallback(callback, flat);
+		util.runCallback(callback, flat);
 		return flat;
 	}
 

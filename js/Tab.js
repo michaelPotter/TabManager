@@ -1,5 +1,9 @@
 // Tab.js
-class Tab {
+
+import TabView from './TabView.js';
+import util from './util.js';
+
+export default class Tab {
 	/**
 	 * wrapper class for chrome.tabs
 	 *
@@ -8,8 +12,47 @@ class Tab {
 	constructor(tab, data) {
 		this.tab = tab;
 		if (data != undefined && data != null) {
+			this.data = data;
 			// set extra properties here
 		}
+	}
+
+	/**
+	 * Closes this tab
+	 *
+	 * Does nothing if the tab is currently active
+	 */
+	close() {
+		if (!this.active) {
+			chrome.tabs.remove(this.id);
+		}
+	}
+
+	focus() {
+	}
+
+	isBookmarked() {
+		// searching for certain sites causes errors
+		var avoid_these_sites = [
+			/^about:.*/,
+			/view-source:moz-extension:.*/
+		]
+
+		var bad_site = false
+		for (var re of avoid_these_sites) {
+			if (re.test(this.tab.url)) {
+				bad_site = true
+			}
+		}
+
+		if (! bad_site) {
+			chrome.bookmarks.search({"url":this.tab.url}, function(array) {
+				if (array.length > 0) {
+					return true
+				}
+			});
+		}
+		return false
 	}
 
 	/**
@@ -53,13 +96,13 @@ class Tab {
 		var key = "tab_" + tab_id;
 		chrome.storage.local.get(key, function(item) {
 			// even if there was no data in storage, we'll just get a fresh Tab
-			Tab.inflate(tab_id, data[key], callback);
+			Tab.inflate(tab_id, this.data[key], callback);
 		});
 	}
 
 	getTabView() {
 		if (! this.tabView) {
-			tv = new tabView(this);
+			var tv = new TabView(this);
 			this.tabView = tv;
 		}
 		return this.tabView;
@@ -77,7 +120,7 @@ class Tab {
 		var k = this.key
 		var flat = {};
 		flat[k] = this.data;
-		runCallback(callback, flat);
+		util.runCallback(callback, flat);
 		return flat;
 	}
 
@@ -97,7 +140,7 @@ class Tab {
 	 * Returns data to be stored for this tab
 	 */
 	get data() {
-		data = {"id": this.id};
+		var data = {"id": this.id};
 		return data;
 	}
 
