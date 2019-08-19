@@ -3,7 +3,10 @@
  *
  * The extension badge shows how many tabs are currently open.
  */
-class Badge {
+
+import util from './util.js';
+
+export default class Badge {
 	constructor() {
 		this.n = -1
 		this.recount()
@@ -17,8 +20,8 @@ class Badge {
 		chrome.browserAction.setBadgeText({"text": this.n.toString()});
 	}
 
-	/** 
-	 * Recounts the number of tabs and updates the badge. 
+	/**
+	 * Recounts the number of tabs and updates the badge.
 	 *
 	 * Use this if the count becomes out of sync somehow. This operation is
 	 * more expensive than just keeping track; use sparingly. Runs the optional
@@ -26,10 +29,10 @@ class Badge {
 	 */
 	recount(callback) {
 		var b = this;
-		countTabs(function(number) {
+		util.countTabs(function(number) {
 			b.n = number;
 			b.refresh();
-			runCallback(callback, number);
+			util.runCallback(callback, number);
 		});
 	}
 

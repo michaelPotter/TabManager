@@ -5,6 +5,12 @@
  * https://developer.chrome.com/extensions/tabs#type-Tab
  */
 
+import util from './js/util';
+import Window from './js/Window';
+import Tab from './js/Tab';
+import tabView from './js/TabView';
+import $ from './lib/jquery-3.4.1.min';
+import Sortable from './lib/Sortable';
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	$('.active').removeClass('active');
@@ -55,7 +61,7 @@ function addSpacer() {
 // adds all tabs from a single window
 function addAllTabs(w) {
 	chrome.tabs.query({windowId: w.id}, function(tabs) {
-		windowDiv = $("<div>").attr("id", w.id);
+		var windowDiv = $("<div>").attr("id", w.id);
 		$('#main').append(windowDiv);
 		for (var j = 0; j < tabs.length; j++) {
 			// get its output
@@ -74,7 +80,7 @@ function addAllTabs(w) {
 }
 
 function open_in_window() {
-	win = {
+	var win = {
 		url:"popup.html?type=popout",
 		type:"popup"
 	}
@@ -83,10 +89,10 @@ function open_in_window() {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-	// var url = new URL(window.location.href)
-	// if (url.searchParams.get("type") != "popout") {
-	// 	open_in_window()
-	// }
+	var url = new URL(window.location.href)
+	if (url.searchParams.get("type") != "popout") {
+		open_in_window()
+	}
 
 	$("#popout_button").click(open_in_window);
 	$("#refresh_button").click(() => location.reload(true));

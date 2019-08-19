@@ -41,12 +41,13 @@
 		.div {
 			white-space: nowrap;
 		}
-		.div:hover { 
-			background: lightblue; 
+		.div:hover {
+			background: lightblue;
 			cursor: pointer;
 		}
 		img {
 			position:relative;
+			top: 2px;
 			/*height:1.20em; */
 		}
 
@@ -57,6 +58,14 @@
 		#popout_button {
 			float:right;
 			padding:5px
+		}
+		.contextMarker {
+			float:left;
+			<!-- transform: translateY(50%); -->
+			vertical-align: middle;
+			position: relative;
+			top: 2px;
+			padding:6px
 		}
 		.star {
 			float:right;
@@ -103,24 +112,11 @@
 		i {
 			max-height: .5em;
 		}
-		
+
 		</style>
 
-		<!--
-			- JavaScript and HTML must be in separate files: see our Content Security
-			- Policy documentation[1] for details and explanation.
-			-
-			- [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-		 -->
-		<script src="popup.js"></script>
-		<script src="js/util.js"></script>
-		<script src="js/Window.js"></script>
-		<script src="js/Tab.js"></script>
-		<script src="js/TabView.js"></script>
-		<script src="js/Selection.js"></script>
-		<script src="jquery-3.4.1.min.js"></script>
-		<script src="Sortable.js"></script>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		<script type="module" src="popup.js"></script>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 				rel="stylesheet">
 	</head>
 	<body>
