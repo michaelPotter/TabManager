@@ -1,4 +1,4 @@
-import {RTab, Trash, StarFilled} from '../components/tab.jsx';
+import {RTab, Trash, StarFilled, ContextMarker, Favicon} from '../components/tab.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -28,15 +28,18 @@ export default class TabView {
 		var tabTitle = document.createTextNode(" " + tab.title );
 		row.id = tab.id;
 
-		var trash = <Trash onClick={e => {trashClick(tab, event)}}/>
-
 		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
 		main.addEventListener("auxclick", function(){trashClick(tab, event)}, true);
 		main.appendChild(getPicture(tab));
 		main.appendChild(tabTitle);
 
+		var trash = <Trash onClick={e => {trashClick(tab, event)}}/>
+		var contextMarker = <ContextMarker color="blue"/>
+
 		// row.append(trash);
+		var items=[trash, contextMarker]
 		ReactDOM.render(trash, row);
+		ReactDOM.render(items, row);
 		row.append(bookmarkStar(tab));
 		row.append(main);
 		this.setBackgroundToTabId(row);
