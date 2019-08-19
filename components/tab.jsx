@@ -25,8 +25,8 @@ export function ContextMarker(props) {
 	// .circle{width:50%;height:0;font-size:20px;color:#fff;text-align:center;line-height:0;padding:25% 0;border-radius:50%;background:#09f}
 
 	return (
-		<svg className="contextMarker" viewBox="0 0 10 10" height="8px" width="8px">
-			<circle cx="5" cy="5" r="5"/>
+		<svg className="contextMarker" viewBox="0 0 10 10" height="10px" width="10px">
+			<circle cx="5" cy="5" r="5" fill={props.color}/>
 		</svg>
 	);
 }

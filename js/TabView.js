@@ -24,6 +24,7 @@ export default class TabView {
 		var tab = this.tab;
 		// console.log("generating view");
 		var row = document.createElement("div");
+		this.row = row
 		var main = document.createElement("div");
 		var tabTitle = document.createTextNode(" " + tab.title );
 		row.id = tab.id;
@@ -33,16 +34,16 @@ export default class TabView {
 		main.appendChild(getPicture(tab));
 		main.appendChild(tabTitle);
 
-		var trash = <Trash onClick={e => {trashClick(tab, event)}}/>
-		var contextMarker = <ContextMarker color="blue"/>
+		var trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
+		var contextMarker = <ContextMarker color="white" key="cm"/>
+		this.trash = trash
+		this.contextMarker = contextMarker
 
+		this.render();
 		// row.append(trash);
-		var items=[trash, contextMarker]
-		ReactDOM.render(trash, row);
-		ReactDOM.render(items, row);
 		row.append(bookmarkStar(tab));
 		row.append(main);
-		this.setBackgroundToTabId(row);
+		this.setTabColor(row);
 
 		main.className = "row-content div";
 		row.className = "row div";
@@ -52,10 +53,20 @@ export default class TabView {
 		this.view = row;
 	}
 
-	setBackgroundToTabId(elem) {
+	render() {
+		var items=[this.trash, this.contextMarker]
+		ReactDOM.render(items, this.row);
+	}
+
+	setTabColor(elem) {
 		var tt = this.tab;
 		var prom = this.tab.get_container();
-		prom.then( id => {elem.style.backgroundColor = id.color});
+		prom.then( id => {
+			// elem.style.backgroundColor = id.color
+			this.contextMarker = <ContextMarker color={id.color} key="cm"/>
+			this.render();
+		});
+
 		// prom.then( id => {elem.css('background-color', id.color)});
 
 	}
