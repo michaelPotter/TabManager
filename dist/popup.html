@@ -10,6 +10,12 @@
 		<title>Tab Manager</title>
 		<style>
 			body {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
 				font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
 				font-size: 100%;
 				min-width: 200px;
@@ -38,12 +44,12 @@
 			display:block;
 			overflow: hidden;
 		}
-		.div {
-			white-space: nowrap;
-		}
-		.div:hover {
+		.row:hover {
 			background: lightblue;
 			cursor: pointer;
+		}
+		div {
+			white-space: nowrap;
 		}
 		img {
 			position:relative;
@@ -89,14 +95,6 @@
 		}
 		.trash:hover {
 			color:rgba(0, 0, 0, 1.0);
-		}
-		body{
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-khtml-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
 		}
 		.active {
 			font-weight:bold;
