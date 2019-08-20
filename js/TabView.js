@@ -1,4 +1,4 @@
-import {RTab, Trash, StarFilled, ContextMarker, Favicon} from '../components/tab.jsx';
+import {RTab, Trash, Star, ContextMarker, Favicon} from '../components/tab.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -34,19 +34,16 @@ export default class TabView {
 		main.appendChild(getPicture(tab));
 		main.appendChild(tabTitle);
 
-		var trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
-		var contextMarker = <ContextMarker color="white" key="cm"/>
-		this.trash = trash
-		this.contextMarker = contextMarker
+		this.trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
+		this.contextMarker = <ContextMarker color="white" key="cm"/>
+		this.star = <Star filled={tab.isBookmarked()} key="star"/>
 
 		this.render();
-		// row.append(trash);
-		row.append(bookmarkStar(tab));
 		row.append(main);
 		this.setTabColor(row);
 
 		main.className = "row-content div";
-		row.className = "row div";
+		row.className = "row div tab";
 		if (tab.active) {
 			row.className += " active";
 		}
@@ -54,7 +51,7 @@ export default class TabView {
 	}
 
 	render() {
-		var items=[this.trash, this.contextMarker]
+		var items=[this.trash, this.contextMarker, this.star]
 		ReactDOM.render(items, this.row);
 	}
 
