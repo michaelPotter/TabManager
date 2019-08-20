@@ -6,35 +6,32 @@ module.exports = {
 		background: './js/background.js'
 	},
 	mode: 'development',
-	devtool: 'source-map',
+	// devtool: 'source-map',
 	output: {
 		filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	},
 	module: {
-		rules: [
-			{
-				test: /.jsx?$/,
-				exclude: /(dist|lib|node_modules)/,
-				use: {
+		rules: [{
+			test: /.jsx?$/,
+			exclude: /(dist|lib|node_modules)/,
+			use: [
+				{
 					loader: 'eslint-loader',
 					options: {
 						cache: true,
-						presets: ['@babel/preset-env', '@babel/preset-react']
+						// presets: ['@babel/preset-env', '@babel/preset-react']
 					}
-				}
-			},
-			{
-				test: /.jsx?$/,
-				exclude: /node_modules/,
-				use: {
+				},
+				{
 					loader: 'babel-loader',
 					options: {
 						cacheDirectory: true,
-						presets: ['@babel/preset-env', '@babel/preset-react']
+						// presets: ['@babel/preset-env', '@babel/preset-react']
+						presets: ['@babel/preset-react']
 					}
 				}
-			}
-		]
+			]
+		}]
 	}
 };
