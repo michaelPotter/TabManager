@@ -4,12 +4,10 @@
 import React from 'react';
 
 export function Star(props) {
-	if (props.type == "border") {
-		return <i className="material-icons star star_border">star_border</i>
-	} else if (props.type == "filled") {
-		return <i className="material-icons star star_filled">star_filled</i>
+	if (props.filled) {
+		return <i className="material-icons star star_filled">star</i>
 	} else {
-		throw new InvalidArgumentException("supported types are 'border' or 'filled'");
+		return <i className="material-icons star star_border">star_border</i>
 	}
 }
 
@@ -36,7 +34,12 @@ export function RTab(props) {
 }
 
 export function Favicon(props) {
-	return <img src={props.src} height="20em"/>
+	var re_avoid = /^chrome:\/\/.*\.svg$/
+	if (! re_avoid.test(props.src)) {
+		return <img src={props.src} height="20em"/>
+	} else {
+		return <img height="20em"/>
+	}
 }
 
 // export class RTab extends React.Component {
