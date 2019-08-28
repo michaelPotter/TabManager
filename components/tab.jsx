@@ -19,21 +19,22 @@ export function Trash(props) {
  * Shows what tab group a tab is in
  */
 export function ContextMarker(props) {
-	// return <div className="contextMarker" minWidth="30px" minHeight="30px" height="30px" width="30px" style={{borderRadius:"50%"}} backgroundColor={props.color} >testa</div>
-	// .circle{width:50%;height:0;font-size:20px;color:#fff;text-align:center;line-height:0;padding:25% 0;border-radius:50%;background:#09f}
-
+	var h=28;
+	var w=4;
+	var arc=4;
+	var ap=`${arc},${arc}`;
+	// height = 28
+	var path=`M0,${arc}  v${h - 2*arc}  a${ap} 0 0,0 ${ap}  h${w-arc}  v-${h}  h-${w-arc}  a${ap} 0 0,0 -${arc},${arc}  Z`;
+		// <svg viewBox="-10 -10 100 100"
 	return (
-		<svg className="contextMarker" viewBox="0 -2 10 10" height="28px" width="10px">
-		<path d="M0,0 L0,27 A3,3 0 0,0 3,30 L7,30 A3,3 0 0,0 10,27 L10,0 Z" />
+		<svg viewBox="0 -2 3 28"
+			height="24px"
+			width="10px"
+			>
+			<path d={path} fill="blue" />
 
 		</svg>
-			// <rect height="28" width="5" y="-11" rx="10px" ry="10px" fill={props.color}/>
-			// <rect height="28" width="3" y="-11" x="2" fill={props.color}/>
-		//
-			// <rect height="28" width="5" x="5" y="-11" rx="5" ry="3" fill={props.color}/>
-			// <rect height="28" width="3" x="5" y="-11" fill={props.color}/>
-			// <rect height="28" width="5" x="5" y="-11" fill="blue"/>
-	);
+	)
 }
 
 export function RTab(props) {
