@@ -31,7 +31,9 @@ export default class TabView {
 
 		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
 		main.addEventListener("auxclick", function(){trashClick(tab, event)}, true);
+		this.icon = <Favicon src={tab.favIconUrl} />
 		main.appendChild(getPicture(tab));
+		// ReactDOM.render(main, this.icon);
 		main.appendChild(tabTitle);
 
 		this.trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
@@ -53,6 +55,15 @@ export default class TabView {
 	render() {
 		var items=[this.trash, this.contextMarker, this.star]
 		ReactDOM.render(items, this.row);
+	}
+
+	getpic() {
+		var src = null
+		var re_avoid = /^chrome:\/\/.*\.svg$/
+		if (! re_avoid.test(tab.favIconUrl)) {
+			src = tab.favIconUrl
+		}
+		return <Favicon src={src} />
 	}
 
 	setTabColor(elem) {
