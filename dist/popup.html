@@ -9,26 +9,26 @@
 		<meta charset="utf-8"/>
 		<title>Tab Manager</title>
 		<style>
-			body {
-				-webkit-touch-callout: none;
-				-webkit-user-select: none;
-				-khtml-user-select: none;
-				-moz-user-select: none;
-				-ms-user-select: none;
-				user-select: none;
-				font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-				font-size: 100%;
-				min-width: 200px;
-				display: block;
-				margin: 0px;
-			}
-			#status {
-				/* avoid an excessively wide status text */
-				white-space: pre;
-				/*text-overflow: ellipsis; */
-				overflow: hidden;
-				min-width: 400px;
-			}
+		body {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+			font-size: 100%;
+			min-width: 200px;
+			display: block;
+			margin: 0px;
+		}
+		#status {
+			/* avoid an excessively wide status text */
+			white-space: pre;
+			/*text-overflow: ellipsis; */
+			overflow: hidden;
+			min-width: 400px;
+		}
 		#header {
 			display:block;
 			height:32px;
@@ -40,13 +40,16 @@
 			margin: 10px;
 			clear:both;
 		}
-		.row-content {
-			display:block;
-			overflow: hidden;
+		#refresh_button {
+			float:right;
+			padding:5px
 		}
-		.row:hover {
-			background: lightblue;
-			cursor: pointer;
+		#popout_button {
+			float:right;
+			padding:5px
+		}
+		i {
+			max-height: .5em;
 		}
 		div {
 			white-space: nowrap;
@@ -56,14 +59,13 @@
 			top: 2px;
 			/*height:1.20em; */
 		}
-
-		#refresh_button {
-			float:right;
-			padding:5px
+		.row-content {
+			display:block;
+			overflow: hidden;
 		}
-		#popout_button {
-			float:right;
-			padding:5px
+		.row:hover {
+			background: lightblue;
+			cursor: pointer;
 		}
 		.contextMarker {
 			float:left;
@@ -88,7 +90,6 @@
 		.star_border:hover {
 			color: rgba(0, 0, 0, 1.0);
 		}
-
 		.trash {
 			float:right;
 			color: rgba(0, 0, 0, 0.26);
@@ -106,11 +107,6 @@
 			color: rgba(0, 0, 0, 0);
 			opacity: 0;
 		}
-
-		i {
-			max-height: .5em;
-		}
-
 		</style>
 
 		<script type="module" src="popup.js"></script>
