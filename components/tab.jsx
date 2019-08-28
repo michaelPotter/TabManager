@@ -19,12 +19,15 @@ export function Trash(props) {
  * Shows what tab group a tab is in
  */
 export function ContextMarker(props) {
-	// return <div className="contextMarker" minWidth="30px" minHeight="30px" height="30px" width="30px" style={{borderRadius:"50%"}} backgroundColor={props.color} >testa</div>
-	// .circle{width:50%;height:0;font-size:20px;color:#fff;text-align:center;line-height:0;padding:25% 0;border-radius:50%;background:#09f}
+	if (props.color) {
+		var opacity="1.0"
+	} else {
+		var opacity="0.0"
+	}
 
 	return (
 		<svg className="contextMarker" viewBox="0 0 10 10" height="10px" width="10px">
-			<circle cx="5" cy="5" r="5" fill={props.color}/>
+			<circle cx="5" cy="5" r="5" fill={props.color} fill-opacity={opacity} />
 		</svg>
 	);
 }

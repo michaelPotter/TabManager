@@ -37,7 +37,7 @@ export default class TabView {
 		main.appendChild(tabTitle);
 
 		this.trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
-		this.contextMarker = <ContextMarker color="white" key="cm"/>
+		this.contextMarker = <ContextMarker key="cm"/>
 		this.star = <Star filled={tab.isBookmarked()} key="star"/>
 
 		this.render();
