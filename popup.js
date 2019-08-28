@@ -89,10 +89,10 @@ function open_in_window() {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-	var url = new URL(window.location.href)
-	if (url.searchParams.get("type") != "popout") {
-		open_in_window()
-	}
+	// var url = new URL(window.location.href)
+	// if (url.searchParams.get("type") != "popout") {
+	// 	open_in_window()
+	// }
 
 	$("#popout_button").click(open_in_window);
 	$("#refresh_button").click(() => location.reload(true));
