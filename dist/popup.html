@@ -41,7 +41,7 @@
 			clear:both;
 		}
 		.row-content {
-			display:block;
+			display:inline-block;
 			overflow: hidden;
 		}
 		.row:hover {
@@ -53,7 +53,7 @@
 		}
 		img {
 			position:relative;
-			top: 2px;
+			top: 5px;
 			/*height:1.20em; */
 		}
 
@@ -68,10 +68,11 @@
 		.contextMarker {
 			float:left;
 			<!-- transform: translateY(50%); -->
-			vertical-align: middle;
-			position: relative;
-			top: 2px;
-			padding:6px
+			<!-- vertical-align: middle; -->
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			<!-- padding:6px -->
 		}
 		.star {
 			float:right;
