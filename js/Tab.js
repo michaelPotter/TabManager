@@ -46,13 +46,12 @@ export default class Tab {
 		}
 
 		if (! bad_site) {
-			chrome.bookmarks.search({"url":this.tab.url}, function(array) {
-				if (array.length > 0) {
-					return true
-				}
-			});
+			return browser.bookmarks
+				.search({"url":this.tab.url})
+				.then(array => array.length > 0)
+		;
 		}
-		return false
+		return new Promise((resolve, reject) => false);
 	}
 
 	/**

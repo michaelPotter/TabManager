@@ -27,7 +27,7 @@ export function ContextMarker(props) {
 
 	return (
 		<svg className="contextMarker" viewBox="0 0 10 10" height="10px" width="10px">
-			<circle cx="5" cy="5" r="5" fill={props.color} fill-opacity={opacity} />
+			<circle cx="5" cy="5" r="5" fill={props.color} fillOpacity={opacity} />
 		</svg>
 	);
 }
