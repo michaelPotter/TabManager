@@ -19,6 +19,11 @@ export function Trash(props) {
  * Shows what tab group a tab is in
  */
 export function ContextMarker(props) {
+	if (props.color) {
+		var opacity="1.0"
+	} else {
+		var opacity="0.0"
+	}
 	var h=28;
 	var w=4;
 	var arc=4;
@@ -32,7 +37,7 @@ export function ContextMarker(props) {
 			width="10px"
 			>
 			<path d={path} fill="blue" />
-
+			// <path d={path} fill={props.color} fillOpacity={opacity} />
 		</svg>
 	)
 }

@@ -1,1 +1,1 @@
-au! BufWrite *.html,*.js,*.json,*.jsx :Make! debug && notify-send '===Build done===' -t 2000
+au! BufWrite *.html,*.js,*.json,*.jsx :silent Make! debug && notify-send '===Build done===' -t 2000

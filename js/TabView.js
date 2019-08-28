@@ -37,8 +37,13 @@ export default class TabView {
 		main.appendChild(tabTitle);
 
 		this.trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
-		this.contextMarker = <ContextMarker color="white" key="cm"/>
-		this.star = <Star filled={tab.isBookmarked()} key="star"/>
+		this.contextMarker = <ContextMarker key="cm"/>
+		this.star = <Star key="star"/>
+		tab.isBookmarked()
+			.then(bookmarked => {
+				this.star = <Star filled={bookmarked} key="star"/>
+				this.render()
+			})
 
 		this.render();
 		row.append(main);
@@ -118,22 +123,5 @@ function trashClick(tab, event) {
 			closeTab(tab);
 		break;
 	}
-}
-
-/* Takes a tab. Returns a star button with bookmarking behavior
- * if given tab is bookmarked, star is filled.
- */
-function bookmarkStar(tab) {
-	var star = document.createElement("i");
-
-	if (tab.isBookmarked()) {
-		star.className = "material-icons star star_border";
-		star.innerHTML = 'star_border';
-	} else {
-		star.className = "material-icons star star_filled";
-		star.innerHTML = 'star';
-	}
-
-	return star
 }
 
