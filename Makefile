@@ -19,3 +19,10 @@ debug.zip: $(src_files) icon_debug.png manifests/debug.json dist/popup.js
 dist/popup.html: webpack
 
 manifest.json:
+
+clean:
+	rm -rf \
+		dist/*.map \
+		dist/*.js \
+		*.zip \
+		manifest.json
