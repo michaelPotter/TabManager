@@ -1,4 +1,4 @@
-src_files = manifest.json src js lib
+src_files = manifest.json src lib
 output_files = dist/popup.html dist/popup.js dist/background.js manifest.json
 
 webpack: $(src_files) popup.js ./node_modules/.bin/webpack
@@ -29,7 +29,6 @@ manifest.json:
 
 clean:
 	rm -rf \
-		dist/*.map \
-		dist/*.js \
+		dist/* \
 		*.zip \
 		manifest.json
