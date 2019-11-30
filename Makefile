@@ -1,5 +1,5 @@
-src_files = manifest.json dist/popup.html icon.png js lib
-output_files = dist/popup.html dist/popup.js dist/background.js icon.png manifest.json
+src_files = manifest.json dist/popup.html js lib
+output_files = dist/popup.html dist/popup.js dist/background.js manifest.json
 
 webpack: $(src_files) popup.js ./node_modules/.bin/webpack
 	./node_modules/.bin/webpack
@@ -9,12 +9,14 @@ release: TabManager.zip
 debug: debug.zip
 
 TabManager.zip: $(src_files) manifests/main.json dist/popup.js
+	cp icons/icon.png dist/icon.png
 	cp manifests/main.json ./manifest.json
-	zip -r TabManager.zip $(output_files)
+	zip -r TabManager.zip $(output_files) dist/icon.png
 
-debug.zip: $(src_files) icon_debug.png manifests/debug.json dist/popup.js
-	cp manifests/debug.json ./manifest.json
-	zip -r debug.zip $(output_files) icon_debug.png
+debug.zip: $(src_files) manifests/debug.json dist/popup.js
+	cp icons/icon_debug.png dist/icon.png
+	cp manifests/main.json ./manifest.json
+	zip -r debug.zip $(output_files) dist/icon.png
 
 dist/popup.html: webpack
 

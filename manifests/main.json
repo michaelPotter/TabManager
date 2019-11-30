@@ -5,13 +5,13 @@
 	"description": "A simple tab manager",
 	"version": "1.0.3",
 	"icons": {
-		"48": "icon.png",
-		"96": "icon.png",
-		"192": "icon.png"
+		"48": "dist/icon.png",
+		"96": "dist/icon.png",
+		"192": "dist/icon.png"
 	},
 
 	"browser_action": {
-		"default_icon": "icon.png",
+		"default_icon": "dist/icon.png",
 		"default_popup": "dist/popup.html"
 	},
 

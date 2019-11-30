@@ -9,3 +9,4 @@ dist/popup.js
 dist/popup.js.map
 dist/background.js
 dist/*.map
+dist/icon.png
