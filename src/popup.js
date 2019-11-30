@@ -5,12 +5,12 @@
  * https://developer.chrome.com/extensions/tabs#type-Tab
  */
 
-import util from './src/js/util';
-import Window from './src/js/Window';
-import Tab from './src/js/Tab';
-import tabView from './src/js/TabView';
-import $ from './lib/jquery-3.4.1.min';
-import Sortable from './lib/Sortable';
+import util from './js/util';
+import Window from './js/Window';
+import Tab from './js/Tab';
+import tabView from './js/TabView';
+import $ from '../lib/jquery-3.4.1.min';
+import Sortable from '../lib/Sortable';
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	$('.active').removeClass('active');

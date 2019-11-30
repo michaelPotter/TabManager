@@ -1,28 +1,24 @@
-src_files = manifest.json src lib
-output_files = dist/popup.html dist/popup.js dist/background.js manifest.json
+src_files = src lib
+output_files = dist/popup.html dist/popup.js dist/background.js dist/manifest.json
 
-webpack: $(src_files) popup.js ./node_modules/.bin/webpack
+webpack: $(src_files) ./node_modules/.bin/webpack
 	./node_modules/.bin/webpack
 
 release: TabManager.zip
 
 debug: debug.zip
 
-TabManager.zip: $(src_files) manifests/main.json dist/popup.js
-	cp src/popup.html dist/
+TabManager.zip: $(src_files) dist
 	cp icons/icon.png dist/icon.png
-	cp manifests/main.json ./manifest.json
-	zip -r TabManager.zip $(output_files) dist/icon.png
+	cd dist && zip -r ../TabManager.zip .
 
-debug.zip: $(src_files) manifests/debug.json dist/popup.js
-	cp src/popup.html dist/
+debug.zip: $(src_files) dist
 	cp icons/icon_debug.png dist/icon.png
-	cp manifests/main.json ./manifest.json
-	zip -r debug.zip $(output_files) dist/icon.png
+	cd dist && zip -r ../debug.zip .
 
-dist/popup.js: webpack
-
-manifest.json:
+dist: webpack
+	cp src/popup.html dist/
+	cp src/manifest.json dist/
 
 ./node_modules/.bin/webpack:
 	npm install
@@ -30,5 +26,4 @@ manifest.json:
 clean:
 	rm -rf \
 		dist/* \
-		*.zip \
-		manifest.json
+		*.zip

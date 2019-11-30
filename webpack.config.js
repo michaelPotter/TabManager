@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
 	entry: {
-		popup: './popup.js',
+		popup: './src/popup.js',
 		background: './src/js/background.js'
 	},
 	mode: 'development',

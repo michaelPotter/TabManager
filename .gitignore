@@ -3,10 +3,10 @@ tags
 tmp
 TabManager.zip
 debug.zip
-manifest.json
 node_modules
 dist/popup.js
 dist/popup.js.map
 dist/background.js
 dist/*.map
 dist/icon.png
+dist
