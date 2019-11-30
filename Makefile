@@ -1,7 +1,7 @@
 src_files = manifest.json dist/popup.html icon.png js lib
 output_files = dist/popup.html dist/popup.js dist/background.js icon.png manifest.json
 
-webpack: $(src_files) popup.js
+webpack: $(src_files) popup.js ./node_modules/.bin/webpack
 	./node_modules/.bin/webpack
 
 release: TabManager.zip
@@ -19,6 +19,9 @@ debug.zip: $(src_files) icon_debug.png manifests/debug.json dist/popup.js
 dist/popup.html: webpack
 
 manifest.json:
+
+./node_modules/.bin/webpack:
+	npm install
 
 clean:
 	rm -rf \
