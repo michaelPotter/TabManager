@@ -1,5 +1,5 @@
 src_files = manifest.json dist/popup.html icon.png js lib
-output_files = dist/popup.html dist/popup.js icon.png manifest.json
+output_files = dist/popup.html dist/popup.js dist/background.js icon.png manifest.json
 
 webpack: $(src_files) popup.js
 	./node_modules/.bin/webpack
