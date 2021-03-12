@@ -1,16 +1,17 @@
 src_files = src lib
 output_files = dist/popup.html dist/popup.js dist/background.js dist/manifest.json
+zip = TabManager.zip
 
 webpack: $(src_files) ./node_modules/.bin/webpack
 	./node_modules/.bin/webpack
 
-release: TabManager.zip
+release: $(zip)
 
 debug: debug.zip
 
-TabManager.zip: $(src_files) dist
+$(zip): $(src_files) dist
 	cp icons/icon.png dist/icon.png
-	cd dist && zip -r ../TabManager.zip .
+	cd dist && zip -r ../$(zip) .
 
 debug.zip: $(src_files) dist
 	cp icons/icon_debug.png dist/icon.png
