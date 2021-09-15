@@ -1,6 +1,5 @@
 // Tab.js
 
-import TabView from './TabView.js';
 import util from './util.js';
 
 export default class Tab {
@@ -95,14 +94,6 @@ export default class Tab {
 			// even if there was no data in storage, we'll just get a fresh Tab
 			Tab.inflate(tab_id, this.data[key], callback);
 		});
-	}
-
-	getTabView() {
-		if (! this.tabView) {
-			var tv = new TabView(this);
-			this.tabView = tv;
-		}
-		return this.tabView;
 	}
 
 	/**
