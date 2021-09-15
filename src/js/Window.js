@@ -8,6 +8,9 @@
  *
  * Window.get(
  *
+ * TODO:
+ * 	- review and re-document how storage works in the context of this class. Maybe refactor
+ * 	- refactor callback stuff to use async/await (change chrome -> browser)
  *
  */
 

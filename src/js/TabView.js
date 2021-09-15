@@ -1,4 +1,10 @@
-import {RTab, Trash, Star, ContextMarker, Favicon} from '../components/tab.jsx';
+/*
+ * DEPRECATED
+ *
+ * Only keeping this file to reference any bits that might not have made it over fully to the React refactor
+ *
+ */
+import {RTab, Trash, Star, ContextMarker, Favicon} from '../components/tab_bits.jsx';
 import Tab from '../components/Tab.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';

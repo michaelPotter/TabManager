@@ -1,3 +1,9 @@
+/*
+ * DEPRECATED
+ *
+ * Only keeping this file to reference any bits that might not have made it over fully to the React refactor
+ *
+ */
 // 'use strict';
 
 // const e = React.createElement;

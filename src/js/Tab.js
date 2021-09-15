@@ -1,4 +1,12 @@
-// Tab.js
+/*
+ * Tab.js
+ *
+ * TODO:
+ * 	- should have this keep track of the container it's in, so you don't have to do the promise thing
+ * 	- maybe also keep track of bookmarks internally instead of promise, though maybe not since bookmarks could change underneath you
+ * 	- review and re-document how storage works in the context of this class. Maybe refactor
+ */
+'use strict';
 
 import util from './util.js';
 
@@ -46,7 +54,6 @@ export default class Tab {
 			return browser.bookmarks
 				.search({"url":this.tab.url})
 				.then(array => array.length > 0)
-		;
 		}
 		return new Promise((resolve, reject) => false);
 	}
