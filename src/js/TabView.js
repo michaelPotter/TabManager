@@ -1,4 +1,5 @@
 import {RTab, Trash, Star, ContextMarker, Favicon} from '../components/tab.jsx';
+import Tab from '../components/Tab.jsx';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -16,6 +17,27 @@ export default class TabView {
 			// this.view = RTab({});
 		}
 		return this.view;
+	}
+
+
+	// getView() {
+	// 	return this.getViewReact();
+	// }
+
+	getViewReact() {
+		let row = document.createElement("div");
+		// row.className = "row div tab";
+		let tabComponent = (
+			<Tab
+				tab={this.tab}
+				mainClick={() => rowClick(this.tab.id)}
+				trashClick={(e) => trashClick(this.tab, e)}
+
+			/>
+		)
+
+		ReactDOM.render(tabComponent, row);
+		return row
 	}
 
 	/* generates the view for this tab

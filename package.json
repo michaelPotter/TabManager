@@ -4,6 +4,7 @@
   "description": "A simple tab manager. See your tabs in a list",
   "private": true,
   "dependencies": {
+    "classnames": "~2.3.1",
     "react": "*",
     "react-dom": "*"
   },
