@@ -22,53 +22,50 @@ export default class TabView {
 	 */
 	generateView() {
 		var tab = this.tab;
-		// console.log("generating view");
+
 		var row = document.createElement("div");
-		this.row = row
-		var main = document.createElement("div");
-		var tabTitle = document.createTextNode(" " + tab.title );
+		row.className = "row div tab";
 		row.id = tab.id;
+		this.row = row
+		this.view = row;
+
+		var main = document.createElement("div");
+		main.className = "row-content div";
 
 		main.addEventListener("click", function(){rowClick(tab.id, event)}, true);
 		main.addEventListener("auxclick", function(){trashClick(tab, event)}, true);
-		this.icon = <Favicon src={tab.favIconUrl} />
+		
+		// add favicon
 		main.appendChild(getPicture(tab));
-		// ReactDOM.render(main, this.icon);
+
+		// add the text
+		var tabTitle = document.createTextNode(" " + tab.title );
 		main.appendChild(tabTitle);
 
 		this.trash = <Trash onClick={e => {trashClick(tab, event)}} key="trash"/>
 		this.contextMarker = <ContextMarker key="cm"/>
 		this.star = <Star key="star"/>
+
+		// See if bookmarked, and re-render if so
 		tab.isBookmarked()
 			.then(bookmarked => {
 				this.star = <Star filled={bookmarked} key="star"/>
 				this.render()
 			})
 
+		// Render the react bits
 		this.render();
 		row.append(main);
 		this.setTabColor(row);
 
-		main.className = "row-content div";
-		row.className = "row div tab";
 		if (tab.active) {
 			row.className += " active";
 		}
-		this.view = row;
 	}
 
 	render() {
 		var items=[this.trash, this.contextMarker, this.star]
 		ReactDOM.render(items, this.row);
-	}
-
-	getpic() {
-		var src = null
-		var re_avoid = /^chrome:\/\/.*\.svg$/
-		if (! re_avoid.test(tab.favIconUrl)) {
-			src = tab.favIconUrl
-		}
-		return <Favicon src={src} />
 	}
 
 	setTabColor(elem) {
