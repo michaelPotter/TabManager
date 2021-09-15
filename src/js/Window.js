@@ -43,19 +43,13 @@ export default class Window {
 	 * Creates all Windows. They are then passed to callback in an array.
 	 * Storage data is used, if found.
 	 */
-	static getAll(callback) {
-		chrome.windows.getAll(null, function(windows) {
-			var keys = windows.map(w => "win_" + w.id);
-			chrome.storage.local.get(keys, function(data) {
-				var myWindows = []
-				for (var w of windows) {
-					var key = "win_" + w.id
-					var d = data[key]
-					myWindows.push(new Window(w, d))
-				}
-				callback(myWindows);
-			});
-		});
+	static async getAll() {
+		let windowList = await browser.windows.getAll(null);
+
+		let keys = windowList.map(w => "win_" + w.id);
+		let data = await browser.storage.local.get(keys)
+
+		return windowList.map(w => new Window(w, data[`win_${w.id}`]))
 	}
 
 	/**

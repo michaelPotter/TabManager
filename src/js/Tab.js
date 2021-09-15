@@ -25,6 +25,8 @@ export default class Tab {
 	}
 
 	focus() {
+		chrome.tabs.update(this.id, {active: true}, null)
+		chrome.windows.update(this.windowId, {focused: true});
 	}
 
 	isBookmarked() {
@@ -159,4 +161,24 @@ export default class Tab {
 	get width()           { return this.tab.width; }
 	get height()          { return this.tab.height; }
 	get sessionId()       { return this.tab.sessionId; }
+
+	set id(value)              { this.tab.id = value; }
+	set index(value)           { this.tab.index = value; }
+	set windowId(value)        { this.tab.windowId = value; }
+	set openerTabId(value)     { this.tab.openerTabId = value; }
+	set highlighted(value)     { this.tab.highlighted = value; }
+	set active(value)          { this.tab.active = value; }
+	set pinned(value)          { this.tab.pinned = value; }
+	set audible(value)         { this.tab.audible = value; }
+	set discarded(value)       { this.tab.discarded = value; }
+	set autoDiscardable(value) { this.tab.autoDiscardable = value; }
+	set mutedInfo(value)       { this.tab.mutedInfo = value; }
+	set url(value)             { this.tab.url = value; }
+	set title(value)           { this.tab.title = value; }
+	set favIconUrl(value)      { this.tab.favIconUrl = value; }
+	set status(value)          { this.tab.status = value; }
+	set incognito(value)       { this.tab.incognito = value; }
+	set width(value)           { this.tab.width = value; }
+	set height(value)          { this.tab.height = value; }
+	set sessionId(value)       { this.tab.sessionId = value; }
 }

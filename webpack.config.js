@@ -20,15 +20,18 @@ module.exports = {
 					loader: 'eslint-loader',
 					options: {
 						cache: true,
-						// presets: ['@babel/preset-env', '@babel/preset-react']
 					}
 				},
 				{
 					loader: 'babel-loader',
 					options: {
 						cacheDirectory: true,
-						// presets: ['@babel/preset-env', '@babel/preset-react']
-						presets: ['@babel/preset-react']
+						presets: ['@babel/preset-react'],
+						// presets: ['@babel/preset-env', '@babel/preset-react'],
+						plugins: [
+							// '@babel/plugin-proposal-optional-chaining',
+							// '@babel/plugin-proposal-nullish-coalescing-operator',
+						],
 					}
 				}
 			]
