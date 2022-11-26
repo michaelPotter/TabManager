@@ -9,6 +9,9 @@ release: $(zip)
 
 debug: debug.zip
 
+watchDebug:
+	fd -tf . src | entr make debug
+
 $(zip): $(src_files) dist
 	cp icons/icon.png dist/icon.png
 	cd dist && zip -r ../$(zip) .
