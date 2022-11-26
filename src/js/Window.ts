@@ -16,14 +16,21 @@
 
 import util from './util.js';
 
+declare type WindowData = {
+	last_accessed?: number,
+};
+
 export default class Window {
+	private _last_accessed: number;
+	private window: chrome.windows.Window;
+
 	/**
 	 * Synchronously create a Window.
 	 *
 	 * Will not pull data from storage. Use Window.get or Window.getAll
 	 * instead, so that data can be pulled out of storage if it exists.
 	 */
-	constructor(window, data) {
+	constructor(window: chrome.windows.Window, data: WindowData) {
 		this.window = window;
 		if (data != undefined && data != null) {
 			this._last_accessed = data.last_accessed;
@@ -36,7 +43,7 @@ export default class Window {
 	 * Creates a Window based on the given id. The Window is then passed to
 	 * callback. If storage data is found for this window, it is retrieved.
 	 */
-	static get(win_id, callback) {
+	static get(win_id: number, callback: (w: Window) => void) {
 		Window.from_storage(win_id, callback);
 	}
 
@@ -47,9 +54,11 @@ export default class Window {
 	 * Storage data is used, if found.
 	 */
 	static async getAll() {
+		// @ts-ignore
 		let windowList = await browser.windows.getAll(null);
 
 		let keys = windowList.map(w => "win_" + w.id);
+		// @ts-ignore
 		let data = await browser.storage.local.get(keys)
 
 		return windowList.map(w => new Window(w, data[`win_${w.id}`]))
@@ -62,8 +71,8 @@ export default class Window {
 	 * Data should be a json object created by calling flatten() on another Window.
 	 * Data may be null or undefined. Calls the given callback on the created Window.
 	 */
-	static inflate(id, data, callback) {
-		chrome.windows.get(id, function(cwin) {
+	static inflate(id: number, data: WindowData, callback: (w: Window) => void) {
+		chrome.windows.get(id, function(cwin: chrome.windows.Window) {
 			var w = new Window(cwin, data)
 			if (data == undefined) {
 				w.store();
@@ -78,7 +87,7 @@ export default class Window {
 	 * Calls the given callback on the Window. It is okay if the given
 	 * window doesn't have any data in storage.
 	 */
-	static from_storage(win_id, callback) {
+	static from_storage(win_id: number, callback: (w: Window) => void) {
 		var key = "win_" + win_id;
 		chrome.storage.local.get(key, function(data) {
 			// even if there was no data in storage, we'll just get a fresh Window
@@ -94,7 +103,7 @@ export default class Window {
 	 * The serialized json will be both returned, and passed to a callback if
 	 * one is given
 	 */
-	flatten(callback) {
+	flatten(callback?) {
 		var k = this.key
 		var flat = {};
 		flat[k] = this.data;
@@ -116,7 +125,7 @@ export default class Window {
 	 * returns > 0 if b more recently than a,
 	 * returns 0 if we can't tell
 	 */
-	static accessCompare(a, b) {
+	static accessCompare(a: Window, b: Window) {
 		var atime = a.last_accessed;
 		var btime = b.last_accessed;
 		if (atime == undefined && btime == undefined) {
@@ -155,7 +164,7 @@ export default class Window {
 	 *
 	 * Will also modify the stored data.
 	 */
-	set last_accessed(last_accessed) {
+	set last_accessed(last_accessed: number) {
 		this._last_accessed = last_accessed;
 		this.store()
 	}

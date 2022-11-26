@@ -17,7 +17,7 @@ import React from 'react';
 import WindowComponent from './components/Window.jsx';
 
 function open_in_window() {
-	var win = {
+	var win: chrome.windows.CreateData = {
 		url:"popup.html?type=popout",
 		type:"popup"
 	}
@@ -27,6 +27,7 @@ function open_in_window() {
 document.addEventListener('DOMContentLoaded', function() {
 
 	$("#popout_button").click(open_in_window);
+	// @ts-ignore
 	$("#refresh_button").click(() => location.reload(true));
 
 	reactMain();
@@ -39,6 +40,7 @@ async function reactMain() {
 	let windowsAndTabs = await Promise.all(
 		windows.sort(Window.accessCompare).map(w =>
 			// fetch browser tabs
+			// @ts-ignore
 			browser.tabs.query({windowId: w.id})
 			.then(tabs => tabs.map(t => new Tab(t)))
 			.then(tabs => ({window: w, tabs: tabs})))
@@ -54,7 +56,7 @@ async function reactMain() {
 	 * Create a closure to re-render, allowing access the window/tab data structures
 	 */
 	function render() {
-		let windowComponents = windowsAndTabs.map(w =>
+		let windowComponents = windowsAndTabs.map(w => 
 			<WindowComponent
 				window={w.window}
 				tabs={w.tabs}
@@ -70,7 +72,9 @@ async function reactMain() {
 	chrome.tabs.onActivated.addListener(function(activeInfo) {
 		tabsMap[activeInfo.tabId].active = true;
 		// This might not exist if the previous tab was just deleted
+		// @ts-ignore
 		if (tabsMap[activeInfo.previousTabId]) {
+			// @ts-ignore
 			tabsMap[activeInfo.previousTabId].active = false
 		}
 		render();

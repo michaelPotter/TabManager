@@ -15,6 +15,7 @@
     "@babel/core": "~7.15.5",
     "@babel/preset-env": "~7.15.6",
     "@babel/preset-react": "~7.14.5",
+    "@types/chrome": "0.0.203",
     "@types/node": "~18.11.9",
     "@types/react": "~18.0.25",
     "@types/react-dom": "~18.0.9",
@@ -25,6 +26,7 @@
     "eslint-plugin-only-warn": "~1.0.3",
     "eslint-plugin-react": "~7.25.1",
     "jsx-loader": "*",
+    "ts-loader": "~9.4.1",
     "typescript": "~4.9.3",
     "webpack": "~5.52.1",
     "webpack-cli": "~4.8.0"

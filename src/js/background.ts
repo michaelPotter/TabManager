@@ -1,5 +1,5 @@
 
-import Window from './Window.js';
+import Window from './Window';
 import Badge from './Badge.js';
 
 var badge = new Badge()

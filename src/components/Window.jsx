@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Tab from './Tab.jsx';
 import { ReactSortable } from 'react-sortablejs';
 
-
 // TODO this should probably go somewhere else??
 function onDragEnd(evt) {
 	var itemEl = evt.item;
