@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Tab from './Tab.jsx';
+import { ReactSortable } from 'react-sortablejs';
 
 
 /*
@@ -10,19 +11,24 @@ import Tab from './Tab.jsx';
  * props.tabs - A list of Tabs
  */
 export default function Window(props) {
-    let tabs = props.tabs.map(t =>
-        <Tab
-            tab={t}
-            key={t.id}
-            mainClick={() => t.focus()}
-            trashClick={() => t.close()}
-            />
-    ) 
+
+    // const [state, setState] = useState<ItemType[]>(items);
+    const [state, setState] = useState(props.tabs);
 
     return (
         <div>
-            {tabs}
+            <ReactSortable list={state} setList={setState}>
+                {
+                    state.map(tab => (
+                        <Tab
+                            tab={tab}
+                            mainClick={() => tab.focus()}
+                            trashClick={() => tab.focus()}
+                            />
+                    ))
+                }
+            </ReactSortable>
             <hr/>
         </div>
     );
-};
+}

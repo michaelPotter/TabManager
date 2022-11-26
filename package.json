@@ -6,21 +6,24 @@
   "dependencies": {
     "classnames": "~2.3.1",
     "lodash": "~4.17.21",
-    "react": "*",
-    "react-dom": "*"
+    "react": "~17.0.2",
+    "react-dom": "~17.0.2",
+    "react-sortablejs": "~6.1.4",
+    "sortablejs": "~1.15.0"
   },
   "devDependencies": {
-    "@babel/core": "*",
-    "@babel/preset-env": "*",
-    "@babel/preset-react": "*",
-    "babel-loader": "*",
-    "eslint": "*",
-    "eslint-loader": "*",
-    "eslint-plugin-only-warn": "*",
-    "eslint-plugin-react": "*",
+    "@babel/core": "~7.15.5",
+    "@babel/preset-env": "~7.15.6",
+    "@babel/preset-react": "~7.14.5",
+    "@types/sortablejs": "~1.15.0",
+    "babel-loader": "~8.2.2",
+    "eslint": "~7.32.0",
+    "eslint-loader": "~4.0.2",
+    "eslint-plugin-only-warn": "~1.0.3",
+    "eslint-plugin-react": "~7.25.1",
     "jsx-loader": "*",
-    "webpack": "*",
-    "webpack-cli": "*"
+    "webpack": "~5.52.1",
+    "webpack-cli": "~4.8.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
