@@ -19,7 +19,8 @@ export default function Tab(props) {
             className={classnames("row div tab", {"active":props.tab.active})}
         >
             {/* FIXME these should go AFTER */}
-            <Trash onClick={props.trashClick}/>
+            {/* FIXME This closes the tab, but doesn't remove tab from the list */}
+            <Trash onClick={() => props.tab.close()}/>
             <Star filled={isBookmarked}/>
             <div className="row-content div" onClick={props.mainClick}>
                 <ContextMarker context={tabContext} />
