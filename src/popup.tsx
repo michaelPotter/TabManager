@@ -38,12 +38,12 @@ async function reactMain() {
 	let windows = await Window.getAll()
 
 	let windowsAndTabs = await Promise.all(
-		windows.sort(Window.accessCompare).map(w =>
+		windows.sort(Window.accessCompare).map(async w =>
 			// fetch browser tabs
 			// @ts-ignore
 			browser.tabs.query({windowId: w.id})
-			.then(tabs => tabs.map(t => new Tab(t)))
-			.then(tabs => ({window: w, tabs: tabs})))
+			.then((tabs: browser.tabs.Tab[]) => tabs.map(t => new Tab(t)))
+			.then((tabs: Tab[]) => ({window: w, tabs: tabs})))
 	);
 
 	/*

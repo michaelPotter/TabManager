@@ -1,5 +1,5 @@
 /**
- * Wrapper class for chrome.windows.Window
+ * Wrapper class for browser.windows.Window
  *
  * Create instances of this class by calling Window.get() or Window.getAll().
  * Any two Windows with the same id will have the same properties. If you use
@@ -22,7 +22,7 @@ declare type WindowData = {
 
 export default class Window {
 	private _last_accessed: number;
-	private window: chrome.windows.Window;
+	private window: browser.windows.Window;
 
 	/**
 	 * Synchronously create a Window.
@@ -30,7 +30,7 @@ export default class Window {
 	 * Will not pull data from storage. Use Window.get or Window.getAll
 	 * instead, so that data can be pulled out of storage if it exists.
 	 */
-	constructor(window: chrome.windows.Window, data: WindowData) {
+	constructor(window: browser.windows.Window, data: WindowData) {
 		this.window = window;
 		if (data != undefined && data != null) {
 			this._last_accessed = data.last_accessed;
@@ -43,7 +43,7 @@ export default class Window {
 	 * Creates a Window based on the given id. The Window is then passed to
 	 * callback. If storage data is found for this window, it is retrieved.
 	 */
-	static get(win_id: number, callback: (w: Window) => void) {
+	static get(win_id: number, callback: (w: Window) => void): void {
 		Window.from_storage(win_id, callback);
 	}
 
@@ -53,7 +53,7 @@ export default class Window {
 	 * Creates all Windows. They are then passed to callback in an array.
 	 * Storage data is used, if found.
 	 */
-	static async getAll() {
+	static async getAll(): Promise<Window[]> {
 		// @ts-ignore
 		let windowList = await browser.windows.getAll(null);
 
@@ -72,7 +72,8 @@ export default class Window {
 	 * Data may be null or undefined. Calls the given callback on the created Window.
 	 */
 	static inflate(id: number, data: WindowData, callback: (w: Window) => void) {
-		chrome.windows.get(id, function(cwin: chrome.windows.Window) {
+		let promise = browser.windows.get(id)
+		promise.then(function(cwin: browser.windows.Window) {
 			var w = new Window(cwin, data)
 			if (data == undefined) {
 				w.store();
@@ -89,7 +90,8 @@ export default class Window {
 	 */
 	static from_storage(win_id: number, callback: (w: Window) => void) {
 		var key = "win_" + win_id;
-		chrome.storage.local.get(key, function(data) {
+		let promise = browser.storage.local.get(key);
+		promise.then(function(data) {
 			// even if there was no data in storage, we'll just get a fresh Window
 			Window.inflate(win_id, data[key], callback);
 		});
@@ -115,7 +117,7 @@ export default class Window {
 	 * Performs the actual data storage
 	 */
 	store() {
-		chrome.storage.local.set(this.flatten());
+		browser.storage.local.set(this.flatten());
 	}
 
 	/**

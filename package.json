@@ -4,6 +4,7 @@
   "description": "A simple tab manager. See your tabs in a list",
   "private": true,
   "dependencies": {
+    "@types/firefox-webext-browser": "~94.0.1",
     "classnames": "~2.3.1",
     "lodash": "~4.17.21",
     "react": "~17.0.2",

@@ -8,20 +8,33 @@
  */
 'use strict';
 
-import util from './util.js';
+// A flattened tab
+declare type FlatTab = {
+	// Key should always be tab_0000 where 0000 is the tab id number
+	// There should only ever be one key, but idk how to express that
+	[key: string]: TabData,
+};
+
+// This seems weirdly sparse.. seems like there should be more but I'm just copying over for now.
+declare type TabData = {
+	id: number,
+};
 
 export default class Tab {
+	private tab: browser.tabs.Tab;
+	// private data: any; // TODO
+
 	/**
-	 * wrapper class for chrome.tabs
+	 * wrapper class for browser.tabs
 	 *
-	 * https://developer.chrome.com/extensions/tabs
+	 * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs
 	 */
-	constructor(tab, data) {
+	constructor(tab: browser.tabs.Tab, data?) {
 		this.tab = tab;
-		if (data != undefined && data != null) {
-			this.data = data;
-			// set extra properties here
-		}
+		// if (data != undefined && data != null) {
+		// 	this.data = data;
+		// 	// set extra properties here
+		// }
 	}
 
 	/**
@@ -66,27 +79,20 @@ export default class Tab {
 		return browser.contextualIdentities.get(id)
 	}
 
-	// store this tab in storage
-	__store() {
-		chrome.storage.local.set(this.flatten());
-	}
-
 	/**
 	 * Inflates the given data into a Tab
 	 *
 	 * Data should be a json object created by calling flatten() on another Tab.
-	 * Calls the given callback on the created Tab.
 	 *
 	 * Behavior is undefined if data does not have the key "id"
 	 */
-	static inflate(id, data, callback) {
-		chrome.tabs.get(id, function(ctab) {
-			var t = new Tab(ctab)
-			if (data == undefined) {
-				t.store();
-			}
-			callback(t)
-		});
+	static async inflate(id: number, data?): Promise<Tab> {
+		let basetab = await browser.tabs.get(id);
+		let tab = new Tab(basetab)
+		if (data == undefined) {
+			tab.store();
+		}
+		return tab;
 	}
 
 	/**
@@ -95,35 +101,21 @@ export default class Tab {
 	 * Calls the given callback on the Tab. Callback should have the form
 	 * function(err, Tab). On success, err will be null.
 	 */
-	static from_storage(tab_id, callback) {
+	static async from_storage(tab_id: number): Promise<Tab> {
 		var key = "tab_" + tab_id;
-		chrome.storage.local.get(key, function(item) {
-			// even if there was no data in storage, we'll just get a fresh Tab
-			Tab.inflate(tab_id, this.data[key], callback);
-		});
-	}
-
-	/**
-	 * Serializes this object to a json object for storage.
-	 *
-	 * The returned json will have two attributes: "key" the storage key, and
-	 * "val" a json object to be stored.
-	 * The serialized json will be both returned, and passed to a callback if
-	 * one is given
-	 */
-	flatten(callback) {
-		var k = this.key
-		var flat = {};
-		flat[k] = this.data;
-		util.runCallback(callback, flat);
-		return flat;
+		let item = browser.storage.local.get(key);
+		// even if there was no data in storage, we'll just get a fresh Tab
+		return Tab.inflate(tab_id);
 	}
 
 	/**
 	 * Performs the actual data storage
 	 */
-	store() {
-		chrome.storage.local.set(this.flatten());
+	store(): Promise<void> {
+		let flatTab: FlatTab = {
+			[this.key]: this.data,
+		};
+		return browser.storage.local.set(flatTab);
 	}
 
 	/**
@@ -149,7 +141,7 @@ export default class Tab {
 	get pinned()          { return this.tab.pinned; }
 	get audible()         { return this.tab.audible; }
 	get discarded()       { return this.tab.discarded; }
-	get autoDiscardable() { return this.tab.autoDiscardable; }
+	// get autoDiscardable() { return this.tab.autoDiscardable; }
 	get mutedInfo()       { return this.tab.mutedInfo; }
 	get url()             { return this.tab.url; }
 	get title()           { return this.tab.title; }
@@ -169,7 +161,7 @@ export default class Tab {
 	set pinned(value)          { this.tab.pinned = value; }
 	set audible(value)         { this.tab.audible = value; }
 	set discarded(value)       { this.tab.discarded = value; }
-	set autoDiscardable(value) { this.tab.autoDiscardable = value; }
+	// set autoDiscardable(value) { this.tab.autoDiscardable = value; }
 	set mutedInfo(value)       { this.tab.mutedInfo = value; }
 	set url(value)             { this.tab.url = value; }
 	set title(value)           { this.tab.title = value; }
