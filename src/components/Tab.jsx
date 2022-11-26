@@ -8,27 +8,27 @@ import classnames from 'classnames';
  *  - container tab color
  */
 export default function Tab(props) {
-    const [isBookmarked, setBookmarked] = useState(false);
-    const [tabContext, setTabContext] = useState({});
-    props.tab.isBookmarked().then(setBookmarked);
-    // TODO things get reaally slow with this enabled...
-    // props.tab.get_container().then(setTabContext);
-    return (
-        <div
-            id={props.tab.id}
-            className={classnames("row div tab", {"active":props.tab.active})}
-        >
-            {/* FIXME these should go AFTER */}
-            {/* FIXME This closes the tab, but doesn't remove tab from the list */}
-            <Trash onClick={() => props.tab.close()}/>
-            <Star filled={isBookmarked}/>
-            <div className="row-content div" onClick={props.mainClick}>
-                <ContextMarker context={tabContext} />
-                <Favicon src={props.tab.favIconUrl}/>
-                {" " + props.tab.title}
-            </div>
-        </div>
-    )
+	const [isBookmarked, setBookmarked] = useState(false);
+	const [tabContext, setTabContext] = useState({});
+	props.tab.isBookmarked().then(setBookmarked);
+	// TODO things get reaally slow with this enabled...
+	// props.tab.get_container().then(setTabContext);
+	return (
+		<div
+			id={props.tab.id}
+			className={classnames("row div tab", {"active":props.tab.active})}
+		>
+			{/* FIXME these should go AFTER */}
+			{/* FIXME This closes the tab, but doesn't remove tab from the list */}
+			<Trash onClick={() => props.tab.close()}/>
+			<Star filled={isBookmarked}/>
+			<div className="row-content div" onClick={props.mainClick}>
+				<ContextMarker context={tabContext} />
+				<Favicon src={props.tab.favIconUrl}/>
+				{" " + props.tab.title}
+			</div>
+		</div>
+	)
 }
 
 function Trash(props) {
@@ -44,15 +44,11 @@ function Star(props) {
 }
 
 function ContextMarker(props) {
-    // Note: props.context has a lot more props that could be useful... we
-    // could render the shape and color of the container icon, and also have
-    // the container name in a hover-over
-    let color = props.context.color;
-	if (color) {
-		var opacity="1.0"
-	} else {
-		var opacity="0.0"
-	}
+	// Note: props.context has a lot more props that could be useful... we
+	// could render the shape and color of the container icon, and also have
+	// the container name in a hover-over
+	let color = props.context.color;
+	let opacity = color ? "1.0" : "0.0";
 
 	return (
 		<svg className="contextMarker" viewBox="0 0 10 10" height="10px" width="10px">
@@ -63,6 +59,6 @@ function ContextMarker(props) {
 
 function Favicon(props) {
 	let re_avoid = /^chrome:\/\/.*\.svg$/
-    let src = re_avoid.test(props.src) ? "undefined" : props.src
-    return <img src={src} height="20em"/>
+	let src = re_avoid.test(props.src) ? "undefined" : props.src
+	return <img src={src} height="20em"/>
 }

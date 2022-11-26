@@ -23,7 +23,7 @@ chrome.tabs.onRemoved.addListener(function(tabid, removeInfo) {
  */
 chrome.windows.onFocusChanged.addListener(function(id) {
 	if (id > 0) {
-		Window.get(id, function(w) {
+		Window.get(id).then(w => {
 			w.last_accessed = Date.now()
 		});
 	}

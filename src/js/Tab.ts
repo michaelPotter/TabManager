@@ -22,19 +22,14 @@ declare type TabData = {
 
 export default class Tab {
 	private tab: browser.tabs.Tab;
-	// private data: any; // TODO
 
 	/**
 	 * wrapper class for browser.tabs
 	 *
 	 * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs
 	 */
-	constructor(tab: browser.tabs.Tab, data?) {
+	constructor(tab: browser.tabs.Tab) {
 		this.tab = tab;
-		// if (data != undefined && data != null) {
-		// 	this.data = data;
-		// 	// set extra properties here
-		// }
 	}
 
 	/**
@@ -49,33 +44,32 @@ export default class Tab {
 		chrome.windows.update(this.windowId, {focused: true});
 	}
 
-	isBookmarked() {
+	async isBookmarked(): Promise<boolean> {
 		// searching for certain sites causes errors
-		var avoid_these_sites = [
+		const avoid_these_sites = [
 			/^about:.*/,
 			/view-source:moz-extension:.*/
 		]
 
-		var bad_site = false
-		for (var re of avoid_these_sites) {
+		let bad_site = false
+		for (let re of avoid_these_sites) {
 			if (re.test(this.tab.url)) {
 				bad_site = true
 			}
 		}
 
 		if (! bad_site) {
-			return browser.bookmarks
-				.search({"url":this.tab.url})
-				.then(array => array.length > 0)
+			let bookmarks = await browser.bookmarks.search({"url":this.tab.url});
+			return bookmarks.length > 0;
 		}
-		return new Promise((resolve, reject) => false);
+		return false;
 	}
 
 	/**
 	 * returns a promise w/contextual id
 	 */
-	get_container() {
-		var id = this.tab.cookieStoreId
+	get_container(): Promise<browser.contextualIdentities.ContextualIdentity> {
+		let id = this.tab.cookieStoreId
 		return browser.contextualIdentities.get(id)
 	}
 
@@ -86,12 +80,9 @@ export default class Tab {
 	 *
 	 * Behavior is undefined if data does not have the key "id"
 	 */
-	static async inflate(id: number, data?): Promise<Tab> {
+	static async inflate(id: number, data?: FlatTab): Promise<Tab> {
 		let basetab = await browser.tabs.get(id);
 		let tab = new Tab(basetab)
-		if (data == undefined) {
-			tab.store();
-		}
 		return tab;
 	}
 
@@ -103,7 +94,7 @@ export default class Tab {
 	 */
 	static async from_storage(tab_id: number): Promise<Tab> {
 		var key = "tab_" + tab_id;
-		let item = browser.storage.local.get(key);
+		let item: FlatTab = await browser.storage.local.get(key) as FlatTab;
 		// even if there was no data in storage, we'll just get a fresh Tab
 		return Tab.inflate(tab_id);
 	}

@@ -43,8 +43,11 @@ export default class Window {
 	 * Creates a Window based on the given id. The Window is then passed to
 	 * callback. If storage data is found for this window, it is retrieved.
 	 */
-	static get(win_id: number, callback: (w: Window) => void): void {
-		Window.from_storage(win_id, callback);
+	static async get(id: number): Promise<Window> {
+		let key = "win_" + id;
+		let data = await browser.storage.local.get(key);
+		// even if there was no data in storage, we'll just get a fresh Window
+		return Window.inflate(id, data[key]);
 	}
 
 	/**
@@ -54,11 +57,9 @@ export default class Window {
 	 * Storage data is used, if found.
 	 */
 	static async getAll(): Promise<Window[]> {
-		// @ts-ignore
 		let windowList = await browser.windows.getAll(null);
 
 		let keys = windowList.map(w => "win_" + w.id);
-		// @ts-ignore
 		let data = await browser.storage.local.get(keys)
 
 		return windowList.map(w => new Window(w, data[`win_${w.id}`]))
@@ -69,32 +70,16 @@ export default class Window {
 	 *
 	 * id {int} should be a valid window id.
 	 * Data should be a json object created by calling flatten() on another Window.
-	 * Data may be null or undefined. Calls the given callback on the created Window.
+	 * Data may be null or undefined.
 	 */
-	static inflate(id: number, data: WindowData, callback: (w: Window) => void) {
-		let promise = browser.windows.get(id)
-		promise.then(function(cwin: browser.windows.Window) {
-			var w = new Window(cwin, data)
-			if (data == undefined) {
-				w.store();
-			}
-			callback(w)
-		});
-	}
-
-	/**
-	 * Builds a Window from storage given a Window's id.
-	 *
-	 * Calls the given callback on the Window. It is okay if the given
-	 * window doesn't have any data in storage.
-	 */
-	static from_storage(win_id: number, callback: (w: Window) => void) {
-		var key = "win_" + win_id;
-		let promise = browser.storage.local.get(key);
-		promise.then(function(data) {
-			// even if there was no data in storage, we'll just get a fresh Window
-			Window.inflate(win_id, data[key], callback);
-		});
+	static async inflate(id: number, data: WindowData): Promise<Window> {
+		let cwin = await browser.windows.get(id)
+		let w = new Window(cwin, data)
+		// Why do we store it if data is undefined?
+		if (data == undefined) {
+			w.store();
+		}
+		return w;
 	}
 
 	/**
