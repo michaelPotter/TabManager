@@ -1,7 +1,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/* chrome tab type wrapper
+/* browser tab type wrapper
  * https://developer.chrome.com/extensions/tabs#type-Tab
  */
 
@@ -11,7 +11,6 @@ import $ from '../lib/jquery-3.4.1.min';
 import _ from 'lodash';
 
 import ReactDOM from 'react-dom';
-import React from 'react';
 import WindowComponent from './components/Window.jsx';
 
 function open_in_window() {
@@ -71,18 +70,17 @@ async function reactMain() {
 
 	render();
 
-	chrome.tabs.onActivated.addListener(function(activeInfo) {
+	browser.tabs.onActivated.addListener(function(activeInfo) {
 		tabsMap[activeInfo.tabId].active = true;
 		// This might not exist if the previous tab was just deleted
-		// @ts-ignore
-		if (tabsMap[activeInfo.previousTabId]) {
-			// @ts-ignore
-			tabsMap[activeInfo.previousTabId].active = false
+		let prevTabId = activeInfo.previousTabId;
+		if (prevTabId && tabsMap[prevTabId]) {
+			tabsMap[prevTabId].active = false
 		}
 		render();
 	});
 
-	chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+	browser.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 		delete tabsMap[tabId]
 
 		// Delete from the windowsAndTabs structure
