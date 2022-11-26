@@ -29,9 +29,9 @@ export default class Window {
 	 * Will not pull data from storage. Use Window.get or Window.getAll
 	 * instead, so that data can be pulled out of storage if it exists.
 	 */
-	constructor(window: browser.windows.Window, data: WindowData) {
+	constructor(window: browser.windows.Window, data?: WindowData) {
 		this.window = window;
-		this._last_accessed = data.last_accessed ?? -1;
+		this._last_accessed = data?.last_accessed ?? -1;
 	}
 
 	/**
