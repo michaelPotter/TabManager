@@ -7,7 +7,6 @@ import classnames from 'classnames';
  *  - row middle click
  *  - fill star on bookmark
  *  - container tab color
- *  - make draggable (https://www.npmjs.com/package/react-draggable)
  */
 export default function Tab(props) {
     return (

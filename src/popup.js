@@ -16,18 +16,6 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import WindowComponent from './components/Window.jsx';
 
-// keeping for future reference
-function onDragEnd(evt) {
-	var itemEl = evt.item;
-	// console.log(evt);
-	chrome.tabs.move(
-		parseInt(itemEl.id),
-		{windowId:parseInt(evt.to.id),
-			index:evt.newIndex},
-		function(tab) {}
-	);
-}
-
 function open_in_window() {
 	var win = {
 		url:"popup.html?type=popout",
