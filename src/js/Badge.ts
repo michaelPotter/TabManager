@@ -5,6 +5,8 @@
  */
 
 export default class Badge {
+	private n: number;
+
 	constructor() {
 		this.n = -1
 		this.recount()
@@ -34,7 +36,7 @@ export default class Badge {
 	/**
 	 * Add {int} n to the count. May be negative to subtract.
 	 */
-	add(n=1) {
+	inc(n=1) {
 		this.n += n;
 		this.refresh()
 	}
@@ -42,9 +44,6 @@ export default class Badge {
 	/**
 	 * Remove {int} n from the count. May be negative to add.
 	 */
-	remove(n=1) { this.add(0 - n); }
-
-	inc() { this.add(1) };
-	dec() { this.remove(1) };
+	dec(n=1) { this.inc(0 - n); }
 
 }
