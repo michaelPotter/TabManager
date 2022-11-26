@@ -3,14 +3,13 @@
  *
  * TODO:
  * 	- should have this keep track of the container it's in, so you don't have to do the promise thing
- * 	- maybe also keep track of bookmarks internally instead of promise, though maybe not since bookmarks could change underneath you
- * 	- review and re-document how storage works in the context of this class. Maybe refactor
  */
 'use strict';
 
-// This seems weirdly sparse.. seems like there should be more but I'm just copying over for now.
+// This is the extra data we can't get from the browser api.
+// ... There isn't anything yet, but that could change.
 declare type TabData = {
-	id: number,
+	id?: number,
 };
 
 export default class Tab {
@@ -29,15 +28,25 @@ export default class Tab {
 	 * Closes this tab
 	 */
 	close() {
-		chrome.tabs.remove(this.id);
+		if (this.id) {
+			browser.tabs.remove(this.id);
+		}
 	}
 
 	focus() {
-		chrome.tabs.update(this.id, {active: true}, null)
-		chrome.windows.update(this.windowId, {focused: true});
+		if (this.id) {
+			browser.tabs.update(this.id, {active: true})
+		}
+		if (this.windowId) {
+			browser.windows.update(this.windowId, {focused: true});
+		}
 	}
 
 	async isBookmarked(): Promise<boolean> {
+		if (!this.tab.url) {
+			return false;
+		}
+
 		// searching for certain sites causes errors
 		const avoid_these_sites = [
 			/^about:.*/,
@@ -61,9 +70,15 @@ export default class Tab {
 	/**
 	 * returns a promise w/contextual id
 	 */
-	get_container(): Promise<browser.contextualIdentities.ContextualIdentity> {
+	get_container(): Promise<browser.contextualIdentities.ContextualIdentity| null> {
 		let id = this.tab.cookieStoreId
-		return browser.contextualIdentities.get(id)
+		return id ? browser.contextualIdentities.get(id) : new Promise(() => null);
+	}
+
+	static async getAllForWindow(windowId: number): Promise<Tab[]> {
+		let tabs = await browser.tabs.query({windowId: windowId});
+		// TODO fetch data out of storage
+		return tabs.map(t => new Tab(t));
 	}
 
 	/**

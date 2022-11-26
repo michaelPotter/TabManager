@@ -5,11 +5,9 @@
  * https://developer.chrome.com/extensions/tabs#type-Tab
  */
 
-import util from './js/util';
 import Window from './js/Window';
 import Tab from './js/Tab';
 import $ from '../lib/jquery-3.4.1.min';
-import Sortable from '../lib/Sortable';
 import _ from 'lodash';
 
 import ReactDOM from 'react-dom';
@@ -38,19 +36,23 @@ async function reactMain() {
 	let windows = await Window.getAll()
 
 	let windowsAndTabs = await Promise.all(
-		windows.sort(Window.accessCompare).map(async w =>
-			// fetch browser tabs
-			// @ts-ignore
-			browser.tabs.query({windowId: w.id})
-			.then((tabs: browser.tabs.Tab[]) => tabs.map(t => new Tab(t)))
-			.then((tabs: Tab[]) => ({window: w, tabs: tabs})))
+		windows
+			.sort(Window.accessCompare)
+			.map(async w => {
+				// @ts-ignore there's apparently a case where w.id can be null... but it's never happened before.
+				let tabs = await Tab.getAllForWindow(w.id);
+				return {
+					window: w,
+					tabs: tabs,
+				}
+			})
 	);
 
 	/*
 	 * A map that holds reference to every tab, for easier access. key'd by tabId
 	 * This lets you easily access and modify a tab without having to search through the list,
 	 */
-	let tabsMap = _(windowsAndTabs).flatMap(wt => wt.tabs).keyBy(tab => tab.id).value()
+	let tabsMap = _(windowsAndTabs).flatMap(wt => wt.tabs).keyBy(tab => tab.id ?? -1).value()
 
 	/*
 	 * Create a closure to re-render, allowing access the window/tab data structures

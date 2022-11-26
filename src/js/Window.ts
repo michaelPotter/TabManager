@@ -15,7 +15,7 @@
 
 // This is the extra data we can't get from the browser api.
 declare type WindowData = {
-	id: number,
+	id?: number,
 	last_accessed?: number,
 };
 
@@ -31,9 +31,7 @@ export default class Window {
 	 */
 	constructor(window: browser.windows.Window, data: WindowData) {
 		this.window = window;
-		if (data) {
-			this._last_accessed = data.last_accessed;
-		}
+		this._last_accessed = data.last_accessed ?? -1;
 	}
 
 	/**
@@ -55,7 +53,7 @@ export default class Window {
 	 * Storage data is used, if found.
 	 */
 	static async getAll(): Promise<Window[]> {
-		let windowList = await browser.windows.getAll(null);
+		let windowList = await browser.windows.getAll();
 
 		let keys = windowList.map(w => "win_" + w.id);
 		let data = await browser.storage.local.get(keys)
