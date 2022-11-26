@@ -4,20 +4,18 @@
  * The extension badge shows how many tabs are currently open.
  */
 
-import util from './util.js';
-
 export default class Badge {
 	constructor() {
 		this.n = -1
 		this.recount()
-		chrome.browserAction.setBadgeBackgroundColor({"color":"teal"})
+		browser.browserAction.setBadgeBackgroundColor({"color":"teal"})
 	}
 
 	/**
 	 * Updates the text of the badge
 	 */
 	refresh() {
-		chrome.browserAction.setBadgeText({"text": this.n.toString()});
+		browser.browserAction.setBadgeText({"text": this.n.toString()});
 	}
 
 	/**
@@ -27,13 +25,10 @@ export default class Badge {
 	 * more expensive than just keeping track; use sparingly. Runs the optional
 	 * callback with the number of open tabs.
 	 */
-	recount(callback) {
-		var b = this;
-		util.countTabs(function(number) {
-			b.n = number;
-			b.refresh();
-			util.runCallback(callback, number);
-		});
+	async recount() {
+		let tabs = await browser.tabs.query({});
+		this.n = tabs.length
+		this.refresh();
 	}
 
 	/**

@@ -10,7 +10,7 @@ release: $(zip)
 debug: debug.zip
 
 watchDebug:
-	fd -tf . src | entr make debug
+	while true; do fd -tf . src | entr make debug ; done
 
 $(zip): $(src_files) dist
 	cp icons/icon.png dist/icon.png
