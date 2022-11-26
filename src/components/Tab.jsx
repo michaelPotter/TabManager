@@ -9,7 +9,10 @@ import classnames from 'classnames';
  */
 export default function Tab(props) {
     const [isBookmarked, setBookmarked] = useState(false);
+    const [tabContext, setTabContext] = useState({});
     props.tab.isBookmarked().then(setBookmarked);
+    // TODO things get reaally slow with this enabled...
+    // props.tab.get_container().then(setTabContext);
     return (
         <div
             id={props.tab.id}
@@ -19,7 +22,7 @@ export default function Tab(props) {
             <Trash onClick={props.trashClick}/>
             <Star filled={isBookmarked}/>
             <div className="row-content div" onClick={props.mainClick}>
-                <ContextMarker />
+                <ContextMarker context={tabContext} />
                 <Favicon src={props.tab.favIconUrl}/>
                 {" " + props.tab.title}
             </div>
@@ -40,7 +43,11 @@ function Star(props) {
 }
 
 function ContextMarker(props) {
-	if (props.color) {
+    // Note: props.context has a lot more props that could be useful... we
+    // could render the shape and color of the container icon, and also have
+    // the container name in a hover-over
+    let color = props.context.color;
+	if (color) {
 		var opacity="1.0"
 	} else {
 		var opacity="0.0"
@@ -48,7 +55,7 @@ function ContextMarker(props) {
 
 	return (
 		<svg className="contextMarker" viewBox="0 0 10 10" height="10px" width="10px">
-			<circle cx="5" cy="5" r="5" fill={props.color} fillOpacity={opacity} />
+			<circle cx="5" cy="5" r="5" fill={color} fillOpacity={opacity} />
 		</svg>
 	);
 }
