@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classnames from 'classnames';
 
 /*
  * A Tab component.
  * TODO:
  *  - row middle click
- *  - fill star on bookmark
  *  - container tab color
  */
 export default function Tab(props) {
+    const [isBookmarked, setBookmarked] = useState(false);
+    props.tab.isBookmarked().then(setBookmarked);
     return (
         <div
             id={props.tab.id}
@@ -16,7 +17,7 @@ export default function Tab(props) {
         >
             {/* FIXME these should go AFTER */}
             <Trash onClick={props.trashClick}/>
-            <Star/>
+            <Star filled={isBookmarked}/>
             <div className="row-content div" onClick={props.mainClick}>
                 <ContextMarker />
                 <Favicon src={props.tab.favIconUrl}/>
