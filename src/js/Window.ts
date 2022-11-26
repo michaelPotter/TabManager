@@ -10,13 +10,12 @@
  *
  * TODO:
  * 	- review and re-document how storage works in the context of this class. Maybe refactor
- * 	- refactor callback stuff to use async/await (change chrome -> browser)
  *
  */
 
-import util from './util.js';
-
+// This is the extra data we can't get from the browser api.
 declare type WindowData = {
+	id: number,
 	last_accessed?: number,
 };
 
@@ -32,7 +31,7 @@ export default class Window {
 	 */
 	constructor(window: browser.windows.Window, data: WindowData) {
 		this.window = window;
-		if (data != undefined && data != null) {
+		if (data) {
 			this._last_accessed = data.last_accessed;
 		}
 	}
@@ -40,20 +39,19 @@ export default class Window {
 	/**
 	 * Get a Window
 	 *
-	 * Creates a Window based on the given id. The Window is then passed to
-	 * callback. If storage data is found for this window, it is retrieved.
+	 * Creates a Window based on the given id. If storage data is found for
+	 * this window, it is retrieved.
 	 */
 	static async get(id: number): Promise<Window> {
 		let key = "win_" + id;
 		let data = await browser.storage.local.get(key);
-		// even if there was no data in storage, we'll just get a fresh Window
 		return Window.inflate(id, data[key]);
 	}
 
 	/**
 	 * Get all Windows
 	 *
-	 * Creates all Windows. They are then passed to callback in an array.
+	 * Creates all Windows.
 	 * Storage data is used, if found.
 	 */
 	static async getAll(): Promise<Window[]> {
@@ -75,10 +73,6 @@ export default class Window {
 	static async inflate(id: number, data: WindowData): Promise<Window> {
 		let cwin = await browser.windows.get(id)
 		let w = new Window(cwin, data)
-		// Why do we store it if data is undefined?
-		if (data == undefined) {
-			w.store();
-		}
 		return w;
 	}
 
@@ -87,22 +81,19 @@ export default class Window {
 	 *
 	 * The returned json will have two attributes: "key" the storage key, and
 	 * "val" a json object to be stored.
-	 * The serialized json will be both returned, and passed to a callback if
-	 * one is given
 	 */
-	flatten(callback?) {
-		var k = this.key
-		var flat = {};
-		flat[k] = this.data;
-		util.runCallback(callback, flat);
+	flatten(): {[key: string]: WindowData}  {
+		let flat = {
+			[this.key]: this.data,
+		};
 		return flat;
 	}
 
 	/**
 	 * Performs the actual data storage
 	 */
-	store() {
-		browser.storage.local.set(this.flatten());
+	store(): Promise<void> {
+		return browser.storage.local.set(this.flatten());
 	}
 
 	/**
@@ -134,8 +125,8 @@ export default class Window {
 	/**
 	 * Returns data to be stored for this window
 	 */
-	get data() {
-		var data = {
+	get data(): WindowData {
+		var data: WindowData = {
 			"id": this.id,
 			"last_accessed": this.last_accessed
 		};

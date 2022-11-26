@@ -8,13 +8,6 @@
  */
 'use strict';
 
-// A flattened tab
-declare type FlatTab = {
-	// Key should always be tab_0000 where 0000 is the tab id number
-	// There should only ever be one key, but idk how to express that
-	[key: string]: TabData,
-};
-
 // This seems weirdly sparse.. seems like there should be more but I'm just copying over for now.
 declare type TabData = {
 	id: number,
@@ -28,7 +21,7 @@ export default class Tab {
 	 *
 	 * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs
 	 */
-	constructor(tab: browser.tabs.Tab) {
+	constructor(tab: browser.tabs.Tab, data?: TabData) {
 		this.tab = tab;
 	}
 
@@ -80,9 +73,9 @@ export default class Tab {
 	 *
 	 * Behavior is undefined if data does not have the key "id"
 	 */
-	static async inflate(id: number, data?: FlatTab): Promise<Tab> {
+	static async inflate(id: number, data?: TabData): Promise<Tab> {
 		let basetab = await browser.tabs.get(id);
-		let tab = new Tab(basetab)
+		let tab = new Tab(basetab, data)
 		return tab;
 	}
 
@@ -94,16 +87,29 @@ export default class Tab {
 	 */
 	static async from_storage(tab_id: number): Promise<Tab> {
 		var key = "tab_" + tab_id;
-		let item: FlatTab = await browser.storage.local.get(key) as FlatTab;
+		let data = await browser.storage.local.get(key);
 		// even if there was no data in storage, we'll just get a fresh Tab
-		return Tab.inflate(tab_id);
+		return Tab.inflate(tab_id, data[key]);
+	}
+
+	/**
+	 * Serializes this object to a json object for storage.
+	 *
+	 * The returned json will have two attributes: "key" the storage key, and
+	 * "val" a json object to be stored.
+	 */
+	flatten(): {[key: string]: TabData}  {
+		let flat = {
+			[this.key]: this.data,
+		};
+		return flat;
 	}
 
 	/**
 	 * Performs the actual data storage
 	 */
 	store(): Promise<void> {
-		let flatTab: FlatTab = {
+		let flatTab = {
 			[this.key]: this.data,
 		};
 		return browser.storage.local.set(flatTab);
