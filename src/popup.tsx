@@ -7,28 +7,13 @@
 
 import Window from './js/Window';
 import Tab from './js/Tab';
-import $ from '../lib/jquery-3.4.1.min';
 import _ from 'lodash';
 
 import ReactDOM from 'react-dom';
 import WindowComponent from './components/Window.jsx';
 
-function open_in_window() {
-	var win: browser.windows._CreateCreateData = {
-		url:"popup.html?type=popout",
-		type:"popup"
-	}
-	browser.windows.create(win);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-
-	$("#popout_button").click(open_in_window);
-	// @ts-ignore
-	$("#refresh_button").click(() => location.reload(true));
-
 	reactMain();
-
 });
 
 async function reactMain() {
@@ -57,7 +42,7 @@ async function reactMain() {
 	 * Create a closure to re-render, allowing access the window/tab data structures
 	 */
 	function render() {
-		let windowComponents = windowsAndTabs.map(w => 
+		let windowComponents = windowsAndTabs.map(w =>
 			<WindowComponent
 				window={w.window}
 				tabs={w.tabs}
@@ -65,7 +50,19 @@ async function reactMain() {
 				/>
 		)
 
-		ReactDOM.render(windowComponents, document.getElementById('main'));
+		let main = (
+			<>
+				<div id="header">
+					<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
+					<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
+				</div>
+				<div id="body">
+					{windowComponents}
+				</div>
+			</>
+		)
+
+		ReactDOM.render(main, document.getElementById('main'));
 	}
 
 	render();
@@ -92,3 +89,12 @@ async function reactMain() {
 	});
 
 }
+
+function open_in_window() {
+	var win: browser.windows._CreateCreateData = {
+		url:"popup.html?type=popout",
+		type:"popup"
+	}
+	browser.windows.create(win);
+}
+

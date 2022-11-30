@@ -1,4 +1,4 @@
-src_files = src lib
+src_files = src
 output_files = dist/popup.html dist/popup.js dist/background.js dist/manifest.json
 zip = TabManager.zip
 
