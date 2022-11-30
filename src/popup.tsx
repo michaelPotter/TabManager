@@ -1,8 +1,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/* browser tab type wrapper
- * https://developer.chrome.com/extensions/tabs#type-Tab
+/*
+ * browser tab type wrapper
  */
 
 import Window from './js/Window';
@@ -14,11 +14,11 @@ import ReactDOM from 'react-dom';
 import WindowComponent from './components/Window.jsx';
 
 function open_in_window() {
-	var win: chrome.windows.CreateData = {
+	var win: browser.windows._CreateCreateData = {
 		url:"popup.html?type=popout",
 		type:"popup"
 	}
-	chrome.windows.create(win);
+	browser.windows.create(win);
 }
 
 document.addEventListener('DOMContentLoaded', function() {

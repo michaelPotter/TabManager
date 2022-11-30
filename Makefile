@@ -9,7 +9,7 @@ release: $(zip)
 
 debug: debug.zip
 
-watchDebug:
+debugd:
 	while sleep 0.1; do fd -tf . src | entr make debug ; done
 
 $(zip): $(src_files) dist
