@@ -1,6 +1,7 @@
 'use strict';
 
 import Window from './Window';
+import WindowBuilder from './WindowBuilder';
 import _ from 'lodash';
 
 class WindowManager {
@@ -24,7 +25,7 @@ class WindowManager {
      */
     private async populate() {
         this.state = "pending";
-        let windowsList = await Window.getAll()
+        let windowsList = await WindowBuilder.getAll()
         this._windows = _.keyBy<Window>(windowsList, w => w.id);
         this.state = "finished";
     }

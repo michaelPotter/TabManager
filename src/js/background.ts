@@ -1,5 +1,6 @@
+'use strict';
 
-import Window from './Window';
+import WindowBuilder from './WindowBuilder';
 import Badge from './Badge';
 
 var badge = new Badge()
@@ -23,7 +24,7 @@ browser.tabs.onRemoved.addListener(function(tabid, removeInfo) {
  */
 browser.windows.onFocusChanged.addListener(function(id) {
 	if (id > 0) {
-		Window.get(id).then(w => {
+		WindowBuilder.get(id).then(w => {
 			w.last_accessed = Date.now()
 		});
 	}

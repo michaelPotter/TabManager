@@ -1,21 +1,12 @@
 /**
  * Wrapper class for browser.windows.Window
  *
- * Create instances of this class by calling Window.get() or Window.getAll().
- * Any two Windows with the same id will have the same properties. If you use
- * the get and getAll functions, data will automatically be propagated to
- * future instances of this Window. For example:
- *
- * Window.get(
- *
- * TODO:
- * 	- review and re-document how storage works in the context of this class. Maybe refactor
- *
+ * Create instances of this class by using WindowBuilder.
  */
 
 import Tab from './Tab';
-import TabBuilder from './TabBuilder';
 import _ from 'lodash';
+import WindowBuilder from './WindowBuilder';
 
 // This is the extra data we can't get from the browser api.
 declare type WindowData = {
@@ -38,65 +29,6 @@ export default class Window {
 		this.window = window;
 		this._last_accessed = data?.last_accessed ?? -1;
 		this.tabs = tabs;
-	}
-
-	/**
-	 * Get a Window
-	 *
-	 * Creates a Window based on the given id. If storage data is found for
-	 * this window, it is retrieved.
-	 */
-	static async get(id: number): Promise<Window> {
-		let key = winKey(id);
-
-		let data = await browser.storage.local.get(key);
-		let cwin = await browser.windows.get(id)
-		let tabs = await TabBuilder.getAllForWindow(id);
-
-		let w = new Window(cwin, tabs, data[key])
-		return w;
-	}
-
-	/**
-	 * Get all Windows
-	 *
-	 * Creates all Windows.
-	 * Storage data is used, if found.
-	 */
-	static async getAll(): Promise<Window[]> {
-		let windowList = await browser.windows.getAll();
-
-		let keys = windowList.map(w => "win_" + w.id);
-		let data = await browser.storage.local.get(keys)
-
-		let tabs = await TabBuilder.getAllForWindows(windowList.map(w => w.id ?? -1));
-
-		let windows = windowList.map(w => {
-			let key = winKey(w);
-			return new Window(w, tabs[w.id ?? -1], data[key])
-		});
-
-		return windows;
-	}
-
-	/**
-	 * Serializes this object to a json object for storage.
-	 *
-	 * The returned json will have two attributes: "key" the storage key, and
-	 * "val" a json object to be stored.
-	 */
-	flatten(): {[key: string]: WindowData}  {
-		let flat = {
-			[this.key]: this.data,
-		};
-		return flat;
-	}
-
-	/**
-	 * Performs the actual data storage
-	 */
-	store(): Promise<void> {
-		return browser.storage.local.set(this.flatten());
 	}
 
 	removeTab(tabid: number) {
@@ -157,7 +89,7 @@ export default class Window {
 	 */
 	set last_accessed(last_accessed: number) {
 		this._last_accessed = last_accessed;
-		this.store()
+		WindowBuilder.storeWindow(this);
 	}
 
 	/**
@@ -175,12 +107,4 @@ export default class Window {
 		// TODO is there a more efficient way than iterating?
 		return this.tabs.find(t => t.active);
 	}
-}
-
-/*
- * Takes either a window or window Id, and returns the storage key string
- */
-function winKey(w: browser.windows.Window | Window | number) {
-	let id = typeof w == 'number' ? w : w.id;
-	return "win_" + id
 }
