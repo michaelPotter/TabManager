@@ -13,6 +13,9 @@
  *
  */
 
+import Tab from './Tab';
+import _ from 'lodash';
+
 // This is the extra data we can't get from the browser api.
 declare type WindowData = {
 	id?: number,
@@ -22,6 +25,7 @@ declare type WindowData = {
 export default class Window {
 	private _last_accessed: number;
 	private window: browser.windows.Window;
+	tabs: Tab[] = [];
 
 	/**
 	 * Synchronously create a Window.
@@ -29,9 +33,10 @@ export default class Window {
 	 * Will not pull data from storage. Use Window.get or Window.getAll
 	 * instead, so that data can be pulled out of storage if it exists.
 	 */
-	constructor(window: browser.windows.Window, data?: WindowData) {
+	constructor(window: browser.windows.Window, tabs: Tab[], data?: WindowData) {
 		this.window = window;
 		this._last_accessed = data?.last_accessed ?? -1;
+		this.tabs = tabs;
 	}
 
 	/**
@@ -41,9 +46,14 @@ export default class Window {
 	 * this window, it is retrieved.
 	 */
 	static async get(id: number): Promise<Window> {
-		let key = "win_" + id;
+		let key = winKey(id);
+
 		let data = await browser.storage.local.get(key);
-		return Window.inflate(id, data[key]);
+		let cwin = await browser.windows.get(id)
+		let tabs = await Tab.getAllForWindow(id);
+
+		let w = new Window(cwin, tabs, data[key])
+		return w;
 	}
 
 	/**
@@ -58,20 +68,14 @@ export default class Window {
 		let keys = windowList.map(w => "win_" + w.id);
 		let data = await browser.storage.local.get(keys)
 
-		return windowList.map(w => new Window(w, data[`win_${w.id}`]))
-	}
+		let tabs = await Tab.getAllForWindows(windowList.map(w => w.id ?? -1));
 
-	/**
-	 * Inflates the given data into a Window
-	 *
-	 * id {int} should be a valid window id.
-	 * Data should be a json object created by calling flatten() on another Window.
-	 * Data may be null or undefined.
-	 */
-	static async inflate(id: number, data: WindowData): Promise<Window> {
-		let cwin = await browser.windows.get(id)
-		let w = new Window(cwin, data)
-		return w;
+		let windows = windowList.map(w => {
+			let key = winKey(w);
+			return new Window(w, tabs[w.id ?? -1], data[key])
+		});
+
+		return windows;
 	}
 
 	/**
@@ -92,6 +96,10 @@ export default class Window {
 	 */
 	store(): Promise<void> {
 		return browser.storage.local.set(this.flatten());
+	}
+
+	removeTab(tabid: number) {
+		this.tabs = this.tabs.filter(t => t.id != tabid);
 	}
 
 	/**
@@ -115,6 +123,11 @@ export default class Window {
 		}
 	}
 
+	////////////////////////////////////////////////////////////////////
+	//                        GETTERS/SETTERS                         //
+	////////////////////////////////////////////////////////////////////
+
+
 	/**
 	 * Returns the key used for storing this window
 	 */
@@ -131,8 +144,9 @@ export default class Window {
 		return data;
 	}
 
-	get id()      { return this.window.id; }
+	get id()      { return this.window.id ?? -1; }
 	get focused() { return this.window.focused; }
+
 	get last_accessed() { return this._last_accessed; }
 
 	/**
@@ -144,4 +158,12 @@ export default class Window {
 		this._last_accessed = last_accessed;
 		this.store()
 	}
+}
+
+/*
+ * Takes either a window or window Id, and returns the storage key string
+ */
+function winKey(w: browser.windows.Window | Window | number) {
+	let id = typeof w == 'number' ? w : w.id;
+	return "win_" + id
 }

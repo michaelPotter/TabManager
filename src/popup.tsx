@@ -7,6 +7,7 @@
 
 import Window from './js/Window';
 import Tab from './js/Tab';
+import WindowManager from './js/WindowManager';
 import _ from 'lodash';
 
 import ReactDOM from 'react-dom';
@@ -17,36 +18,28 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function reactMain() {
-	let windows = await Window.getAll()
 
-	let windowsAndTabs = await Promise.all(
-		windows
-			.sort(Window.accessCompare)
-			.map(async w => {
-				// @ts-ignore there's apparently a case where w.id can be null... but it's never happened before.
-				let tabs = await Tab.getAllForWindow(w.id);
-				return {
-					window: w,
-					tabs: tabs,
-				}
-			})
-	);
+	await WindowManager.waitForPopulated();
+	let windowsMap = WindowManager.windows;
+	console.log(`windowsMap: `, windowsMap)  // TODO DELETE ME
+	let windows = Object.values(windowsMap).sort(Window.accessCompare);
 
 	/*
 	 * A map that holds reference to every tab, for easier access. key'd by tabId
 	 * This lets you easily access and modify a tab without having to search through the list,
 	 */
-	let tabsMap = _(windowsAndTabs).flatMap(wt => wt.tabs).keyBy(tab => tab.id ?? -1).value()
+	let tabsMap = _(windows).flatMap(w => w.tabs).keyBy((tab: Tab) => tab.id ?? -1).value()
+
 
 	/*
 	 * Create a closure to re-render, allowing access the window/tab data structures
 	 */
 	function render() {
-		let windowComponents = windowsAndTabs.map(w =>
+		let windowComponents = windows.map(w =>
 			<WindowComponent
-				window={w.window}
+				window={w}
 				tabs={w.tabs}
-				key={w.window.id}
+				key={w.id}
 				/>
 		)
 
@@ -65,28 +58,9 @@ async function reactMain() {
 		ReactDOM.render(main, document.getElementById('main'));
 	}
 
+	WindowManager.onTabChange(render);
+
 	render();
-
-	browser.tabs.onActivated.addListener(function(activeInfo) {
-		tabsMap[activeInfo.tabId].active = true;
-		// This might not exist if the previous tab was just deleted
-		let prevTabId = activeInfo.previousTabId;
-		if (prevTabId && tabsMap[prevTabId]) {
-			tabsMap[prevTabId].active = false
-		}
-		render();
-	});
-
-	browser.tabs.onRemoved.addListener(function(tabId, removeInfo) {
-		delete tabsMap[tabId]
-
-		// Delete from the windowsAndTabs structure
-		let tabs = windowsAndTabs.filter(wt => wt.window.id == removeInfo.windowId)[0].tabs
-		let index = tabs.findIndex(tab => tab.id == tabId)
-		tabs.splice(index, 1)
-
-		render();
-	});
 
 }
 

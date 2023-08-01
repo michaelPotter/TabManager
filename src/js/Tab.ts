@@ -12,6 +12,8 @@ declare type TabData = {
 	id?: number,
 };
 
+import _ from 'lodash';
+
 export default class Tab {
 	private tab: browser.tabs.Tab;
 
@@ -75,10 +77,21 @@ export default class Tab {
 		return id ? browser.contextualIdentities.get(id) : new Promise(() => null);
 	}
 
-	static async getAllForWindow(windowId: number): Promise<Tab[]> {
+	static async getAllForWindow(windowId?: number): Promise<Tab[]> {
 		let tabs = await browser.tabs.query({windowId: windowId});
 		// TODO fetch data out of storage
 		return tabs.map(t => new Tab(t));
+	}
+
+	static async getAllForWindows(windowIds: number[]): Promise<Record<number, Tab[]>> {
+		let promises = windowIds.map(async (id) => {
+			let pair: [number, Tab[]] = [id, await Tab.getAllForWindow(id)];
+			return pair
+		})
+		let tabPairs = await Promise.all(promises);
+		let tabs = _.fromPairs(tabPairs);
+
+		return tabs;
 	}
 
 	/**
