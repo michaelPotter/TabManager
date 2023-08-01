@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import classnames from 'classnames';
+import {Trash} from './Trash';
 
 /*
  * A Tab component.
@@ -18,9 +19,9 @@ export default function Tab(props) {
 			id={props.tab.id}
 			className={classnames("row div tab", {"active":props.tab.active})}
 		>
-			{/* FIXME these should go AFTER */}
-			{/* FIXME This closes the tab, but doesn't remove tab from the list */}
-			<Trash onClick={() => props.tab.close()}/>
+			{/* TODO these should go AFTER */}
+			{/* TODO This closes the tab, but doesn't remove tab from the list */}
+			<Trash onClick={props.trashClick}/>
 			<Star filled={isBookmarked}/>
 			<div className="row-content div" onClick={props.mainClick}>
 				<ContextMarker context={tabContext} />
@@ -29,10 +30,6 @@ export default function Tab(props) {
 			</div>
 		</div>
 	)
-}
-
-function Trash(props) {
-	return <i className="material-icons trash" onClick={props.onClick}>delete</i>
 }
 
 function Star(props) {
