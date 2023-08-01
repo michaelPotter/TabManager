@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Tab from './Tab.jsx';
+import {Trash} from './Trash';
 import { ReactSortable } from 'react-sortablejs';
 
 // TODO this should probably go somewhere else??
@@ -23,26 +24,29 @@ function onDragEnd(evt) {
  */
 export default function Window(props) {
 
-    // const [state, setState] = useState<ItemType[]>(items);
-    const [state, setState] = useState(props.tabs);
-
     return (
         <>
+            <div className="windowHeader">
+                {props.tabs.length} tabs
+                <Trash/>
+            </div>
             <ReactSortable
                 id={props.window.id}
                 class="window"
-                list={state}
-                setList={setState}
+                list={props.tabs}
+                // Normally you'd use a state hook and pass "setState" here, but using a state hook interferes with
+                // re-rendering due to out-of band tab changes.
+                setList={() => {}}
                 animation={200}
                 onEnd={onDragEnd}
             >
                 {
-                    state.map(tab => (
+                    props.tabs.map(tab => (
                         <Tab
                             key={tab.id}
                             tab={tab}
                             mainClick={() => tab.focus()}
-                            trashClick={() => tab.focus()}
+                            trashClick={() => tab.close()}
                             />
                     ))
                 }
