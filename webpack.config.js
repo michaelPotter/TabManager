@@ -26,12 +26,6 @@ module.exports = {
 				exclude: /(dist|lib|node_modules)/,
 				use: [
 					{
-						loader: 'eslint-loader',
-						options: {
-							cache: true,
-						}
-					},
-					{
 						loader: 'babel-loader',
 						options: {
 							cacheDirectory: true,

@@ -6,5 +6,5 @@ A simple tab manager. See ALL of your tabs in a list
 Run `make release` to build the extension, `./TabManager.zip`
 
 versions:
-	- npm: 6.12.1
-	- node: v12.13.0
+	- npm: 9.6.2
+	- node: v18.13.0

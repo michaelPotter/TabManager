@@ -31,3 +31,5 @@ clean:
 	rm -rf \
 		dist/* \
 		*.zip
+
+.PHONY: release debug debugd clean test all
