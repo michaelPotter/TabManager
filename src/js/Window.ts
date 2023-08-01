@@ -40,6 +40,16 @@ export default class Window {
 	}
 
 	/**
+	 * Given a new browser tab object, update our tab object to reference the new object.
+	 * Sometimes the data backing a tab will change, such as on page navigation.
+	 */
+	updateTab(tab: browser.tabs.Tab) {
+		if (tab.id) {
+			this.getTabById(tab.id)?.updateTab(tab);
+		}
+	}
+
+	/**
 	 * Pass to Array.Sort to order Windows by access time.
 	 *
 	 * Returns an int < 0 if a was accessed more recently than b,

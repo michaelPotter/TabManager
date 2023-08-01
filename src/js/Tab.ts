@@ -45,6 +45,14 @@ export default class Tab {
 		}
 	}
 
+	/**
+	 * Given a new browser tab object, update our tab object to reference the new object.
+	 * Sometimes the data backing a tab will change, such as on page navigation.
+	 */
+	updateTab(tab: browser.tabs.Tab) {
+		this.tab = tab;
+	}
+
 	async isBookmarked(): Promise<boolean> {
 		if (!this.tab.url) {
 			return false;

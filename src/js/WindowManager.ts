@@ -16,6 +16,7 @@ class WindowManager {
         // Set up callbacks
         browser.tabs.onCreated.addListener(this._onTabCreated);
         browser.tabs.onActivated.addListener(this._onTabActivated);
+        browser.tabs.onUpdated.addListener(this._onTabUpdated);
         browser.tabs.onRemoved.addListener(this._onTabRemoved);
     }
 
@@ -63,7 +64,15 @@ class WindowManager {
         window.getActiveTab()?.setActive(false);
         window.getTabById(activeInfo.tabId)?.setActive(true);
 
+        this.changeCallback();
+    }
+
+    private _onTabUpdated: Parameters<typeof browser.tabs.onUpdated.addListener>[0]
+    = async (tabId, changeInfo, tab) => {
+        if (tab.windowId) {
+            this._windows[tab.windowId]?.updateTab(tab);
             this.changeCallback();
+        }
     }
 
     private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
