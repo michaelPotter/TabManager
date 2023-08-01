@@ -1,10 +1,12 @@
 /*
- * Tab.js
+ * Tab.ts
  *
  * TODO:
  * 	- should have this keep track of the container it's in, so you don't have to do the promise thing
  */
 'use strict';
+
+import _ from 'lodash';
 
 // This is the extra data we can't get from the browser api.
 // ... There isn't anything yet, but that could change.
@@ -12,7 +14,6 @@ declare type TabData = {
 	id?: number,
 };
 
-import _ from 'lodash';
 
 export default class Tab {
 	private tab: browser.tabs.Tab;
@@ -75,23 +76,6 @@ export default class Tab {
 	get_container(): Promise<browser.contextualIdentities.ContextualIdentity| null> {
 		let id = this.tab.cookieStoreId
 		return id ? browser.contextualIdentities.get(id) : new Promise(() => null);
-	}
-
-	static async getAllForWindow(windowId?: number): Promise<Tab[]> {
-		let tabs = await browser.tabs.query({windowId: windowId});
-		// TODO fetch data out of storage
-		return tabs.map(t => new Tab(t));
-	}
-
-	static async getAllForWindows(windowIds: number[]): Promise<Record<number, Tab[]>> {
-		let promises = windowIds.map(async (id) => {
-			let pair: [number, Tab[]] = [id, await Tab.getAllForWindow(id)];
-			return pair
-		})
-		let tabPairs = await Promise.all(promises);
-		let tabs = _.fromPairs(tabPairs);
-
-		return tabs;
 	}
 
 	/**
