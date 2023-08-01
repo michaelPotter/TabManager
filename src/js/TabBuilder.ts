@@ -2,6 +2,8 @@
  * TabBuilder.ts
  *
  * Methods for creating Tabs
+ *
+ * Note: this class would handle persistence of extra data too, if/when tabs eventually have any data that needs it.
  */
 'use strict';
 
@@ -31,5 +33,9 @@ export default class TabBuilder {
         let tabs = _.fromPairs(tabPairs);
 
         return tabs;
+    }
+
+    static async createFromBrowserTab(browserTab: browser.tabs.Tab): Promise<Tab> {
+        return new Tab(browserTab);
     }
 }

@@ -3,6 +3,7 @@
 import Window from './Window';
 import WindowBuilder from './WindowBuilder';
 import _ from 'lodash';
+import TabBuilder from './TabBuilder';
 
 class WindowManager {
     private changeCallback: () => void = () => {};
@@ -13,6 +14,7 @@ class WindowManager {
         this.populate();
 
         // Set up callbacks
+        browser.tabs.onCreated.addListener(this._onTabCreated);
         browser.tabs.onActivated.addListener(this._onTabActivated);
         browser.tabs.onRemoved.addListener(this._onTabRemoved);
     }
@@ -45,10 +47,14 @@ class WindowManager {
         });
     }
 
-    private _onTabCreated: Parameters<typeof browser.tabs.onActivated.addListener>[0]
-    = async (activeInfo) => {
-        activeInfo.windowId
-        activeInfo.tabId
+    private _onTabCreated: Parameters<typeof browser.tabs.onCreated.addListener>[0]
+    = async (browserTab) => {
+        const tab = await TabBuilder.createFromBrowserTab(browserTab);
+        if (tab.windowId) {
+            this._windows[tab.windowId]?.addTab(tab);
+        } else {
+            console.log(`tab.windowId unexpectedly undefined: ${tab}`)
+        }
     }
 
     private _onTabActivated: Parameters<typeof browser.tabs.onActivated.addListener>[0]
@@ -63,7 +69,6 @@ class WindowManager {
     private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
     = async (tabId, removeInfo) => {
         this._windows[removeInfo.windowId].removeTab(tabId)
-        console.log(`this._windows[removeInfo.windowId]: `, this._windows[removeInfo.windowId])  // TODO DELETE ME
         this.changeCallback();
     }
 

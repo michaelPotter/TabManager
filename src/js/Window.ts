@@ -35,6 +35,10 @@ export default class Window {
 		this.tabs = this.tabs.filter(t => t.id != tabid);
 	}
 
+	addTab(tab: Tab) {
+		this.tabs.push(tab);
+	}
+
 	/**
 	 * Pass to Array.Sort to order Windows by access time.
 	 *
