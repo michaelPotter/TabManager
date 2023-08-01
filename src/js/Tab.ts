@@ -144,6 +144,13 @@ export default class Tab {
 	}
 
 	/**
+	 * Convenience method for optional chaining
+	 */
+	setActive(active: boolean) {
+		this.active = active;
+	}
+
+	/**
 	 * Returns the key used for storing this tab
 	 */
 	get key() { return "tab_" + this.id; }

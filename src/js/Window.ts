@@ -158,6 +158,22 @@ export default class Window {
 		this._last_accessed = last_accessed;
 		this.store()
 	}
+
+	/**
+	 * Return the tab with this Id. May return undefined if the tab could not be found.
+	 */
+	getTabById(tabId: number) {
+		// TODO is there a more efficient way than iterating?
+		return this.tabs.find(t => t.id == tabId);
+	}
+
+	/**
+	 * Return the active tab in this window.
+	 */
+	getActiveTab() {
+		// TODO is there a more efficient way than iterating?
+		return this.tabs.find(t => t.active);
+	}
 }
 
 /*
