@@ -20,26 +20,27 @@ document.addEventListener('DOMContentLoaded', function() {
 async function reactMain() {
 
 	await WindowManager.waitForPopulated();
-	let windowsMap = WindowManager.windows;
-	console.log(`windowsMap: `, windowsMap)  // TODO DELETE ME
-	let windows = Object.values(windowsMap).sort(Window.accessCompare);
+	console.log(`windowsMap: `, WindowManager.windows)  // TODO DELETE ME
 
-	/*
-	 * A map that holds reference to every tab, for easier access. key'd by tabId
-	 * This lets you easily access and modify a tab without having to search through the list,
-	 */
-	let tabsMap = _(windows).flatMap(w => w.tabs).keyBy((tab: Tab) => tab.id ?? -1).value()
+	// /*
+	//  * A map that holds reference to every tab, for easier access. key'd by tabId
+	//  * This lets you easily access and modify a tab without having to search through the list,
+	//  */
+	// let tabsMap = _(windows).flatMap(w => w.tabs).keyBy((tab: Tab) => tab.id ?? -1).value()
 
 
 	/*
 	 * Create a closure to re-render, allowing access the window/tab data structures
 	 */
 	function render() {
+		let windowsMap = WindowManager.windows;
+		let windows = Object.values(windowsMap).sort(Window.accessCompare);
 		let windowComponents = windows.map(w =>
 			<WindowComponent
 				window={w}
 				tabs={w.tabs}
 				key={w.id}
+				onCloseClick={() => WindowManager.closeWindow(w.id)}
 				/>
 		)
 

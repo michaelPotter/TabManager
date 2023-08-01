@@ -33,7 +33,7 @@ export default function Window(props) {
         <>
             <div className="windowHeader">
                 {props.tabs.length} tabs
-                <Trash/>
+                <Trash onClick={props.onCloseClick}/>
             </div>
             <ReactSortable
                 id={props.window.id}

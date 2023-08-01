@@ -49,6 +49,15 @@ class WindowManager {
         });
     }
 
+    /**
+     * Closes the given window.
+     */
+    async closeWindow(windowId: number): Promise<void> {
+        delete this._windows[windowId];
+        browser.windows.remove(windowId);
+        this.changeCallback();
+    }
+
 ////////////////////////////////////////////////////////////////////////
 //                             CALLBACKS                              //
 ////////////////////////////////////////////////////////////////////////
