@@ -5,10 +5,15 @@ import {Trash} from './Trash';
 import { ReactSortable } from 'react-sortablejs';
 
 // TODO this should probably go somewhere else??
+// NOTE: there's a sort of animation bug here where the tabs jump around...
+// When you drag a tab in the list, we call the browser "move" api to perform
+// the actual tab move, which then turns around and calls our callback causing a re-render.
+// It'd be better to update our internal list of tabs with the new ordering,
+// and somehow ignore the browser callback.
 function onDragEnd(evt) {
 	var itemEl = evt.item;
 	// console.log(evt);
-	chrome.tabs.move(
+	browser.tabs.move(
 		parseInt(itemEl.id),
 		{windowId:parseInt(evt.to.id),
 			index:evt.newIndex},

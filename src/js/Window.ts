@@ -50,6 +50,24 @@ export default class Window {
 	}
 
 	/**
+	 * Handle a tab being dragged within the SAME window.
+	 */
+	moveTab(tabId: number, fromIndex: number, toIndex: number) {
+		const tab = this.tabs[fromIndex];
+		if (toIndex < fromIndex) {
+			const a = this.tabs.slice(0, toIndex);
+			const b = this.tabs.slice(toIndex, fromIndex);
+			const c = this.tabs.slice(fromIndex + 1, this.tabs.length);
+			this.tabs = a.concat([tab]).concat(b).concat(c)
+		} else {
+			const a = this.tabs.slice(0, fromIndex);
+			const b = this.tabs.slice(fromIndex + 1, toIndex + 1);
+			const c = this.tabs.slice(toIndex + 1, this.tabs.length);
+			this.tabs = a.concat(b).concat([tab]).concat(c)
+		}
+	}
+
+	/**
 	 * Pass to Array.Sort to order Windows by access time.
 	 *
 	 * Returns an int < 0 if a was accessed more recently than b,

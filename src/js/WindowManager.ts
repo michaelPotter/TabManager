@@ -17,6 +17,7 @@ class WindowManager {
         browser.tabs.onCreated.addListener(this._onTabCreated);
         browser.tabs.onActivated.addListener(this._onTabActivated);
         browser.tabs.onUpdated.addListener(this._onTabUpdated);
+        browser.tabs.onMoved.addListener(this._onTabMoved);
         browser.tabs.onRemoved.addListener(this._onTabRemoved);
     }
 
@@ -48,6 +49,11 @@ class WindowManager {
         });
     }
 
+////////////////////////////////////////////////////////////////////////
+//                             CALLBACKS                              //
+////////////////////////////////////////////////////////////////////////
+
+
     private _onTabCreated: Parameters<typeof browser.tabs.onCreated.addListener>[0]
     = async (browserTab) => {
         const tab = await TabBuilder.createFromBrowserTab(browserTab);
@@ -73,6 +79,15 @@ class WindowManager {
             this._windows[tab.windowId]?.updateTab(tab);
             this.changeCallback();
         }
+    }
+
+    /**
+     * When a tab is dragged within the SAME window.
+     */
+    private _onTabMoved: Parameters<typeof browser.tabs.onMoved.addListener>[0]
+    = async (tabId, {windowId, fromIndex, toIndex}) => {
+        this._windows[windowId].moveTab(tabId, fromIndex, toIndex);
+        this.changeCallback();
     }
 
     private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
