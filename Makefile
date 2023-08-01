@@ -9,8 +9,9 @@ release: $(zip)
 
 debug: debug.zip
 
-debugd:
-	while sleep 0.1; do fd -tf . src | entr make debug ; done
+debug-daemon: debugd
+debugd: debug
+	npx webpack watch
 
 $(zip): $(src_files) dist
 	cp icons/icon.png dist/icon.png
@@ -32,4 +33,4 @@ clean:
 		dist/* \
 		*.zip
 
-.PHONY: release debug debugd clean test all
+.PHONY: release debug debugd debug-daemon clean test all
