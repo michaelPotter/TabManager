@@ -22,7 +22,6 @@
     "@types/react-dom": "~18.0.9",
     "@types/sortablejs": "~1.15.0",
     "babel-loader": "~8.2.2",
-    "jsx-loader": "*",
     "ts-loader": "~9.4.1",
     "typescript": "~4.9.3",
     "webpack": "~5.88.2",
