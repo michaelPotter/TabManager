@@ -11,12 +11,15 @@ import { ReactSortable } from 'react-sortablejs';
 // It'd be better to update our internal list of tabs with the new ordering,
 // and somehow ignore the browser callback.
 function onDragEnd(evt) {
-	var itemEl = evt.item;
+	let tabId = parseInt(evt.item.id);
+	let destinationWindow = parseInt(evt.to.id);
 	// console.log(evt);
 	browser.tabs.move(
-		parseInt(itemEl.id),
-		{windowId:parseInt(evt.to.id),
-			index:evt.newIndex},
+		tabId,
+		{
+			windowId: destinationWindow,
+			index: evt.newIndex
+		},
 		function(tab) {}
 	);
 }
@@ -28,35 +31,52 @@ function onDragEnd(evt) {
  * props.tabs - A list of Tabs
  */
 export default function Window(props) {
+	const [isHover, setIsHover] = useState(false);
 
-    return (
-        <>
-            <div className="windowHeader">
-                {props.tabs.length} tabs
-                <Trash onClick={props.onCloseClick}/>
-            </div>
-            <ReactSortable
-                id={props.window.id}
-                class="window"
-                list={props.tabs}
-                // Normally you'd use a state hook and pass "setState" here, but using a state hook interferes with
-                // re-rendering due to out-of band tab changes.
-                setList={() => {}}
-                animation={200}
-                onEnd={onDragEnd}
-            >
-                {
-                    props.tabs.map(tab => (
-                        <Tab
-                            key={tab.id}
-                            tab={tab}
-                            mainClick={() => tab.focus()}
-                            trashClick={() => tab.close()}
-                            />
-                    ))
-                }
-            </ReactSortable>
-            <hr/>
-        </>
-    );
+	const handleMouseEnter = () => {
+		setIsHover(true);
+	};
+
+	const handleMouseLeave = () => {
+		setIsHover(false);
+	};
+
+
+
+	const windowClass = isHover ? "window_hover" : ""
+
+	return (
+		<>
+			<ReactSortable
+				id={props.window.id}
+				className={`window ${windowClass}`}
+				list={props.tabs}
+				// Normally you'd use a state hook and pass "setState" here, but using a state hook interferes with
+				// re-rendering due to out-of band tab changes.
+				setList={() => {}}
+				animation={200}
+				onEnd={onDragEnd}
+			>
+				<div
+					className="windowHeader"
+					onMouseEnter={handleMouseEnter}
+					onMouseLeave={handleMouseLeave}
+				>
+					{props.tabs.length} tabs
+					<Trash onClick={props.onCloseClick}/>
+				</div>
+				{
+					props.tabs.map(tab => (
+						<Tab
+							key={tab.id}
+							tab={tab}
+							mainClick={() => tab.focus()}
+							trashClick={() => tab.close()}
+							/>
+					))
+				}
+			</ReactSortable>
+			<hr/>
+		</>
+	);
 }
