@@ -8,3 +8,6 @@ Run `make release` to build the extension, `./TabManager.zip`
 versions:
 	- npm: 9.6.2
 	- node: v18.13.0
+
+## Releasing
+... TODO add steps for my own reference
