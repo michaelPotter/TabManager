@@ -30,6 +30,7 @@ export default function Tab(props) {
 				<Col className='p-0'>
 					<ContextMarker context={tabContext} />
 					{/* TODO figure out how to center the favicon, without increasing the line height past 24(ish) */}
+					{/* TODO here's an idea... when the favicon is hovered, show a checkbox. Once one tab is clicked, the entire page goes into "multi-select" mode until none are selected again. */}
 					<Favicon src={props.tab.favIconUrl}/>
 					{" " + props.tab.title}
 				</Col>
@@ -40,6 +41,7 @@ export default function Tab(props) {
 						style={{ maxHeight: "24px" }}
 					>
 						<Star filled={isBookmarked}/>
+						{/* TODO when the last tab in a window is closed, the window should be removed from the list. That doesn't have to happen here though. */}
 						<Trash onClick={props.trashClick}/>
 					</div>
 				</Col>
