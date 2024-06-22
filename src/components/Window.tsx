@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Tab from './Tab.jsx';
-import {Trash} from './Trash';
+import { Trash } from './Trash';
 import { ReactSortable } from 'react-sortablejs';
 
 import type TabModel from '../js/model/Tab';
@@ -60,6 +60,7 @@ export default function Window(
 				animation={200}
 				onEnd={onDragEnd}
 			>
+				{/* TODO use flexbox instead */}
 				<div
 					className="windowHeader"
 					onMouseEnter={handleMouseEnter}

@@ -21,6 +21,7 @@ debug.zip: $(src_files) dist
 	cp icons/icon_debug.png dist/icon.png
 	cd dist && zip -r ../debug.zip .
 
+# TODO have webpack copy html instead, so that webpack watch works on it too
 dist: webpack
 	cp src/popup.html dist/
 	cp src/manifest.json dist/
