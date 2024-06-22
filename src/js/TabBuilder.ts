@@ -8,7 +8,7 @@
 'use strict';
 
 import _ from 'lodash';
-import Tab from './Tab';
+import Tab from './model/Tab';
 
 export default class TabBuilder {
 
