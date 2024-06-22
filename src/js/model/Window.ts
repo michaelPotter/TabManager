@@ -9,7 +9,7 @@ import _ from 'lodash';
 import WindowBuilder from '../WindowBuilder';
 
 // This is the extra data we can't get from the browser api.
-declare type WindowData = {
+declare type WindowExtraData = {
 	id?: number,
 	last_accessed?: number,
 };
@@ -25,7 +25,7 @@ export default class Window {
 	 * Will not pull data from storage. Use Window.get or Window.getAll
 	 * instead, so that data can be pulled out of storage if it exists.
 	 */
-	constructor(window: browser.windows.Window, tabs: Tab[], data?: WindowData) {
+	constructor(window: browser.windows.Window, tabs: Tab[], data?: WindowExtraData) {
 		this.window = window;
 		this._last_accessed = data?.last_accessed ?? -1;
 		this.tabs = tabs;
@@ -101,8 +101,8 @@ export default class Window {
 	/**
 	 * Returns data to be stored for this window
 	 */
-	get data(): WindowData {
-		var data: WindowData = {
+	get data(): WindowExtraData {
+		var data: WindowExtraData = {
 			"id": this.id,
 			"last_accessed": this.last_accessed
 		};

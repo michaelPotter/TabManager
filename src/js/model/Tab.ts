@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 // This is the extra data we can't get from the browser api.
 // ... There isn't anything yet, but that could change.
-declare type TabData = {
+declare type TabExtraData = {
 	id?: number,
 };
 
@@ -23,7 +23,7 @@ export default class Tab {
 	 *
 	 * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs
 	 */
-	constructor(tab: browser.tabs.Tab, data?: TabData) {
+	constructor(tab: browser.tabs.Tab, data?: TabExtraData) {
 		this.tab = tab;
 	}
 
@@ -93,7 +93,7 @@ export default class Tab {
 	 *
 	 * Behavior is undefined if data does not have the key "id"
 	 */
-	static async inflate(id: number, data?: TabData): Promise<Tab> {
+	static async inflate(id: number, data?: TabExtraData): Promise<Tab> {
 		let basetab = await browser.tabs.get(id);
 		let tab = new Tab(basetab, data)
 		return tab;
@@ -118,7 +118,7 @@ export default class Tab {
 	 * The returned json will have two attributes: "key" the storage key, and
 	 * "val" a json object to be stored.
 	 */
-	flatten(): {[key: string]: TabData}  {
+	flatten(): {[key: string]: TabExtraData}  {
 		let flat = {
 			[this.key]: this.data,
 		};
