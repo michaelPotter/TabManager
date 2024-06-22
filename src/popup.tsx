@@ -10,7 +10,7 @@ import WindowManager from './js/WindowManager';
 import _ from 'lodash';
 
 import ReactDOM from 'react-dom';
-import WindowComponent from './components/Window.jsx';
+import WindowComponent from './components/Window';
 
 document.addEventListener('DOMContentLoaded', function() {
 	reactMain();
