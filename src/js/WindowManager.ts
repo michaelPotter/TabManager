@@ -1,6 +1,6 @@
 'use strict';
 
-import Window from './Window';
+import Window from './model/Window';
 import WindowBuilder from './WindowBuilder';
 import _ from 'lodash';
 import TabBuilder from './TabBuilder';

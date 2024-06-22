@@ -4,9 +4,9 @@
  * Create instances of this class by using WindowBuilder.
  */
 
-import Tab from './model/Tab';
+import Tab from './Tab';
 import _ from 'lodash';
-import WindowBuilder from './WindowBuilder';
+import WindowBuilder from '../WindowBuilder';
 
 // This is the extra data we can't get from the browser api.
 declare type WindowData = {

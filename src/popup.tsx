@@ -5,7 +5,7 @@
  * browser tab type wrapper
  */
 
-import Window from './js/Window';
+import Window from './js/model/Window';
 import WindowManager from './js/WindowManager';
 import _ from 'lodash';
 
