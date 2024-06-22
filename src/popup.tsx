@@ -5,6 +5,9 @@
  * browser tab type wrapper
  */
 
+// Pull in the styles ...
+import './scss/root.scss';
+
 import Window from './js/model/Window';
 import WindowManager from './js/WindowManager';
 import _ from 'lodash';

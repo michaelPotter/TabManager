@@ -5,9 +5,12 @@ declare type Clickable = {
 };
 
 export function Trash(props: Clickable) {
-	return <i
-		className="button-icon float-right material-icons trash"
-		onClick={props.onClick}>
+	return (
+		<i
+			className="button-icon material-icons trash"
+			onClick={props.onClick}
+			>
 			delete
 		</i>
+	)
 }

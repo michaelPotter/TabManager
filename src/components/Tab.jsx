@@ -1,4 +1,9 @@
 import React, {useState} from 'react';
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import classnames from 'classnames';
 import {Trash} from './Icons';
 
@@ -17,17 +22,29 @@ export default function Tab(props) {
 	return (
 		<div
 			id={props.tab.id}
-			className={classnames("row div tab", {"active":props.tab.active})}
+			className={classnames("tab", {"activeTab":props.tab.active})}
 		>
-			{/* TODO these should go AFTER */}
-			{/* TODO This closes the tab, but doesn't remove tab from the list */}
-			<Trash onClick={props.trashClick}/>
-			<Star filled={isBookmarked}/>
-			<div className="row-content div" onClick={props.mainClick}>
-				<ContextMarker context={tabContext} />
-				<Favicon src={props.tab.favIconUrl}/>
-				{" " + props.tab.title}
-			</div>
+
+			<Container fluid>
+			<Row className='p-0'>
+				<Col className='p-0'>
+					<ContextMarker context={tabContext} />
+					{/* TODO figure out how to center the favicon, without increasing the line height past 24(ish) */}
+					<Favicon src={props.tab.favIconUrl}/>
+					{" " + props.tab.title}
+				</Col>
+				<Col sm="auto" className='p-0'>
+					<div
+						className="float-end"
+						// Without this, the icon buttons increase the size of the tab line
+						style={{ maxHeight: "24px" }}
+					>
+						<Star filled={isBookmarked}/>
+						<Trash onClick={props.trashClick}/>
+					</div>
+				</Col>
+			</Row>
+			</Container>
 		</div>
 	)
 }

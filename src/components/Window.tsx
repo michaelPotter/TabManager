@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+
 import Tab from './Tab.jsx';
-import { Trash } from './Icons';
+import {
+	Trash,
+} from './Icons';
 import { ReactSortable } from 'react-sortablejs';
 
 import type TabModel from '../js/model/Tab';
@@ -60,15 +69,24 @@ export default function Window(
 				animation={200}
 				onEnd={onDragEnd}
 			>
-				{/* TODO use flexbox instead */}
-				<div
-					className="windowHeader"
-					onMouseEnter={handleMouseEnter}
-					onMouseLeave={handleMouseLeave}
-				>
-					{props.tabs.length} tabs
-					<Trash onClick={props.onCloseClick}/>
-				</div>
+
+				<Container fluid>
+					<Row>
+						<Col>
+							{props.tabs.length} tabs
+						</Col>
+						<Col sm="auto" className='p-0'>
+							<div
+								className="float-end"
+								// Without this, the icon buttons increase the size of the tab line
+								style={{ maxHeight: "24px" }}
+							>
+								<Trash onClick={props.onCloseClick}/>
+							</div>
+						</Col>
+					</Row>
+				</Container>
+
 				{
 					props.tabs.map((tab) => (
 						<Tab
