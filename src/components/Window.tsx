@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { observer, Observer } from "mobx-react";
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -7,13 +8,18 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import { ReactSortable } from 'react-sortablejs';
+import {
+	MdArrowDropDown,
+	MdArrowRight,
+} from "react-icons/md";
 
+import WindowStore from './state/WindowStore';
 import Tab from './Tab.jsx';
 import {
 	Trash,
 	Pencil,
 } from './Icons';
-import { ReactSortable } from 'react-sortablejs';
 
 import type TabModel from '../js/model/Tab';
 import type WindowModel from '../js/model/Window';
@@ -44,19 +50,22 @@ function onDragEnd(
 /**
  * Represents a window.
  */
-export default function Window(
+const Window = (
 	props : {
 		window: WindowModel,
 		tabs: TabModel[],
 		/** A callback to be triggered when the user clicks window close */
 		onCloseClick: () => void,
 	}
-) {
+) => {
 	const [isHover, setIsHover] = useState(false);
 	const handleMouseEnter = () => setIsHover(true);
 	const handleMouseLeave = () => setIsHover(false);
+	const store = useMemo(() => new WindowStore(), []);
 
 	const windowClass = isHover ? "window_hover" : ""
+
+	let RollupArrow = store.areTabsRolledUp ? MdArrowRight : MdArrowDropDown;
 
 	return (
 		<>
@@ -75,6 +84,7 @@ export default function Window(
 				<Container fluid>
 					<Row>
 						<Col>
+							<RollupArrow onClick={store.toggleTabsRolledUp} />
 							{props.window.name != "" &&
 								`${props.window.name} - ` }
 							<span className="text-muted">
@@ -96,8 +106,9 @@ export default function Window(
 					</Row>
 				</Container>
 
-				{
-					props.tabs.map((tab) => (
+
+				<> {
+					store.areTabsRolledUp || props.tabs.map((tab) => (
 						<Tab
 							key={tab.id}
 							tab={tab}
@@ -105,12 +116,14 @@ export default function Window(
 							trashClick={() => tab.close()}
 							/>
 					))
-				}
+				} </>
 			</ReactSortable>
 			<hr/>
 		</>
 	);
 }
+export default observer(Window);
+
 
 /** This component handles the button and modal for editing a window. */
 const EditWindowModalButton = (props : {
@@ -158,9 +171,9 @@ const EditWindowModalButton = (props : {
 }
 
 /** The actual edit window form */
-function EditWindowForm(props : {
+const EditWindowForm = observer((props : {
 	store : FormStore,
-}) {
+}) => {
 	return (
 		<>
 			<FloatingLabel
@@ -168,13 +181,17 @@ function EditWindowForm(props : {
 				label="Window Name"
 				// Uncomment this margin setting when other form items get added
 				// className="mb-3"
-				onChange={(e) => props.store.setName((e.target as any).value)}
 			>
-				<Form.Control name="name" placeholder=""/>
+				<Form.Control
+					name="name"
+					placeholder=""
+					value={props.store.formData.name}
+				onChange={(e) => props.store.setName((e.target as any).value)}
+				/>
 			</FloatingLabel>
 		</>
 	);
-}
+})
 
 import { observable, configure, action, flow, makeObservable } from "mobx";
 
