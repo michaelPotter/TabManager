@@ -6,7 +6,6 @@
  */
 
 import Window from './js/Window';
-import Tab from './js/Tab';
 import WindowManager from './js/WindowManager';
 import _ from 'lodash';
 
@@ -35,14 +34,6 @@ async function reactMain() {
 	function render() {
 		let windowsMap = WindowManager.windows;
 		let windows = Object.values(windowsMap).sort(Window.accessCompare);
-		let windowComponents = windows.map(w =>
-			<WindowComponent
-				window={w}
-				tabs={w.tabs}
-				key={w.id}
-				onCloseClick={() => WindowManager.closeWindow(w.id)}
-				/>
-		)
 
 		let main = (
 			<>
@@ -51,7 +42,14 @@ async function reactMain() {
 					<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 				</div>
 				<div id="body">
-					{windowComponents}
+					{windows.map(w =>
+						<WindowComponent
+							window={w}
+							tabs={w.tabs}
+							key={w.id}
+							onCloseClick={() => WindowManager.closeWindow(w.id)}
+							/>
+					)}
 				</div>
 			</>
 		)
