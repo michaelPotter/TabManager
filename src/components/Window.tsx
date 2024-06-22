@@ -5,11 +5,13 @@ import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 
 import Tab from './Tab.jsx';
 import {
 	Trash,
+	Pencil,
 } from './Icons';
 import { ReactSortable } from 'react-sortablejs';
 
@@ -73,7 +75,11 @@ export default function Window(
 				<Container fluid>
 					<Row>
 						<Col>
-							{props.tabs.length} tabs
+							{props.window.name != "" &&
+								`${props.window.name} - ` }
+							<span className="text-muted">
+								{props.tabs.length} tabs
+							</span>
 						</Col>
 						<Col sm="auto" className='p-0'>
 							<div
@@ -81,6 +87,9 @@ export default function Window(
 								// Without this, the icon buttons increase the size of the tab line
 								style={{ maxHeight: "24px" }}
 							>
+								<EditWindowModalButton
+									window={props.window}
+								/>
 								<Trash onClick={props.onCloseClick}/>
 							</div>
 						</Col>
@@ -101,4 +110,93 @@ export default function Window(
 			<hr/>
 		</>
 	);
+}
+
+/** This component handles the button and modal for editing a window. */
+const EditWindowModalButton = (props : {
+	window: WindowModel,
+}) => {
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+
+	const store = new FormStore()
+	store.init({
+		name: props.window.name,
+	});
+
+	const onSubmit = () => {
+		props.window.name = store.formData.name;
+		return true;
+	}
+
+	return (
+		<>
+			<Pencil onClick={handleShow}/>
+
+			<Modal show={show} onHide={handleClose}>
+				<Modal.Header closeButton>
+					<Modal.Title>Edit window</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<EditWindowForm
+						store={store}
+					/>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="danger" onClick={() => onSubmit() && handleClose()}>
+						Confirm
+					</Button>
+					<Button variant="secondary" onClick={handleClose}>
+						Cancel
+					</Button>
+				</Modal.Footer>
+			</Modal>
+		</>
+	);
+}
+
+/** The actual edit window form */
+function EditWindowForm(props : {
+	store : FormStore,
+}) {
+	return (
+		<>
+			<FloatingLabel
+				controlId="floatingInput"
+				label="Window Name"
+				// Uncomment this margin setting when other form items get added
+				// className="mb-3"
+				onChange={(e) => props.store.setName((e.target as any).value)}
+			>
+				<Form.Control name="name" placeholder=""/>
+			</FloatingLabel>
+		</>
+	);
+}
+
+import { observable, configure, action, flow, makeObservable } from "mobx";
+
+// TODO this should prolly go in its own file
+class FormStore {
+	formData = {
+		name: "",
+	};
+
+	constructor() {
+		makeObservable(this, {
+			formData: observable,
+			init: action,
+			setName: action,
+		});
+	}
+
+	init(formData: typeof FormStore.prototype.formData) {
+		this.formData = formData;
+	}
+
+	setName(name: string) {
+		this.formData.name = name;
+	}
 }

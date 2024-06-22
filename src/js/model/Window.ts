@@ -12,10 +12,12 @@ import WindowBuilder from '../WindowBuilder';
 declare type WindowExtraData = {
 	id?: number,
 	last_accessed?: number,
+	name: string,
 };
 
 export default class Window {
 	private _last_accessed: number;
+	private _name: string;
 	private window: browser.windows.Window;
 	tabs: Tab[] = [];
 
@@ -28,6 +30,7 @@ export default class Window {
 	constructor(window: browser.windows.Window, tabs: Tab[], data?: WindowExtraData) {
 		this.window = window;
 		this._last_accessed = data?.last_accessed ?? -1;
+		this._name = data?.name ?? "";
 		this.tabs = tabs;
 	}
 
@@ -104,7 +107,8 @@ export default class Window {
 	get data(): WindowExtraData {
 		var data: WindowExtraData = {
 			"id": this.id,
-			"last_accessed": this.last_accessed
+			"last_accessed": this.last_accessed,
+			"name": this.name,
 		};
 		return data;
 	}
@@ -121,6 +125,12 @@ export default class Window {
 	 */
 	set last_accessed(last_accessed: number) {
 		this._last_accessed = last_accessed;
+		WindowBuilder.storeWindow(this);
+	}
+
+	get name() { return this._name; }
+	set name(name: string) {
+		this._name = name;
 		WindowBuilder.storeWindow(this);
 	}
 

@@ -14,3 +14,14 @@ export function Trash(props: Clickable) {
 		</i>
 	)
 }
+
+export function Pencil(props: Clickable) {
+	return (
+		<i
+			className="button-icon float-right material-icons pencil"
+			onClick={props.onClick}
+			>
+			edit
+		</i>
+	)
+}
