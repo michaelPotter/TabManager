@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Tab from './Tab.jsx';
-import { Trash } from './Trash';
+import { Trash } from './Icons';
 import { ReactSortable } from 'react-sortablejs';
 
 import type TabModel from '../js/model/Tab';

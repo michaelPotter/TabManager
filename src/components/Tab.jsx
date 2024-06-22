@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import classnames from 'classnames';
-import {Trash} from './Trash';
+import {Trash} from './Icons';
 
 /*
  * A Tab component.
