@@ -8,11 +8,15 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { ReactSortable } from 'react-sortablejs';
 import {
 	MdArrowDropDown,
 	MdArrowRight,
 } from "react-icons/md";
+import {
+	FaEllipsisV,
+} from "react-icons/fa";
 
 import WindowStore from './state/WindowStore';
 import Tab from './Tab.jsx';
@@ -92,14 +96,22 @@ const Window = (
 							</span>
 						</Col>
 						<Col sm="auto" className='p-0'>
-							<div
-								className="float-end"
-								// Without this, the icon buttons increase the size of the tab line
-								style={{ maxHeight: "24px" }}
-							>
-								<EditWindowModalButton
-									window={props.window}
-								/>
+							<div className="float-end"
+								 // Without this, the icon buttons increase the size of the tab line
+								 style={{ maxHeight: "24px" }} >
+								{/* TODO size/align the ellipse a lil better */}
+								{/* FIXME the dropdown hangs off the side */}
+								<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
+									<Dropdown.Toggle
+										as={CustomDropdownToggle}
+										variant="icon"
+										className="dropdown-no-caret" // This class doens't exist in this code base... but maybe that would be a better approach
+										title={`Actions for window`}>
+									</Dropdown.Toggle>
+									<Dropdown.Menu className="shadow-sm">
+										<EditWindowModalButton window={props.window}/>
+									</Dropdown.Menu>
+								</Dropdown>
 								<Trash onClick={props.onCloseClick}/>
 							</div>
 						</Col>
@@ -124,6 +136,13 @@ const Window = (
 }
 export default observer(Window);
 
+// @ts-ignore
+const CustomDropdownToggle = React.forwardRef(({ children, onClick }, ref) => (
+	<FaEllipsisV
+		onClick={onClick}
+		className="button-icon material-icons window-edit-button"
+	/>
+));
 
 /** This component handles the button and modal for editing a window. */
 const EditWindowModalButton = (props : {
@@ -146,7 +165,7 @@ const EditWindowModalButton = (props : {
 
 	return (
 		<>
-			<Pencil onClick={handleShow}/>
+			<Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
