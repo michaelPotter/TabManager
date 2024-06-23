@@ -29,7 +29,6 @@ export default function Tab(props) {
 			<Row className='p-0'>
 				<Col className='p-0'>
 					<ContextMarker context={tabContext} />
-					{/* TODO figure out how to center the favicon, without increasing the line height past 24(ish) */}
 					{/* TODO here's an idea... when the favicon is hovered, show a checkbox. Once one tab is clicked, the entire page goes into "multi-select" mode until none are selected again. */}
 					<Favicon src={props.tab.favIconUrl}/>
 					{" " + props.tab.title}
@@ -76,5 +75,5 @@ function ContextMarker(props) {
 function Favicon(props) {
 	let re_avoid = /^chrome:\/\/.*\.svg$/
 	let src = re_avoid.test(props.src) ? "undefined" : props.src
-	return <img src={src} height="20em"/>
+	return <img src={src} className="favicon"/>
 }
