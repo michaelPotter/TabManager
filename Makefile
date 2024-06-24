@@ -1,8 +1,10 @@
-src_files = src
-output_files = dist/popup.html dist/popup.js dist/background.js dist/manifest.json
+src_files = src/**
+webpack_output = dist/popup.js dist/background.js dist/tabmanager.css
 zip = TabManager.zip
 
-webpack: $(src_files) ./node_modules/.bin/webpack
+webpack: $(webpack_output)
+
+$(webpack_output) &: $(src_files) ./node_modules/.bin/webpack
 	./node_modules/.bin/webpack
 
 release: $(zip)
@@ -35,4 +37,4 @@ clean:
 		dist/* \
 		*.zip
 
-.PHONY: release debug debugd debug-daemon clean test all
+.PHONY: release debug debugd debug-daemon clean test all webpack
