@@ -3,8 +3,8 @@ import { observer } from "mobx-react";
 
 import _ from 'lodash';
 
-import Window from './js/model/Window';
-import WindowManager from './js/WindowManager';
+import Window from './js/model/window/Window';
+import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
 import PopupStore from './popupStore';
 

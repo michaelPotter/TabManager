@@ -1,6 +1,6 @@
 'use strict';
 
-import WindowBuilder from './WindowBuilder';
+import WindowBuilder from './model/window/WindowBuilder';
 import Badge from './Badge';
 
 var badge = new Badge()

@@ -1,9 +1,9 @@
 'use strict';
 
-import Window from './model/Window';
+import Window from './Window';
 import WindowBuilder from './WindowBuilder';
 import _ from 'lodash';
-import TabBuilder from './model/tab/TabBuilder';
+import TabBuilder from '../tab/TabBuilder';
 
 class WindowManager {
     private changeCallback: () => void = () => {};

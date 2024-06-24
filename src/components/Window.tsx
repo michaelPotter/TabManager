@@ -26,7 +26,7 @@ import {
 } from './Icons';
 
 import type TabModel from '../js/model/tab/Tab';
-import type WindowModel from '../js/model/Window';
+import type WindowModel from '../js/model/window/Window';
 
 // TODO this should probably go somewhere else??
 // NOTE: there's a sort of animation bug here where the tabs jump around...

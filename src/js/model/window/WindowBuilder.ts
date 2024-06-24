@@ -6,8 +6,8 @@
 'use strict';
 
 import _ from 'lodash';
-import TabBuilder from './model/tab/TabBuilder';
-import Window from './model/Window';
+import TabBuilder from '../tab/TabBuilder';
+import Window from './Window';
 
 // This is the extra data we can't get from the browser api.
 declare type WindowData = {
