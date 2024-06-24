@@ -7,9 +7,11 @@ import Window from './js/model/window/Window';
 import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
 import PopupStore from './popupStore';
+import WindowGroupStore from './js/model/windowGroup/WindowGroupStore';
 
 // Pull in the styles ...
 import './scss/root.scss';
+import WindowGroupComponent from './components/WindowGroup';
 
 const App = observer(() => {
 	let windowsMap = WindowManager.windows;
@@ -38,9 +40,12 @@ const App = observer(() => {
 				   )
 			}
 			{ PopupStore.page == "active_groups" &&
-					<p>
-						Active Groups
-					</p>
+					<div>
+						<p>{WindowGroupStore.windowGroups.length == 0 && "(no groups)" || "Groups:"}</p>
+						{WindowGroupStore.windowGroups.map(g => (<>
+							<WindowGroupComponent key={g.name} windowGroup={g}/>
+						</>))}
+					</div>
 			}
 			{ PopupStore.page == "archive" &&
 					<p>

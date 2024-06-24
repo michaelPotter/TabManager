@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { observer, Observer } from "mobx-react";
+import { observer } from "mobx-react";
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -19,11 +19,9 @@ import {
 } from "react-icons/fa";
 
 import WindowStore from './state/WindowStore';
+import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
 import Tab from './Tab.jsx';
-import {
-	Trash,
-	Pencil,
-} from './Icons';
+import { Trash } from './Icons';
 
 import type TabModel from '../js/model/tab/Tab';
 import type WindowModel from '../js/model/window/Window';
@@ -156,10 +154,22 @@ const EditWindowModalButton = (props : {
 	const store = new FormStore()
 	store.init({
 		name: props.window.name,
+		windowGroup: "",
 	});
 
 	const onSubmit = () => {
 		props.window.name = store.formData.name;
+		if (store.formData.windowGroup == "__add_new__") {
+			WindowGroupStore.addWindowToNewGroup(
+				props.window,
+				store.formData.newWindowGroupName,
+			);
+		} else if (store.formData.windowGroup != "") {
+			WindowGroupStore.addWindowToGroup(
+				props.window,
+				store.formData.windowGroup,
+			);
+		}
 		return true;
 	}
 
@@ -198,8 +208,6 @@ const EditWindowForm = observer((props : {
 			<FloatingLabel
 				controlId="floatingInput"
 				label="Window Name"
-				// Uncomment this margin setting when other form items get added
-				// className="mb-3"
 			>
 				<Form.Control
 					name="name"
@@ -208,16 +216,59 @@ const EditWindowForm = observer((props : {
 				onChange={(e) => props.store.setName((e.target as any).value)}
 				/>
 			</FloatingLabel>
+
+			<FloatingLabel
+				controlId="floatingInput"
+				label="Window Group"
+				className="mt-3"
+			>
+				<Form.Select
+					name="window-group"
+					id="window-group"
+					// disabled={!RegToolsStore.optChargesForm.override}
+					onChange={(e) => props.store.setWindowGroup((e.target as any).value)}
+					value={props.store.formData.windowGroup}
+				>
+					<option value="">(None)</option>
+					<option value="__add_new__">Add New</option>
+					{WindowGroupStore.windowGroups.map((windowGroup) => (
+						<option key={windowGroup.name} value={windowGroup.name}>{windowGroup.name}</option>
+					))}
+				</Form.Select>
+			</FloatingLabel>
+
+			{/* Only show this if the user has selected "__add_new__" */}
+			{ props.store.formData.windowGroup == "__add_new__" &&
+				<FloatingLabel
+					controlId="floatingInput"
+					label="New Window Group Name"
+					className="mt-3"
+				>
+					<Form.Control
+						name="new-window-group-name"
+						placeholder=""
+						value={props.store.formData.newWindowGroupName}
+					onChange={(e) => props.store.setNewWindowGroupName((e.target as any).value)}
+					/>
+				</FloatingLabel>
+			}
 		</>
 	);
 })
 
-import { observable, configure, action, flow, makeObservable } from "mobx";
+import { observable, action, makeObservable } from "mobx";
+
+type FormStoreInitArgs = Omit<
+	typeof FormStore.prototype.formData,
+	"newWindowGroupName"
+>
 
 // TODO this should prolly go in its own file
 class FormStore {
 	formData = {
 		name: "",
+		windowGroup: "",
+		newWindowGroupName: "",
 	};
 
 	constructor() {
@@ -225,14 +276,24 @@ class FormStore {
 			formData: observable,
 			init: action,
 			setName: action,
+			setNewWindowGroupName: action,
 		});
 	}
 
-	init(formData: typeof FormStore.prototype.formData) {
-		this.formData = formData;
+	init(formData: FormStoreInitArgs) {
+		this.formData = {
+			newWindowGroupName: "",
+			...formData
+		};
 	}
 
 	setName(name: string) {
 		this.formData.name = name;
+	}
+	setWindowGroup(windowGroup: string) {
+		this.formData.windowGroup = windowGroup;
+	}
+	setNewWindowGroupName(newWindowGroupName: string) {
+		this.formData.newWindowGroupName = newWindowGroupName;
 	}
 }
