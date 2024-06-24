@@ -1,10 +1,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/*
- * browser tab type wrapper
- */
-
 // Pull in the styles ...
 import './scss/root.scss';
 
@@ -13,7 +9,9 @@ import WindowManager from './js/WindowManager';
 import _ from 'lodash';
 
 import ReactDOM from 'react-dom';
+
 import WindowComponent from './components/Window';
+import PopupStore from './popupStore';
 
 document.addEventListener('DOMContentLoaded', function() {
 	reactMain();
@@ -22,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
 async function reactMain() {
 
 	await WindowManager.waitForPopulated();
-	console.log(`windowsMap: `, WindowManager.windows)  // TODO DELETE ME
 
 	// /*
 	//  * A map that holds reference to every tab, for easier access. key'd by tabId
@@ -41,18 +38,27 @@ async function reactMain() {
 		let main = (
 			<>
 				<div id="header">
+					<a onClick={() => PopupStore.setPage("alltabs")}>all tabs</a>
+					<a onClick={() => PopupStore.setPage("archive")}>archive</a>
 					<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
 					<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 				</div>
 				<div id="body">
-					{windows.map(w =>
-						<WindowComponent
-							window={w}
-							tabs={w.tabs}
-							key={w.id}
-							onCloseClick={() => WindowManager.closeWindow(w.id)}
-							/>
-					)}
+				{ PopupStore.page == "alltabs"
+					&&
+						windows.map(w =>
+							<WindowComponent
+								window={w}
+								tabs={w.tabs}
+								key={w.id}
+								onCloseClick={() => WindowManager.closeWindow(w.id)}
+								/>
+					   )
+					||
+						<p>
+							The Archive
+						</p>
+				}
 				</div>
 			</>
 		)
