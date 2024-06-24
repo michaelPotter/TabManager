@@ -25,7 +25,7 @@ import {
 	Pencil,
 } from './Icons';
 
-import type TabModel from '../js/model/Tab';
+import type TabModel from '../js/model/tab/Tab';
 import type WindowModel from '../js/model/Window';
 
 // TODO this should probably go somewhere else??

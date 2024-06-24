@@ -3,7 +3,7 @@
 import Window from './model/Window';
 import WindowBuilder from './WindowBuilder';
 import _ from 'lodash';
-import TabBuilder from './TabBuilder';
+import TabBuilder from './model/tab/TabBuilder';
 
 class WindowManager {
     private changeCallback: () => void = () => {};

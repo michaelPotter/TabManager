@@ -4,7 +4,7 @@
  * Create instances of this class by using WindowBuilder.
  */
 
-import Tab from './Tab';
+import Tab from './tab/Tab';
 import _ from 'lodash';
 import WindowBuilder from '../WindowBuilder';
 

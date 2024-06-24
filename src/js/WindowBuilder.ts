@@ -6,7 +6,7 @@
 'use strict';
 
 import _ from 'lodash';
-import TabBuilder from './TabBuilder';
+import TabBuilder from './model/tab/TabBuilder';
 import Window from './model/Window';
 
 // This is the extra data we can't get from the browser api.
