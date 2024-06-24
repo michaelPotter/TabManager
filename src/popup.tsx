@@ -18,15 +18,16 @@ const App = observer(() => {
 	return (
 		<>
 			<div id="header">
-				<a onClick={() => PopupStore.setPage("alltabs")}>all tabs</a>
+				<a onClick={() => PopupStore.setPage("alltabs")}>All Tabs</a>
 				{" | "}
-				<a onClick={() => PopupStore.setPage("archive")}>archive</a>
+				<a onClick={() => PopupStore.setPage("active_groups")}>Active Groups</a>
+				{" | "}
+				<a onClick={() => PopupStore.setPage("archive")}>Archive</a>
 				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 			</div>
 			<div id="body">
-			{ PopupStore.page == "alltabs"
-				&&
+			{ PopupStore.page == "alltabs" &&
 					windows.map(w =>
 						<WindowComponent
 							window={w}
@@ -35,7 +36,13 @@ const App = observer(() => {
 							onCloseClick={() => WindowManager.closeWindow(w.id)}
 							/>
 				   )
-				||
+			}
+			{ PopupStore.page == "active_groups" &&
+					<p>
+						Active Groups
+					</p>
+			}
+			{ PopupStore.page == "archive" &&
 					<p>
 						The Archive
 					</p>
