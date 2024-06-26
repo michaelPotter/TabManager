@@ -37,12 +37,7 @@ const App = observer(() => {
 			<div id="body">
 			{ PopupStore.page == "alltabs" &&
 					windows.map(w =>
-						<WindowComponent
-							window={w}
-							tabs={w.tabs}
-							key={w.id}
-							onCloseClick={() => WindowManager.closeWindow(w.id)}
-							/>
+						<WindowComponent window={w} key={w.id}/>
 				   )
 			}
 			{ PopupStore.page == "active_groups" &&

@@ -10,17 +10,13 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ReactSortable } from 'react-sortablejs';
-import {
-	MdArrowDropDown,
-	MdArrowRight,
-} from "react-icons/md";
 
-import WindowStore from './state/WindowStore';
 import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
 import Tab from './Tab.jsx';
 import { Trash } from './Icons';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';
+import WindowManager from '../js/model/window/WindowManager';
 
 import type TabModel from '../js/model/tab/Tab';
 import type WindowModel from '../js/model/window/Window';
@@ -52,12 +48,7 @@ function onDragEnd(
  * Represents a window.
  */
 const Window = (
-	props : {
-		window: WindowModel,
-		tabs: TabModel[],
-		/** A callback to be triggered when the user clicks window close */
-		onCloseClick: () => void,
-	}
+	props : { window: WindowModel , }
 ) => {
 	const [isHover, setIsHover] = useState(false);
 	const handleMouseEnter = () => setIsHover(true);
@@ -77,7 +68,7 @@ const Window = (
 						{props.window.name != "" &&
 							`${props.window.name} - ` }
 						<span className="text-muted">
-							{props.tabs.length} tabs
+							{props.window.tabs.length} tabs
 						</span>
 					</Col>
 					<Col sm="auto" className='p-0'>
@@ -98,7 +89,7 @@ const Window = (
 								</Dropdown.Menu>
 							</Dropdown>
 							{/* For safety, don't allow deleting rolled up windows */}
-							{isRolledUp || <Trash onClick={props.onCloseClick}/>}
+								{isRolledUp || <Trash onClick={() => WindowManager.closeWindow(props.window.id)}/>}
 						</div>
 					</Col>
 				</Row>
@@ -109,14 +100,14 @@ const Window = (
 					<ReactSortable
 						id={props.window.id.toString()}
 						// @ts-ignore
-						list={props.tabs}
+						list={props.window.tabs}
 						// Normally you'd use a state hook and pass "setState" here, but using a state hook interferes with
 						// re-rendering due to out-of band tab changes.
 						setList={() => {}}
 						animation={200}
 						onEnd={onDragEnd}
 					>
-						{props.tabs.map((tab) => (
+						{props.window.tabs.map((tab) => (
 							<Tab
 								key={tab.id}
 								tab={tab}

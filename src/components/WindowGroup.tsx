@@ -62,12 +62,7 @@ export default observer((
 			{ isRolledUp ||
 				<Card.Body>
 					{props.windowGroup.windows.map(w => (
-						<WindowComponent
-							window={w}
-							tabs={w.tabs}
-							key={w.id}
-							onCloseClick={() => WindowManager.closeWindow(w.id)}
-							/>
+						<WindowComponent window={w} key={w.id}/>
 					))}
 				</Card.Body>
 			}
