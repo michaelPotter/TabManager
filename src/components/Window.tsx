@@ -14,14 +14,12 @@ import {
 	MdArrowDropDown,
 	MdArrowRight,
 } from "react-icons/md";
-import {
-	FaEllipsisV,
-} from "react-icons/fa";
 
 import WindowStore from './state/WindowStore';
 import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
 import Tab from './Tab.jsx';
 import { Trash } from './Icons';
+import CustomDropdownToggle from './lib/CustomDropdownToggle';
 
 import type TabModel from '../js/model/tab/Tab';
 import type WindowModel from '../js/model/window/Window';
@@ -70,78 +68,68 @@ const Window = (
 	let RollupArrow = store.areTabsRolledUp ? MdArrowRight : MdArrowDropDown;
 
 	return (
-		<>
-			<ReactSortable
-				id={props.window.id.toString()}
-				className={`window ${windowClass}`}
-				// @ts-ignore
-				list={props.tabs}
-				// Normally you'd use a state hook and pass "setState" here, but using a state hook interferes with
-				// re-rendering due to out-of band tab changes.
-				setList={() => {}}
-				animation={200}
-				onEnd={onDragEnd}
-			>
+		<div className={`window ${windowClass}`}>
+			<Container fluid>
+				<Row>
+					<Col>
+						<RollupArrow onClick={store.toggleTabsRolledUp} />
+						{props.window.name != "" &&
+							`${props.window.name} - ` }
+						<span className="text-muted">
+							{props.tabs.length} tabs
+						</span>
+					</Col>
+					<Col sm="auto" className='p-0'>
+						<div className="float-end"
+							 // Without this, the icon buttons increase the size of the tab line
+							 style={{ maxHeight: "24px" }} >
+							{/* TODO size/align the ellipse a lil better */}
+							{/* FIXME the dropdown hangs off the side */}
+							{/* TODO since this component can be displayed in different contexts now (all tabs vs window groups) the dropdown menu should be configurable based on context. E.g. in the window groups page, the dropdown should include "remove from group" */}
+							<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
+								<CustomDropdownToggle
+									title={`Actions for window`}/>
+								<Dropdown.Menu className="shadow-sm">
+									<EditWindowModalButton window={props.window}/>
+								</Dropdown.Menu>
+							</Dropdown>
+							{/* For safety, don't allow deleting rolled up windows */}
+							{store.areTabsRolledUp || <Trash onClick={props.onCloseClick}/>}
+						</div>
+					</Col>
+				</Row>
+			</Container>
 
-				<Container fluid>
-					<Row>
-						<Col>
-							<RollupArrow onClick={store.toggleTabsRolledUp} />
-							{props.window.name != "" &&
-								`${props.window.name} - ` }
-							<span className="text-muted">
-								{props.tabs.length} tabs
-							</span>
-						</Col>
-						<Col sm="auto" className='p-0'>
-							<div className="float-end"
-								 // Without this, the icon buttons increase the size of the tab line
-								 style={{ maxHeight: "24px" }} >
-								{/* TODO size/align the ellipse a lil better */}
-								{/* FIXME the dropdown hangs off the side */}
-								{/* TODO since this component can be displayed in different contexts now (all tabs vs window groups) the dropdown menu should be configurable based on context. E.g. in the window groups page, the dropdown should include "remove from group" */}
-								<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
-									<Dropdown.Toggle
-										as={CustomDropdownToggle}
-										variant="icon"
-										className="dropdown-no-caret" // This class doens't exist in this code base... but maybe that would be a better approach
-										title={`Actions for window`}>
-									</Dropdown.Toggle>
-									<Dropdown.Menu className="shadow-sm">
-										<EditWindowModalButton window={props.window}/>
-									</Dropdown.Menu>
-								</Dropdown>
-								<Trash onClick={props.onCloseClick}/>
-							</div>
-						</Col>
-					</Row>
-				</Container>
-
-
-				<> {
-					store.areTabsRolledUp || props.tabs.map((tab) => (
-						<Tab
-							key={tab.id}
-							tab={tab}
-							mainClick={() => tab.focus()}
-							trashClick={() => tab.close()}
-							/>
-					))
-				} </>
-			</ReactSortable>
-			<hr/>
-		</>
+			{
+				store.areTabsRolledUp
+				||
+				<>
+					<ReactSortable
+						id={props.window.id.toString()}
+						// @ts-ignore
+						list={props.tabs}
+						// Normally you'd use a state hook and pass "setState" here, but using a state hook interferes with
+						// re-rendering due to out-of band tab changes.
+						setList={() => {}}
+						animation={200}
+						onEnd={onDragEnd}
+					>
+						{props.tabs.map((tab) => (
+							<Tab
+								key={tab.id}
+								tab={tab}
+								mainClick={() => tab.focus()}
+								trashClick={() => tab.close()}
+								/>
+						))}
+					</ReactSortable>
+				<hr/>
+				</>
+			}
+		</div>
 	);
 }
 export default observer(Window);
-
-// @ts-ignore
-const CustomDropdownToggle = React.forwardRef(({ children, onClick }, ref) => (
-	<FaEllipsisV
-		onClick={onClick}
-		className="button-icon material-icons window-edit-button"
-	/>
-));
 
 /** This component handles the button and modal for editing a window. */
 const EditWindowModalButton = (props : {
