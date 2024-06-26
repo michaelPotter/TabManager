@@ -52,7 +52,7 @@ export default observer((
 										<Dropdown.Item>TODO Move to Archive</Dropdown.Item>
 										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
 											// TODO it might be better to open a confirm modal instead.
-											window.alert("Cannot delete a window group with windows in it.") :
+											window.alert("Cannot delete a window group with windows in it. Please close or remove them.") :
 											WindowGroupStore.deleteWindowGroup(props.windowGroup.name)}>
 											Delete this window group
 										</Dropdown.Item>
@@ -68,7 +68,18 @@ export default observer((
 			{ isRolledUp ||
 				<Card.Body>
 					{props.windowGroup.windows.map(w => (
-						<WindowComponent window={w} key={w.id}/>
+						<WindowComponent
+							window={w}
+							key={w.id}
+							dropdownMenu={
+								<Dropdown.Menu className="shadow-sm">
+									{/* TODO should we still include the edit option here? */}
+									<Dropdown.Item onClick={() => WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)}>
+										Remove from group
+									</Dropdown.Item>
+								</Dropdown.Menu>
+							}
+						/>
 					))}
 				</Card.Body>
 			}

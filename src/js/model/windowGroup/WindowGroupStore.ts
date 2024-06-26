@@ -26,6 +26,7 @@ class WindowGroupStore {
 		this.windowGroups = await WindowGroupBuilder.getAll();
 	}
 
+	// FIXME we should prevent the same window from being added twice
 	addWindowToGroup = (window: Window, groupName: string) => {
 		this.windowGroups.find(wg => wg.name === groupName)?.windows.push(window)
 		this.#persist();
@@ -42,6 +43,14 @@ class WindowGroupStore {
 
 	deleteWindowGroup = (groupName: string) => {
 		this.windowGroups = this.windowGroups.filter(wg => wg.name !== groupName);
+		this.#persist();
+	}
+
+	removeWindowFromGroup = (window: Window, groupName: string) => {
+		const group = this.windowGroups.find(wg => wg.name === groupName);
+		if (group) {
+			group.windows = group.windows.filter(w => w.id !== window.id);
+		}
 		this.#persist();
 	}
 

@@ -47,7 +47,10 @@ function onDragEnd(
  * Represents a window.
  */
 const Window = (
-	props : { window: WindowModel , }
+	props : {
+		window: WindowModel,
+		dropdownMenu?: JSX.Element
+	}
 ) => {
 	const [isHover, setIsHover] = useState(false);
 	const handleMouseEnter = () => setIsHover(true);
@@ -83,9 +86,11 @@ const Window = (
 							<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
 								<CustomDropdownToggle
 									title={`Actions for window`}/>
-								<Dropdown.Menu className="shadow-sm">
-									<EditWindowModalButton window={props.window}/>
-								</Dropdown.Menu>
+								{props.dropdownMenu ||
+									<Dropdown.Menu className="shadow-sm">
+										<EditWindowModalButton window={props.window}/>
+									</Dropdown.Menu>
+								}
 							</Dropdown>
 							{/* For safety, don't allow deleting rolled up windows */}
 								{isRolledUp || <Trash onClick={() => WindowManager.closeWindow(props.window.id)}/>}
