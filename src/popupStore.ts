@@ -1,6 +1,6 @@
 import { observable, configure, action, flow, makeObservable } from "mobx";
 
-type Page = "alltabs" | "archive" | "active_groups"
+export type Page = "alltabs" | "archive" | "active_groups"
 
 class PopupStore {
 	page: Page = "alltabs";

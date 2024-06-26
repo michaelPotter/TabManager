@@ -6,7 +6,7 @@ import _ from 'lodash';
 import Window from './js/model/window/Window';
 import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
-import PopupStore from './popupStore';
+import PopupStore, { Page } from './popupStore';
 import WindowGroupStore from './js/model/windowGroup/WindowGroupStore';
 
 // Pull in the styles ...
@@ -17,14 +17,20 @@ const App = observer(() => {
 	let windowsMap = WindowManager.windows;
 	let windows = Object.values(windowsMap).sort(Window.accessCompare);
 
+	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
+		<a onClick={() => PopupStore.setPage(key)}>
+			{PopupStore.page === key && <b>{text}</b> || text}
+		</a>
+	)
+
 	return (
 		<>
 			<div id="header">
-				<a onClick={() => PopupStore.setPage("alltabs")}>All Tabs</a>
+				<QuickLink page="alltabs" text="All Tabs"/>
 				{" | "}
-				<a onClick={() => PopupStore.setPage("active_groups")}>Active Groups</a>
+				<QuickLink page="active_groups" text="Active Groups"/>
 				{" | "}
-				<a onClick={() => PopupStore.setPage("archive")}>Archive</a>
+				<QuickLink page="archive" text="Archive"/>
 				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 			</div>
