@@ -14,6 +14,7 @@ class WindowGroupStore {
 			windowGroups: observable,
 			addWindowToGroup: action,
 			addWindowToNewGroup: action,
+			deleteWindowGroup: action,
 			_init: action,
 		});
 
@@ -36,6 +37,11 @@ class WindowGroupStore {
 				.withWindow(window)
 				.build()
 		);
+		this.#persist();
+	}
+
+	deleteWindowGroup = (groupName: string) => {
+		this.windowGroups = this.windowGroups.filter(wg => wg.name !== groupName);
 		this.#persist();
 	}
 

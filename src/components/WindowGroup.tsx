@@ -12,6 +12,7 @@ import WindowGroup from '../js/model/windowGroup/WindowGroup';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';
+import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
 
 /**
  * WindowGroup
@@ -49,7 +50,12 @@ export default observer((
 									<Dropdown.Menu className="shadow-sm">
 										<Dropdown.Item>TODO Rename</Dropdown.Item>
 										<Dropdown.Item>TODO Move to Archive</Dropdown.Item>
-										<Dropdown.Item>TODO Delete this window group (TODO popup an are you sure? message)</Dropdown.Item>
+										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
+											// TODO it might be better to open a confirm modal instead.
+											window.alert("Cannot delete a window group with windows in it.") :
+											WindowGroupStore.deleteWindowGroup(props.windowGroup.name)}>
+											Delete this window group
+										</Dropdown.Item>
 									</Dropdown.Menu>
 								</Dropdown>
 								{/* For safety, don't allow deleting rolled up windows */}
