@@ -4,8 +4,9 @@ import { observer } from "mobx-react";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
 import classnames from 'classnames';
+
+import TabModel from '../js/model/tab/Tab';
 import {Trash} from './Icons';
 
 /*
@@ -14,7 +15,13 @@ import {Trash} from './Icons';
  *  - row middle click
  *  - container tab color
  */
-export default observer(function Tab(props) {
+export default observer(function Tab(
+	props : {
+		tab: TabModel,
+		mainClick: () => void,
+		trashClick: () => void,
+	}
+) {
 	const [isBookmarked, setBookmarked] = useState(false);
 	const [tabContext, setTabContext] = useState({});
 	props.tab.isBookmarked().then(setBookmarked);
@@ -22,7 +29,7 @@ export default observer(function Tab(props) {
 	// props.tab.get_container().then(setTabContext);
 	return (
 		<div
-			id={props.tab.id}
+			id={(props.tab.id ?? -1).toString()}
 			className={classnames("tab", {"activeTab":props.tab.active})}
 		>
 
@@ -51,7 +58,11 @@ export default observer(function Tab(props) {
 	)
 });
 
-function Star(props) {
+function Star(
+	props : {
+		filled: boolean,
+	}
+) {
 	if (props.filled) {
 		return <i className="material-icons star star_filled">star</i>
 	} else {
@@ -59,7 +70,7 @@ function Star(props) {
 	}
 }
 
-function ContextMarker(props) {
+function ContextMarker(props: { context: { color?: string; }; }) {
 	// Note: props.context has a lot more props that could be useful... we
 	// could render the shape and color of the container icon, and also have
 	// the container name in a hover-over
@@ -73,8 +84,11 @@ function ContextMarker(props) {
 	);
 }
 
-function Favicon(props) {
-	let re_avoid = /^chrome:\/\/.*\.svg$/
-	let src = re_avoid.test(props.src) ? "undefined" : props.src
+const FAVICON_RE_AVOID = /^chrome:\/\/.*\.svg$/
+function Favicon(props: { src?: string; }) {
+	if (!props.src) {
+		return null;
+	}
+	let src = FAVICON_RE_AVOID.test(props.src) ? "undefined" : props.src
 	return <img src={src} className="favicon"/>
 }

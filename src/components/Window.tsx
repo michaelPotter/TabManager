@@ -12,13 +12,12 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { ReactSortable } from 'react-sortablejs';
 
 import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
-import Tab from './Tab.jsx';
+import Tab from './Tab';
 import { Trash } from './Icons';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';
 import WindowManager from '../js/model/window/WindowManager';
 
-import type TabModel from '../js/model/tab/Tab';
 import type WindowModel from '../js/model/window/Window';
 
 // TODO this should probably go somewhere else??
