@@ -99,6 +99,7 @@ const Window = (
 								 style={{ maxHeight: "24px" }} >
 								{/* TODO size/align the ellipse a lil better */}
 								{/* FIXME the dropdown hangs off the side */}
+								{/* TODO since this component can be displayed in different contexts now (all tabs vs window groups) the dropdown menu should be configurable based on context. E.g. in the window groups page, the dropdown should include "remove from group" */}
 								<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
 									<Dropdown.Toggle
 										as={CustomDropdownToggle}
@@ -175,7 +176,7 @@ const EditWindowModalButton = (props : {
 
 	return (
 		<>
-			<Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
+			<Dropdown.Item onClick={handleShow}>Edit Window</Dropdown.Item>
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>

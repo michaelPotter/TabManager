@@ -42,9 +42,9 @@ const App = observer(() => {
 			{ PopupStore.page == "active_groups" &&
 					<div>
 						<p>{WindowGroupStore.windowGroups.length == 0 && "(no groups)" || "Groups:"}</p>
-						{WindowGroupStore.windowGroups.map(g => (<>
+						{WindowGroupStore.windowGroups.map(g => (
 							<WindowGroupComponent key={g.name} windowGroup={g}/>
-						</>))}
+						))}
 					</div>
 			}
 			{ PopupStore.page == "archive" &&

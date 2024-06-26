@@ -16,7 +16,7 @@ export default observer((
 	return (
 		// TODO add rollup support
 		<>
-			<p key="g.name">{props.windowGroup.name}</p>
+			<p>{props.windowGroup.name}</p>
 			{props.windowGroup.windows.map(w => (
 				<WindowComponent
 					window={w}

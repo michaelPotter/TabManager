@@ -49,6 +49,10 @@ class WindowManager {
         });
     }
 
+    getWindowById(windowId: number): Window|undefined {
+        return this._windows[windowId];
+    }
+
     /**
      * Closes the given window.
      */

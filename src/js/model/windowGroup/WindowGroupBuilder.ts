@@ -1,5 +1,6 @@
 import Window from "../window/Window";
-import WindowGroup from "./WindowGroup";
+import WindowManager from "../window/WindowManager";
+import WindowGroup, { SerializedWindowGroup } from "./WindowGroup";
 
 export default class WindowGroupBuilder {
 
@@ -7,12 +8,37 @@ export default class WindowGroupBuilder {
 		// TODO implemente persistence/hydration
 		// TODO something still needs to call this... not sure what
 		let data = await browser.storage.local.get("windowGroups");
-		return [];
+		let windowGroups: WindowGroup[] = data.windowGroups.map((wg: SerializedWindowGroup) => {
+			return {
+				name: wg.name,
+				windows: wg.windows.map(wid => {
+					let window = WindowManager.getWindowById(wid)
+					if (window == undefined) {
+						console.error(`Window with id [${wid}] was expected in window group [${wg.name}] but not found`);
+					}
+					return window;
+				})
+			}
+		});
+		return windowGroups
 	}
 
 	static new(name: string): _windowGroupBuilder {
 		let builder = new _windowGroupBuilder(name);
 		return builder;
+	}
+
+	static flattenWindowGroup(windowGroup: WindowGroup): SerializedWindowGroup {
+		return {
+			name: windowGroup.name,
+			windows: windowGroup.windows.map(w => w.id),
+		};
+	}
+
+	static async storeAllWindowGroups(windowGroups: WindowGroup[]) {
+		await browser.storage.local.set({
+			windowGroups: windowGroups.map(WindowGroupBuilder.flattenWindowGroup)
+		});
 	}
 	
 }

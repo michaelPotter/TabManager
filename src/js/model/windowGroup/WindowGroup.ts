@@ -19,14 +19,12 @@ export default class WindowGroup {
 	get windows() { return this._windows; }
 	set windows(windows: Window[]) { this._windows = windows; }
 
-	static async inflate(serialized: SerializedWindowGroup): Promise<WindowGroup> {
-		return new WindowGroup(); // TODO
-	}
 }
 
 export type SerializedWindowGroup = {
 	name: string;
 	/** A list of window IDs. */
 	// TODO think this through. Window IDs work for active windows, but archived windows will need more info... since we can't just use the ID to get the window data. Like maybe archived windowgroups need to have a list of windowobjects, that each need to have a list of tabs.
-	windows: string[];
+	windows: number[];
 }
+

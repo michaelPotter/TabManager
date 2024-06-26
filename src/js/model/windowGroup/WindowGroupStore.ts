@@ -1,6 +1,7 @@
 import { observable, action, makeObservable } from "mobx";
 
 import Window from "../window/Window";
+import WindowManager from "../window/WindowManager";
 import WindowGroup from "./WindowGroup";
 import WindowGroupBuilder from "./WindowGroupBuilder";
 
@@ -11,15 +12,22 @@ class WindowGroupStore {
 	constructor() {
 		makeObservable(this, {
 			windowGroups: observable,
-			setWindowGroups: action,
 			addWindowToGroup: action,
+			addWindowToNewGroup: action,
+			_init: action,
 		});
+
+		this._init();
 	}
 
-	setWindowGroups = (windowGroups: WindowGroup[]) => this.windowGroups = windowGroups
+	async _init() {
+		await WindowManager.waitForPopulated();
+		this.windowGroups = await WindowGroupBuilder.getAll();
+	}
 
 	addWindowToGroup = (window: Window, groupName: string) => {
-		return this.windowGroups.find(wg => wg.name === groupName)?.windows.push(window)
+		this.windowGroups.find(wg => wg.name === groupName)?.windows.push(window)
+		this.#persist();
 	}
 
 	addWindowToNewGroup = (window: Window, groupName: string) => {
@@ -28,6 +36,11 @@ class WindowGroupStore {
 				.withWindow(window)
 				.build()
 		);
+		this.#persist();
+	}
+
+	#persist() {
+		WindowGroupBuilder.storeAllWindowGroups(this.windowGroups);
 	}
 }
 
