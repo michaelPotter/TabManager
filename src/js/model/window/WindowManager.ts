@@ -6,7 +6,6 @@ import _ from 'lodash';
 import TabBuilder from '../tab/TabBuilder';
 
 class WindowManager {
-    private changeCallback: () => void = () => {};
     private _windows: Record<number, Window> = {};
     private state: "pending"|"finished" = "pending";
 
@@ -59,13 +58,11 @@ class WindowManager {
     async closeWindow(windowId: number): Promise<void> {
         delete this._windows[windowId];
         browser.windows.remove(windowId);
-        this.changeCallback();
     }
 
 ////////////////////////////////////////////////////////////////////////
 //                             CALLBACKS                              //
 ////////////////////////////////////////////////////////////////////////
-
 
     private _onTabCreated: Parameters<typeof browser.tabs.onCreated.addListener>[0]
     = async (browserTab) => {
@@ -82,15 +79,12 @@ class WindowManager {
         const window = this._windows[activeInfo.windowId];
         window.getActiveTab()?.setActive(false);
         window.getTabById(activeInfo.tabId)?.setActive(true);
-
-        this.changeCallback();
     }
 
     private _onTabUpdated: Parameters<typeof browser.tabs.onUpdated.addListener>[0]
     = async (tabId, changeInfo, tab) => {
         if (tab.windowId) {
             this._windows[tab.windowId]?.updateTab(tab);
-            this.changeCallback();
         }
     }
 
@@ -100,20 +94,11 @@ class WindowManager {
     private _onTabMoved: Parameters<typeof browser.tabs.onMoved.addListener>[0]
     = async (tabId, {windowId, fromIndex, toIndex}) => {
         this._windows[windowId].moveTab(tabId, fromIndex, toIndex);
-        this.changeCallback();
     }
 
     private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
     = async (tabId, removeInfo) => {
         this._windows[removeInfo.windowId].removeTab(tabId)
-        this.changeCallback();
-    }
-
-    /**
-     * Set the callback function. We'll call this after we get notified of tab changes.
-     */
-    onTabChange(f: () => void) {
-        this.changeCallback = f;
     }
 
     get windows() {

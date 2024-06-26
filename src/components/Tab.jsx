@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { observer } from "mobx-react";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -13,7 +14,7 @@ import {Trash} from './Icons';
  *  - row middle click
  *  - container tab color
  */
-export default function Tab(props) {
+export default observer(function Tab(props) {
 	const [isBookmarked, setBookmarked] = useState(false);
 	const [tabContext, setTabContext] = useState({});
 	props.tab.isBookmarked().then(setBookmarked);
@@ -48,7 +49,7 @@ export default function Tab(props) {
 			</Container>
 		</div>
 	)
-}
+});
 
 function Star(props) {
 	if (props.filled) {

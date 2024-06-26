@@ -16,7 +16,9 @@ declare type TabExtraData = {
 
 
 export default class Tab {
-	private tab: browser.tabs.Tab;
+	tab: browser.tabs.Tab;
+	// This is tracked differently from other properties for mobx support.
+	active: boolean = false;
 
 	/**
 	 * wrapper class for browser.tabs
@@ -25,6 +27,8 @@ export default class Tab {
 	 */
 	constructor(tab: browser.tabs.Tab, data?: TabExtraData) {
 		this.tab = tab;
+		if (tab.active) this.setActive(true);
+
 	}
 
 	/**
@@ -139,6 +143,7 @@ export default class Tab {
 	 * Convenience method for optional chaining
 	 */
 	setActive(active: boolean) {
+		this.tab.active = active;
 		this.active = active;
 	}
 
@@ -161,7 +166,7 @@ export default class Tab {
 	get windowId()        { return this.tab.windowId; }
 	get openerTabId()     { return this.tab.openerTabId; }
 	get highlighted()     { return this.tab.highlighted; }
-	get active()          { return this.tab.active; }
+	// get active()          { return this.tab.active; }
 	get pinned()          { return this.tab.pinned; }
 	get audible()         { return this.tab.audible; }
 	get discarded()       { return this.tab.discarded; }
@@ -181,7 +186,7 @@ export default class Tab {
 	set windowId(value)        { this.tab.windowId = value; }
 	set openerTabId(value)     { this.tab.openerTabId = value; }
 	set highlighted(value)     { this.tab.highlighted = value; }
-	set active(value)          { this.tab.active = value; }
+	// set active(value)          { this.tab.active = value; }
 	set pinned(value)          { this.tab.pinned = value; }
 	set audible(value)         { this.tab.audible = value; }
 	set discarded(value)       { this.tab.discarded = value; }

@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 
 import _ from 'lodash';
 
-import Window from './js/model/window/Window';
 import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
 import PopupStore, { Page } from './popupStore';
@@ -61,20 +60,13 @@ const App = observer(() => {
 })
 
 document.addEventListener('DOMContentLoaded', async function() {
-	/*
-	 * Create a closure to re-render, allowing access the window/tab data structures
-	 */
-	function render() {
-		ReactDOM.render(<App/>, document.getElementById('main'));
-	}
+	// Render the app
+	ReactDOM.render(<App/>, document.getElementById('main'));
 
+	// Set up a callback to trigger a re-render when we get the initial data.
 	WindowManager.waitForPopulated().then(() => {
 		PopupStore.setWindows(Object.values(WindowManager.windows));
 	})
-
-	WindowManager.onTabChange(render);
-
-	render();
 });
 
 function open_in_window() {
