@@ -3,7 +3,7 @@ import { observable, configure, action, flow, makeObservable } from "mobx";
 export type Page = "alltabs" | "archive" | "active_groups"
 
 class PopupStore {
-	page: Page = "alltabs";
+	page: Page = window.sessionStorage.getItem("popup-tab") as Page ?? "alltabs";
 
 	constructor() {
 		makeObservable(this, {
@@ -12,7 +12,10 @@ class PopupStore {
 		});
 	}
 
-	setPage = (p: Page) => this.page = p
+	setPage = (p: Page) => {
+		window.sessionStorage.setItem("popup-tab", p);
+		return this.page = p
+	}
 }
 
 export default new PopupStore();
