@@ -7,7 +7,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import WindowComponent from './Window';
-import WindowManager from '../js/model/window/WindowManager';
 import WindowGroup from '../js/model/windowGroup/WindowGroup';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
@@ -48,7 +47,7 @@ export default observer((
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>
 									<Dropdown.Menu className="shadow-sm">
-										<Dropdown.Item>TODO Rename</Dropdown.Item>
+										<Dropdown.Item>TODO Rename group</Dropdown.Item>
 										<Dropdown.Item>TODO Move to Archive</Dropdown.Item>
 										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
 											// TODO it might be better to open a confirm modal instead.
@@ -75,7 +74,7 @@ export default observer((
 								<Dropdown.Menu className="shadow-sm">
 									{/* TODO should we still include the edit option here? */}
 									<Dropdown.Item onClick={() => WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)}>
-										Remove from group
+										Remove window from group
 									</Dropdown.Item>
 								</Dropdown.Menu>
 							}
