@@ -87,6 +87,9 @@ const Window = (
 							{/* TODO size/align the ellipse a lil better */}
 							{/* FIXME the dropdown hangs off the side */}
 							{/* TODO since this component can be displayed in different contexts now (all tabs vs window groups) the dropdown menu should be configurable based on context. E.g. in the window groups page, the dropdown should include "remove from group" */}
+							{/* TODO look at this...
+									https://mdbootstrap.com/docs/react/extended/dropdown-multilevel/#
+									it'd be nice if there was an "add to group" option, that would open a sub-menu with all the groups and/or an option to add a new group. */}
 							<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
 								<CustomDropdownToggle
 									title={`Actions for window`}/>
