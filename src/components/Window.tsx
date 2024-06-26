@@ -20,6 +20,7 @@ import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
 import Tab from './Tab.jsx';
 import { Trash } from './Icons';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
+import RollupArrow from './lib/RollupArrow';
 
 import type TabModel from '../js/model/tab/Tab';
 import type WindowModel from '../js/model/window/Window';
@@ -61,18 +62,18 @@ const Window = (
 	const [isHover, setIsHover] = useState(false);
 	const handleMouseEnter = () => setIsHover(true);
 	const handleMouseLeave = () => setIsHover(false);
-	const store = useMemo(() => new WindowStore(), []);
+
+	const [isRolledUp, setIsRolledUp] = useState(false);
+	const toggleIsRolledUp = () => setIsRolledUp(!isRolledUp);
 
 	const windowClass = isHover ? "window_hover" : ""
-
-	let RollupArrow = store.areTabsRolledUp ? MdArrowRight : MdArrowDropDown;
 
 	return (
 		<div className={`window ${windowClass}`}>
 			<Container fluid>
 				<Row>
 					<Col>
-						<RollupArrow onClick={store.toggleTabsRolledUp} />
+						<RollupArrow closed={isRolledUp} onClick={toggleIsRolledUp} />
 						{props.window.name != "" &&
 							`${props.window.name} - ` }
 						<span className="text-muted">
@@ -94,15 +95,13 @@ const Window = (
 								</Dropdown.Menu>
 							</Dropdown>
 							{/* For safety, don't allow deleting rolled up windows */}
-							{store.areTabsRolledUp || <Trash onClick={props.onCloseClick}/>}
+							{isRolledUp || <Trash onClick={props.onCloseClick}/>}
 						</div>
 					</Col>
 				</Row>
 			</Container>
 
-			{
-				store.areTabsRolledUp
-				||
+			{ isRolledUp ||
 				<>
 					<ReactSortable
 						id={props.window.id.toString()}

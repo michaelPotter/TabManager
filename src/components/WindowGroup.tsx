@@ -5,16 +5,13 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {
-	MdArrowDropDown,
-	MdArrowRight,
-} from "react-icons/md";
 
 import WindowComponent from './Window';
 import WindowManager from '../js/model/window/WindowManager';
 import WindowGroup from '../js/model/windowGroup/WindowGroup';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
+import RollupArrow from './lib/RollupArrow';
 
 /**
  * WindowGroup
@@ -24,8 +21,9 @@ export default observer((
 		windowGroup: WindowGroup,
 	}
 ) => {
-	// TODO implement rollup
-	// let RollupArrow = store.areTabsRolledUp ? MdArrowRight : MdArrowDropDown;
+	const [isRolledUp, setIsRolledUp] = useState(false);
+	const toggleIsRolledUp = () => setIsRolledUp(!isRolledUp);
+
 	return (
 		// TODO There's a lot of padding inside the card, seems like it'd be better with more padding around the card instead.
 		<Card className="mb-3">
@@ -33,7 +31,7 @@ export default observer((
 				<Container fluid>
 					<Row>
 						<Col>
-							{/* <RollupArrow onClick={store.toggleTabsRolledUp} /> */}
+							<RollupArrow closed={isRolledUp} onClick={toggleIsRolledUp} />
 							{props.windowGroup.name} {" - "}
 							<span className="text-muted">
 							{props.windowGroup.windows.length} windows
@@ -61,16 +59,18 @@ export default observer((
 					</Row>
 				</Container>
 			</Card.Header>
-			<Card.Body>
-				{props.windowGroup.windows.map(w => (
-					<WindowComponent
-						window={w}
-						tabs={w.tabs}
-						key={w.id}
-						onCloseClick={() => WindowManager.closeWindow(w.id)}
-						/>
-				))}
-			</Card.Body>
+			{ isRolledUp ||
+				<Card.Body>
+					{props.windowGroup.windows.map(w => (
+						<WindowComponent
+							window={w}
+							tabs={w.tabs}
+							key={w.id}
+							onCloseClick={() => WindowManager.closeWindow(w.id)}
+							/>
+					))}
+				</Card.Body>
+			}
 		</Card>
 	)
 });
