@@ -14,8 +14,10 @@ import './scss/root.scss';
 import WindowGroupComponent from './components/WindowGroup';
 
 const App = observer(() => {
-	let windowsMap = WindowManager.windows;
-	let windows = Object.values(windowsMap).sort(Window.accessCompare);
+	let windows = _.chain(PopupStore.windows)
+				.sortBy("last_accessed")
+				.reverse()
+				.value();
 
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
 		<a onClick={() => PopupStore.setPage(key)}>
@@ -59,14 +61,16 @@ const App = observer(() => {
 })
 
 document.addEventListener('DOMContentLoaded', async function() {
-	await WindowManager.waitForPopulated();
-
 	/*
 	 * Create a closure to re-render, allowing access the window/tab data structures
 	 */
 	function render() {
 		ReactDOM.render(<App/>, document.getElementById('main'));
 	}
+
+	WindowManager.waitForPopulated().then(() => {
+		PopupStore.setWindows(Object.values(WindowManager.windows));
+	})
 
 	WindowManager.onTabChange(render);
 

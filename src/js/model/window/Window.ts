@@ -76,6 +76,7 @@ export default class Window {
 	 * Returns an int < 0 if a was accessed more recently than b,
 	 * returns > 0 if b more recently than a,
 	 * returns 0 if we can't tell
+	 * @deprecated
 	 */
 	static accessCompare(a: Window, b: Window) {
 		var atime = a.last_accessed;
