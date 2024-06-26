@@ -11,12 +11,13 @@ export default class WindowGroupBuilder {
 		let windowGroups: WindowGroup[] = data.windowGroups.map((wg: SerializedWindowGroup) => {
 			return {
 				name: wg.name,
-				windows: wg.windows.map(wid => {
+				windows: wg.windows.flatMap(wid => {
 					let window = WindowManager.getWindowById(wid)
 					if (window == undefined) {
-						console.error(`Window with id [${wid}] was expected in window group [${wg.name}] but not found`);
+						console.warn(`Window with id [${wid}] was expected in window group [${wg.name}] but not found`);
+						return [];
 					}
-					return window;
+					return [window];
 				})
 			}
 		});
