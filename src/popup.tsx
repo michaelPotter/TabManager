@@ -5,12 +5,12 @@ import _ from 'lodash';
 
 import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
+import WindowGroupComponent from './components/WindowGroup';
 import PopupStore, { Page } from './popupStore';
 import WindowGroupStore from './js/model/windowGroup/WindowGroupStore';
 
 // Pull in the styles ...
 import './scss/root.scss';
-import WindowGroupComponent from './components/WindowGroup';
 
 const App = observer(() => {
 	let windows = _.chain(PopupStore.windows)
@@ -36,6 +36,7 @@ const App = observer(() => {
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 			</div>
 			<div id="body">
+			{/* TODO prolly want to split these out into separate components */}
 			{ PopupStore.page == "alltabs" &&
 					windows.map(w =>
 						<WindowComponent window={w} key={w.id}/>
