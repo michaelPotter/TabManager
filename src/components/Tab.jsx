@@ -26,7 +26,7 @@ export default observer(function Tab(props) {
 			className={classnames("tab", {"activeTab":props.tab.active})}
 		>
 
-			<Container fluid>
+			<Container fluid onClick={props.mainClick}>
 			<Row className='p-0'>
 				<Col className='p-0'>
 					<ContextMarker context={tabContext} />
