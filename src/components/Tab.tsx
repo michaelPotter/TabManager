@@ -8,6 +8,7 @@ import classnames from 'classnames';
 
 import TabModel from '../js/model/tab/Tab';
 import {Trash} from './Icons';
+import Favicon from './lib/Favicon';
 
 /*
  * A Tab component.

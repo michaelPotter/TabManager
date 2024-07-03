@@ -9,9 +9,11 @@ import WindowGroupComponent from './components/WindowGroup';
 import PopupStore, { Page } from './js/appState/PopupStore';
 import WindowStore from './js/appState/WindowStore';
 import WindowGroupStore from './js/appState/WindowGroupStore';
+import ArchivedWindowGroupStore from './js/model/archivedWindowGroup/ArchivedWindowGroupStore';
 
 // Pull in the styles ...
 import './scss/root.scss';
+import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
 
 const App = observer(() => {
 	let windows = _.chain(WindowStore.windows)
@@ -52,9 +54,15 @@ const App = observer(() => {
 					</div>
 			}
 			{ PopupStore.page == "archive" &&
-					<p>
-						The Archive
-					</p>
+				<div>
+					<p> The Archive </p>
+						<p>{ "len: " +
+							ArchivedWindowGroupStore.archivedWindowGroups.length
+						}</p>
+						{ArchivedWindowGroupStore.archivedWindowGroups.map(g => (
+							<ArchivedWindowGroup key={g.name} archivedWindowGroup={g}/>
+						))}
+				</div>
 			}
 			</div>
 		</>

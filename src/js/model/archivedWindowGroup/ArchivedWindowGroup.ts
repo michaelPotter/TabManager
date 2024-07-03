@@ -12,5 +12,6 @@ export type ArchivedWindow = {
 
 export type ArchivedTab = {
 	title: string;
+	favIconUrl?: string;
 	url: string;
 }

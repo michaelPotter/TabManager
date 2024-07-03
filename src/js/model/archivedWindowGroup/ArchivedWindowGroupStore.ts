@@ -4,7 +4,7 @@ import { ArchivedWindowGroup } from "./ArchivedWindowGroup";
 class ArchivedWindowGroupStore {
 	archivedWindowGroups: ArchivedWindowGroup[] = [];
 
-	construtor() {
+	constructor() {
 		makeObservable(this, {
 			archivedWindowGroups: observable,
 			addAWG: action,

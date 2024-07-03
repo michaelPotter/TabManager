@@ -9,6 +9,7 @@ export function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 			name: w.name,
 			tabs: w.tabs.map(t => ({
 				title: t.title ?? t.url ?? "",
+				favIconUrl: t.favIconUrl,
 				url: t.url ?? (() => { throw new Error("Cannot archive a tab without a url"); })(),
 			})),
 		})),
