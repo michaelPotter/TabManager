@@ -83,12 +83,3 @@ function ContextMarker(props: { context: { color?: string; }; }) {
 		</svg>
 	);
 }
-
-const FAVICON_RE_AVOID = /^chrome:\/\/.*\.svg$/
-function Favicon(props: { src?: string; }) {
-	if (!props.src) {
-		return null;
-	}
-	let src = FAVICON_RE_AVOID.test(props.src) ? "undefined" : props.src
-	return <img src={src} className="favicon"/>
-}
