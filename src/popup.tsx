@@ -9,6 +9,7 @@ import PopupStore, { Page } from './js/appState/PopupStore';
 import WindowStore from './js/appState/WindowStore';
 import WindowGroupStore from './js/appState/WindowGroupStore';
 import ArchivedWindowGroupStore from './js/model/archivedWindowGroup/ArchivedWindowGroupStore';
+import type WindowModel from './js/model/window/Window';
 
 // Pull in the styles ...
 import './scss/root.scss';
@@ -42,7 +43,7 @@ const App = observer(() => {
 })
 
 const AllTabs = observer(() => {
-	let windows = _.chain(WindowStore.windows)
+	let windows = _.chain(WindowStore.windows as WindowModel[])
 				.sortBy("last_accessed")
 				.reverse()
 				.value();

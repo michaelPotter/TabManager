@@ -1,6 +1,8 @@
 import TabBuilder from '../model/tab/TabBuilder';
 import WindowStore from './WindowStore';
 
+import type WindowModel from '../model/window/Window';
+
 class BrowserWindowHooks {
 
 	public engageHooks() {
@@ -16,23 +18,24 @@ class BrowserWindowHooks {
 	= async (browserTab) => {
 		const tab = await TabBuilder.createFromBrowserTab(browserTab);
 		if (tab.windowId) {
-			WindowStore._windowsObject[tab.windowId]?.addTab(tab);
+			getWindowById(tab.windowId).addTab(tab);
 		} else {
-			console.warn(`tab.windowId unexpectedly undefined: ${tab}`)
+			console.warn(`Invariant failure: tab.windowId unexpectedly undefined: ${tab}`)
 		}
 	}
 
 	private _onTabActivated: Parameters<typeof browser.tabs.onActivated.addListener>[0]
 	= async (activeInfo) => {
-		const window = WindowStore._windowsObject[activeInfo.windowId];
-		window.getActiveTab()?.setActive(false);
-		window.getTabById(activeInfo.tabId)?.setActive(true);
+		let windowId = activeInfo.windowId;
+		const window = getWindowById(windowId);
+		window?.getActiveTab()?.setActive(false);
+		window?.getTabById(activeInfo.tabId)?.setActive(true);
 	}
 
 	private _onTabUpdated: Parameters<typeof browser.tabs.onUpdated.addListener>[0]
 	= async (tabId, changeInfo, tab) => {
 		if (tab.windowId) {
-			WindowStore._windowsObject[tab.windowId]?.updateTab(tab);
+			getWindowById(tab.windowId)?.updateTab(tab);
 		}
 	}
 
@@ -41,13 +44,23 @@ class BrowserWindowHooks {
 	 */
 	private _onTabMoved: Parameters<typeof browser.tabs.onMoved.addListener>[0]
 	= async (tabId, {windowId, fromIndex, toIndex}) => {
-		WindowStore._windowsObject[windowId].moveTab(tabId, fromIndex, toIndex);
+		getWindowById(windowId)?.moveTab(tabId, fromIndex, toIndex);
 	}
 
 	private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
 	= async (tabId, removeInfo) => {
-		WindowStore._windowsObject[removeInfo.windowId].removeTab(tabId)
+		getWindowById(removeInfo.windowId)?.removeTab(tabId)
 	}
+}
+
+function getWindowById(windowId: number): WindowModel {
+	let window = WindowStore.getWindowById(windowId);
+	if (window == undefined) {
+		let err = `Invariant failure: Window not found for WindowId: [${windowId}]`
+		console.trace(err)
+		throw err;
+	}
+	return window;
 }
 
 export default new BrowserWindowHooks();

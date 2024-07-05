@@ -7,7 +7,8 @@ import WindowBuilder from "../model/window/WindowBuilder";
 
 class WindowStore {
 
-	_windowsObject: Record<number, Window> = {};
+	// Type Window|undefined helps protect from an object miss
+	_windowsObject: Record<number, Window|undefined> = {};
     private state: "pending"|"finished" = "pending";
 
 	constructor() {
@@ -59,13 +60,13 @@ class WindowStore {
 	 */
 	_makeThingsObservable() {
 		Object.values(this._windowsObject).forEach(w => {
-			makeObservable(w, {
+			makeObservable(w as Window, {
 				tabs: observable,
 				removeTab: action,
 				addTab: action,
 				moveTab: action,
 			});
-			w.tabs.forEach(t => {
+			(w as Window).tabs.forEach(t => {
 				makeObservable(t, {
 					tab: observable,
 					active: observable,

@@ -9,7 +9,7 @@ export default class WindowGroupBuilder {
 
 		// Make sure that WindowStore is populated before we try to build window groups
 		await WindowStore.waitForPopulated();
-		let windowGroups: WindowGroup[] = data.windowGroups.map((wg: SerializedWindowGroup) => {
+		let windowGroups: WindowGroup[] = data.windowGroups?.map((wg: SerializedWindowGroup) => {
 			return {
 				name: wg.name,
 				windows: wg.windows.flatMap(wid => {
@@ -21,7 +21,8 @@ export default class WindowGroupBuilder {
 					return [window];
 				})
 			}
-		});
+		}) ?? [];
+
 		return windowGroups
 	}
 
