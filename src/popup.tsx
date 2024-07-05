@@ -15,11 +15,6 @@ import './scss/root.scss';
 import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
 
 const App = observer(() => {
-	let windows = _.chain(WindowStore.windows)
-				.sortBy("last_accessed")
-				.reverse()
-				.value();
-
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
 		<a onClick={() => PopupStore.setPage(key)}>
 			{PopupStore.page === key && <b>{text}</b> || text}
@@ -38,35 +33,53 @@ const App = observer(() => {
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 			</div>
 			<div id="body">
-			{/* TODO prolly want to split these out into separate components */}
-			{ PopupStore.page == "alltabs" &&
-					windows.map(w =>
-						<WindowComponent window={w} key={w.id}/>
-				   )
-			}
-			{ PopupStore.page == "active_groups" &&
-					<div>
-						<p>{WindowGroupStore.windowGroups.length == 0 && "(no groups)" || "Groups:"}</p>
-						{WindowGroupStore.windowGroups.map(g => (
-							<WindowGroupComponent key={g.name} windowGroup={g}/>
-						))}
-					</div>
-			}
-			{ PopupStore.page == "archive" &&
-				<div>
-					<p> The Archive </p>
-						<p>{ "len: " +
-							ArchivedWindowGroupStore.archivedWindowGroups.length
-						}</p>
-						{ArchivedWindowGroupStore.archivedWindowGroups.map(g => (
-							<ArchivedWindowGroup key={g.name} archivedWindowGroup={g}/>
-						))}
-				</div>
-			}
+			{ PopupStore.page == "alltabs" && <AllTabs/> }
+			{ PopupStore.page == "active_groups" && <ActiveGroups/> }
+			{ PopupStore.page == "archive" && <TheArchive/> }
 			</div>
 		</>
 	)
 })
+
+const AllTabs = observer(() => {
+	let windows = _.chain(WindowStore.windows)
+				.sortBy("last_accessed")
+				.reverse()
+				.value();
+
+	return (
+		<>
+			{windows.map(w =>
+				<WindowComponent window={w} key={w.id}/>
+			)}
+		</>
+	)
+})
+
+const ActiveGroups = observer(() => {
+	return (
+		<div>
+			<p>{WindowGroupStore.windowGroups.length == 0 && "(no groups)" || "Groups:"}</p>
+			{WindowGroupStore.windowGroups.map(g => (
+				<WindowGroupComponent key={g.name} windowGroup={g}/>
+			))}
+		</div>
+	)
+});
+
+const TheArchive = observer(() => {
+	return (
+		<div>
+			<p> The Archive </p>
+			<p>{ "len: " +
+				ArchivedWindowGroupStore.archivedWindowGroups.length
+			}</p>
+			{ArchivedWindowGroupStore.archivedWindowGroups.map(g => (
+				<ArchivedWindowGroup key={g.name} archivedWindowGroup={g}/>
+			))}
+		</div>
+	)
+});
 
 document.addEventListener('DOMContentLoaded', async function() {
 	// Render the app
