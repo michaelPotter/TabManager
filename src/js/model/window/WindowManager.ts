@@ -3,21 +3,16 @@
 import Window from './Window';
 import WindowBuilder from './WindowBuilder';
 import _ from 'lodash';
-import TabBuilder from '../tab/TabBuilder';
+import BrowserWindowHooks from '../../appState/BrowserWindowHooks';
 
 class WindowManager {
-    private _windows: Record<number, Window> = {};
+    // TODO move to WindowStore
+    public windows: Record<number, Window> = {};
     private state: "pending"|"finished" = "pending";
 
     constructor() {
         this.populate();
-
-        // Set up callbacks
-        browser.tabs.onCreated.addListener(this._onTabCreated);
-        browser.tabs.onActivated.addListener(this._onTabActivated);
-        browser.tabs.onUpdated.addListener(this._onTabUpdated);
-        browser.tabs.onMoved.addListener(this._onTabMoved);
-        browser.tabs.onRemoved.addListener(this._onTabRemoved);
+        BrowserWindowHooks.engageHooks();
     }
 
     /**
@@ -29,7 +24,7 @@ class WindowManager {
     private async populate() {
         this.state = "pending";
         let windowsList = await WindowBuilder.getAll()
-        this._windows = _.keyBy<Window>(windowsList, w => w.id);
+        this.windows = _.keyBy<Window>(windowsList, w => w.id);
         this.state = "finished";
     }
 
@@ -49,60 +44,15 @@ class WindowManager {
     }
 
     getWindowById(windowId: number): Window|undefined {
-        return this._windows[windowId];
+        return this.windows[windowId];
     }
 
     /**
      * Closes the given window.
      */
     async closeWindow(windowId: number): Promise<void> {
-        delete this._windows[windowId];
+        delete this.windows[windowId];
         browser.windows.remove(windowId);
-    }
-
-////////////////////////////////////////////////////////////////////////
-//                             CALLBACKS                              //
-////////////////////////////////////////////////////////////////////////
-
-    private _onTabCreated: Parameters<typeof browser.tabs.onCreated.addListener>[0]
-    = async (browserTab) => {
-        const tab = await TabBuilder.createFromBrowserTab(browserTab);
-        if (tab.windowId) {
-            this._windows[tab.windowId]?.addTab(tab);
-        } else {
-            console.log(`tab.windowId unexpectedly undefined: ${tab}`)
-        }
-    }
-
-    private _onTabActivated: Parameters<typeof browser.tabs.onActivated.addListener>[0]
-    = async (activeInfo) => {
-        const window = this._windows[activeInfo.windowId];
-        window.getActiveTab()?.setActive(false);
-        window.getTabById(activeInfo.tabId)?.setActive(true);
-    }
-
-    private _onTabUpdated: Parameters<typeof browser.tabs.onUpdated.addListener>[0]
-    = async (tabId, changeInfo, tab) => {
-        if (tab.windowId) {
-            this._windows[tab.windowId]?.updateTab(tab);
-        }
-    }
-
-    /**
-     * When a tab is dragged within the SAME window.
-     */
-    private _onTabMoved: Parameters<typeof browser.tabs.onMoved.addListener>[0]
-    = async (tabId, {windowId, fromIndex, toIndex}) => {
-        this._windows[windowId].moveTab(tabId, fromIndex, toIndex);
-    }
-
-    private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
-    = async (tabId, removeInfo) => {
-        this._windows[removeInfo.windowId].removeTab(tabId)
-    }
-
-    get windows() {
-        return this._windows;
     }
 
 }
