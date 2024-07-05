@@ -6,9 +6,9 @@ import _ from 'lodash';
 import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
 import WindowGroupComponent from './components/WindowGroup';
-import PopupStore, { Page } from './popupStore';
+import PopupStore, { Page } from './js/appState/PopupStore';
 import WindowStore from './js/appState/WindowStore';
-import WindowGroupStore from './js/model/windowGroup/WindowGroupStore';
+import WindowGroupStore from './js/appState/WindowGroupStore';
 
 // Pull in the styles ...
 import './scss/root.scss';

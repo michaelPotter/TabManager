@@ -1,9 +1,9 @@
 import { observable, action, makeObservable } from "mobx";
 
-import Window from "../window/Window";
-import WindowManager from "../window/WindowManager";
-import WindowGroup from "./WindowGroup";
-import WindowGroupBuilder from "./WindowGroupBuilder";
+import Window from "../model/window/Window";
+import WindowManager from "../model/window/WindowManager";
+import WindowGroup from "../model/windowGroup/WindowGroup";
+import WindowGroupBuilder from "../model/windowGroup/WindowGroupBuilder";
 
 class WindowGroupStore {
 

@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ReactSortable } from 'react-sortablejs';
 
-import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
+import WindowGroupStore from '../js/appState/WindowGroupStore';
 import Tab from './Tab';
 import { Trash } from './Icons';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';

@@ -11,7 +11,7 @@ import WindowGroup from '../js/model/windowGroup/WindowGroup';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';
-import WindowGroupStore from '../js/model/windowGroup/WindowGroupStore';
+import WindowGroupStore from '../js/appState/WindowGroupStore';
 
 /**
  * WindowGroup
