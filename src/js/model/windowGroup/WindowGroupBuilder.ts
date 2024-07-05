@@ -1,18 +1,19 @@
+import WindowStore from "../../appState/WindowStore";
 import Window from "../window/Window";
-import WindowManager from "../window/WindowManager";
 import WindowGroup, { SerializedWindowGroup } from "./WindowGroup";
 
 export default class WindowGroupBuilder {
 
 	static async getAll(): Promise<WindowGroup[]> {
-		// TODO implemente persistence/hydration
-		// TODO something still needs to call this... not sure what
 		let data = await browser.storage.local.get("windowGroups");
+
+		// Make sure that WindowStore is populated before we try to build window groups
+		await WindowStore.waitForPopulated();
 		let windowGroups: WindowGroup[] = data.windowGroups.map((wg: SerializedWindowGroup) => {
 			return {
 				name: wg.name,
 				windows: wg.windows.flatMap(wid => {
-					let window = WindowManager.getWindowById(wid)
+					let window = WindowStore.getWindowById(wid)
 					if (window == undefined) {
 						console.warn(`Window with id [${wid}] was expected in window group [${wg.name}] but not found`);
 						return [];

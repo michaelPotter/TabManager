@@ -16,7 +16,6 @@ import { ReactSortable } from 'react-sortablejs';
 // import { Trash } from './Icons';
 import CustomDropdownToggle from '../lib/CustomDropdownToggle';
 import RollupArrow from '../lib/RollupArrow';
-// import WindowManager from '../js/model/window/WindowManager';
 
 import type { ArchivedWindow } from '../../js/model/archivedWindowGroup/ArchivedWindowGroup';
 import ArchivedTab from './ArchivedTab';

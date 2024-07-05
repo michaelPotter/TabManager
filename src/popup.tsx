@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 
 import _ from 'lodash';
 
-import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
 import WindowGroupComponent from './components/WindowGroup';
 import PopupStore, { Page } from './js/appState/PopupStore';
@@ -72,11 +71,6 @@ const App = observer(() => {
 document.addEventListener('DOMContentLoaded', async function() {
 	// Render the app
 	ReactDOM.render(<App/>, document.getElementById('main'));
-
-	// Set up a callback to trigger a re-render when we get the initial data.
-	WindowManager.waitForPopulated().then(() => {
-		WindowStore.setWindows(Object.values(WindowManager.windows));
-	})
 });
 
 function open_in_window() {

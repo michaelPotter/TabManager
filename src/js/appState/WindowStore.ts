@@ -1,22 +1,55 @@
-import { observable, configure, action, flow, makeObservable } from "mobx";
+import { observable, configure, action, flow, makeObservable, runInAction } from "mobx";
 
 import Window from '../../js/model/window/Window';
+import BrowserWindowHooks from './BrowserWindowHooks';
+import _ from 'lodash';
+import WindowBuilder from "../model/window/WindowBuilder";
 
 class WindowStore {
 
-	windows: Window[] = [];
+	_windowsObject: Record<number, Window> = {};
+    private state: "pending"|"finished" = "pending";
 
 	constructor() {
 		makeObservable(this, {
-			windows: observable,
-			setWindows: action,
+			_windowsObject: observable,
 		});
+        BrowserWindowHooks.engageHooks();
+
+        WindowBuilder.getAll()
+			.then(action(windowsList => {
+				this._windowsObject = _.keyBy<Window>(windowsList, w => w.id);
+				this._makeThingsObservable();
+				this.state = "finished"
+			}));
 	}
 
-	setWindows(windows: Window[]) {
-		this.windows = windows;
-		this._makeThingsObservable();
-	}
+    /*
+     * Returns a promise that will resolve when the tabs data is finished populating.
+     */
+    async waitForPopulated(): Promise<void> {
+        let intervalId: ReturnType<typeof setInterval>;
+        return new Promise((resolve) => {
+            intervalId = setInterval(() => {
+                if (this.state == "finished") {
+                    clearInterval(intervalId);
+                    resolve();
+                }
+            });
+        });
+    }
+
+    getWindowById(windowId: number): Window|undefined {
+        return this._windowsObject[windowId];
+    }
+
+    /**
+     * Closes the given window.
+     */
+    async closeWindow(windowId: number): Promise<void> {
+        delete this._windowsObject[windowId];
+        browser.windows.remove(windowId);
+    }
 
 	/**
 	 * This function reaches deep into the models structure to add observable
@@ -25,7 +58,7 @@ class WindowStore {
 	* first.
 	 */
 	_makeThingsObservable() {
-		this.windows.forEach(w => {
+		Object.values(this._windowsObject).forEach(w => {
 			makeObservable(w, {
 				tabs: observable,
 				removeTab: action,
@@ -41,6 +74,10 @@ class WindowStore {
 				});
 			});
 		});
+	}
+
+	get windows() {
+		return Object.values(this._windowsObject);
 	}
 }
 

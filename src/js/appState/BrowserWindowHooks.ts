@@ -1,5 +1,5 @@
 import TabBuilder from '../model/tab/TabBuilder';
-import WindowManager from '../model/window/WindowManager';
+import WindowStore from './WindowStore';
 
 class BrowserWindowHooks {
 
@@ -16,15 +16,15 @@ class BrowserWindowHooks {
 	= async (browserTab) => {
 		const tab = await TabBuilder.createFromBrowserTab(browserTab);
 		if (tab.windowId) {
-			WindowManager.windows[tab.windowId]?.addTab(tab);
+			WindowStore._windowsObject[tab.windowId]?.addTab(tab);
 		} else {
-			console.log(`tab.windowId unexpectedly undefined: ${tab}`)
+			console.warn(`tab.windowId unexpectedly undefined: ${tab}`)
 		}
 	}
 
 	private _onTabActivated: Parameters<typeof browser.tabs.onActivated.addListener>[0]
 	= async (activeInfo) => {
-		const window = WindowManager.windows[activeInfo.windowId];
+		const window = WindowStore._windowsObject[activeInfo.windowId];
 		window.getActiveTab()?.setActive(false);
 		window.getTabById(activeInfo.tabId)?.setActive(true);
 	}
@@ -32,7 +32,7 @@ class BrowserWindowHooks {
 	private _onTabUpdated: Parameters<typeof browser.tabs.onUpdated.addListener>[0]
 	= async (tabId, changeInfo, tab) => {
 		if (tab.windowId) {
-			WindowManager.windows[tab.windowId]?.updateTab(tab);
+			WindowStore._windowsObject[tab.windowId]?.updateTab(tab);
 		}
 	}
 
@@ -41,12 +41,12 @@ class BrowserWindowHooks {
 	 */
 	private _onTabMoved: Parameters<typeof browser.tabs.onMoved.addListener>[0]
 	= async (tabId, {windowId, fromIndex, toIndex}) => {
-		WindowManager.windows[windowId].moveTab(tabId, fromIndex, toIndex);
+		WindowStore._windowsObject[windowId].moveTab(tabId, fromIndex, toIndex);
 	}
 
 	private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
 	= async (tabId, removeInfo) => {
-		WindowManager.windows[removeInfo.windowId].removeTab(tabId)
+		WindowStore._windowsObject[removeInfo.windowId].removeTab(tabId)
 	}
 }
 

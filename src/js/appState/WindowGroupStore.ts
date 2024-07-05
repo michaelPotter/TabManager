@@ -1,7 +1,6 @@
 import { observable, action, makeObservable } from "mobx";
 
 import Window from "../model/window/Window";
-import WindowManager from "../model/window/WindowManager";
 import WindowGroup from "../model/windowGroup/WindowGroup";
 import WindowGroupBuilder from "../model/windowGroup/WindowGroupBuilder";
 
@@ -15,15 +14,10 @@ class WindowGroupStore {
 			addWindowToGroup: action,
 			addWindowToNewGroup: action,
 			deleteWindowGroup: action,
-			_init: action,
 		});
 
-		this._init();
-	}
-
-	async _init() {
-		await WindowManager.waitForPopulated();
-		this.windowGroups = await WindowGroupBuilder.getAll();
+		WindowGroupBuilder.getAll()
+			.then(action(windowGroups => this.windowGroups = windowGroups));
 	}
 
 	// FIXME we should prevent the same window from being added twice

@@ -16,7 +16,6 @@ import Tab from './Tab';
 import { Trash } from './Icons';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';
-import WindowManager from '../js/model/window/WindowManager';
 
 import type WindowModel from '../js/model/window/Window';
 
@@ -93,7 +92,7 @@ const Window = (
 								}
 							</Dropdown>
 							{/* For safety, don't allow deleting rolled up windows */}
-								{isRolledUp || <Trash onClick={() => WindowManager.closeWindow(props.window.id)}/>}
+								{isRolledUp || <Trash onClick={() => WindowStore.closeWindow(props.window.id)}/>}
 						</div>
 					</Col>
 				</Row>
@@ -243,6 +242,7 @@ const EditWindowForm = observer((props : {
 })
 
 import { observable, action, makeObservable } from "mobx";
+import WindowStore from '../js/appState/WindowStore';
 
 type FormStoreInitArgs = Omit<
 	typeof FormStore.prototype.formData,
