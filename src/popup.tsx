@@ -7,13 +7,14 @@ import WindowManager from './js/model/window/WindowManager';
 import WindowComponent from './components/Window';
 import WindowGroupComponent from './components/WindowGroup';
 import PopupStore, { Page } from './popupStore';
+import WindowStore from './js/appState/WindowStore';
 import WindowGroupStore from './js/model/windowGroup/WindowGroupStore';
 
 // Pull in the styles ...
 import './scss/root.scss';
 
 const App = observer(() => {
-	let windows = _.chain(PopupStore.windows)
+	let windows = _.chain(WindowStore.windows)
 				.sortBy("last_accessed")
 				.reverse()
 				.value();
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 	// Set up a callback to trigger a re-render when we get the initial data.
 	WindowManager.waitForPopulated().then(() => {
-		PopupStore.setWindows(Object.values(WindowManager.windows));
+		WindowStore.setWindows(Object.values(WindowManager.windows));
 	})
 });
 
