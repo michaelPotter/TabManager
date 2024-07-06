@@ -50,18 +50,26 @@ export default observer((
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>
 									<Dropdown.Menu className="shadow-sm">
+
 										<Dropdown.Item>TODO Rename group</Dropdown.Item>
+
 										<Dropdown.Item onClick={() => {
 											let awg = createWindowGroupArchive(props.windowGroup);
 											ArchivedWindowGroupStore.addAWG(awg);
 											// TODO remove window group when we're sure everythign works
-										}}>TODO Move to Archive</Dropdown.Item>
+										}}>Copy to Archive (TEMP)</Dropdown.Item>
+
+										{/* <Dropdown.Item onClick={() => {/1* TODO implement *1/}}> */}
+										{/* 	TODO Move to Archive */}
+										{/* </Dropdown.Item> */}
+
 										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
 											// TODO it might be better to open a confirm modal instead.
 											window.alert("Cannot delete a window group with windows in it. Please close or remove them.") :
 											WindowGroupStore.deleteWindowGroup(props.windowGroup.name)}>
 											Delete this window group
 										</Dropdown.Item>
+
 									</Dropdown.Menu>
 								</Dropdown>
 								{/* For safety, don't allow deleting rolled up windows */}
