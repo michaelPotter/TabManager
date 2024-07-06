@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import {
 	FaEllipsisV,
@@ -8,22 +8,30 @@ import {
  * A custom dropdown toggle, showing just an ellipse icon.
  */
 export default (
-	props: {title: string}
+	props: {
+		// id: string;
+		title: string;
+	}
 ) => (
+
 	<Dropdown.Toggle
-		as={CustomDropdownToggleIcon}
-		variant="icon"
-		className="dropdown-no-caret" // This class doens't exist in this code base... but maybe that would be a better approach
-		title={props.title}>
+					// id={props.id}
+					variant="icon"
+					className={[
+						// Remove the trailing caret
+						"dropdown-no-caret",
+						// Strip excess button padding
+						"p-0",
+					].join(" ")}
+					style={{ border: 'none' }}
+					title={props.title} >
+		<FaEllipsisV className={[
+			// Bump up the size a lil
+			"fs-5",
+			// Fix coloring and hover
+			"button-icon",
+		].join(" ")}/>
 	</Dropdown.Toggle>
 )
 
-
-// @ts-ignore
-const CustomDropdownToggleIcon = React.forwardRef(({ children, onClick }, ref) => (
-	<FaEllipsisV
-		onClick={onClick}
-		className="button-icon material-icons window-edit-button"
-	/>
-));
 

@@ -64,6 +64,7 @@ const Window = (
 		<div className={`window ${windowClass}`}>
 			<Container fluid>
 				<Row>
+
 					<Col>
 						<RollupArrow closed={isRolledUp} onClick={toggleIsRolledUp} />
 						{props.window.name != "" &&
@@ -72,29 +73,33 @@ const Window = (
 							{props.window.tabs.length} tabs
 						</span>
 					</Col>
-					<Col sm="auto" className='p-0'>
-						<div className="float-end"
-							 // Without this, the icon buttons increase the size of the tab line
-							 style={{ maxHeight: "24px" }} >
-							{/* TODO size/align the ellipse a lil better */}
-							{/* FIXME the dropdown hangs off the side */}
-							{/* TODO since this component can be displayed in different contexts now (all tabs vs window groups) the dropdown menu should be configurable based on context. E.g. in the window groups page, the dropdown should include "remove from group" */}
-							{/* TODO look at this...
-									https://mdbootstrap.com/docs/react/extended/dropdown-multilevel/#
-									it'd be nice if there was an "add to group" option, that would open a sub-menu with all the groups and/or an option to add a new group. */}
-							<Dropdown style={{ display: "inline-block" }} id={`window-actions-${props.window.id}`} align="end">
-								<CustomDropdownToggle
-									title={`Actions for window`}/>
-								{props.dropdownMenu ||
-									<Dropdown.Menu className="shadow-sm">
+
+					<Col xs='auto' className="p-0">
+						{/* TODO size/align the ellipse a lil better */}
+						{/* TODO look at this...
+								https://mdbootstrap.com/docs/react/extended/dropdown-multilevel/#
+								it'd be nice if there was an "add to group" option, that would open a sub-menu with all the groups and/or an option to add a new group. */}
+						<Dropdown align="end">
+							<CustomDropdownToggle
+								// id="actions-for-window"
+								title="Actions for window"
+								/>
+							{props.dropdownMenu ||
+								<Dropdown.Menu
+									renderOnMount={true}
+									className="shadow-sm"
+									>
 										<EditWindowModalButton window={props.window}/>
-									</Dropdown.Menu>
-								}
-							</Dropdown>
-							{/* For safety, don't allow deleting rolled up windows */}
-								{isRolledUp || <Trash onClick={() => WindowStore.closeWindow(props.window.id)}/>}
-						</div>
+								</Dropdown.Menu>
+							}
+						</Dropdown>
 					</Col>
+
+					<Col xs='auto' className="p-0">
+					{/* For safety, don't allow deleting rolled up windows */}
+						{isRolledUp || <Trash onClick={() => WindowStore.closeWindow(props.window.id)}/>}
+					</Col>
+
 				</Row>
 			</Container>
 

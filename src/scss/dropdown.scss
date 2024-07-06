@@ -1,0 +1,5 @@
+.dropdown-toggle.dropdown-no-caret {
+	&:after {
+		display: none;
+	}
+}
