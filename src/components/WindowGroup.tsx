@@ -57,7 +57,7 @@ export default observer((
 											let awg = createWindowGroupArchive(props.windowGroup);
 											ArchivedWindowGroupStore.addAWG(awg);
 											// TODO remove window group when we're sure everythign works
-										}}>Copy to Archive (TEMP)</Dropdown.Item>
+										}}>TEMP Copy to Archive</Dropdown.Item>
 
 										{/* <Dropdown.Item onClick={() => {/1* TODO implement *1/}}> */}
 										{/* 	TODO Move to Archive */}

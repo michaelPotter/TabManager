@@ -2,7 +2,7 @@ import { observable, action, makeObservable } from "mobx";
 
 import Window from "../model/window/Window";
 import WindowGroup from "../model/windowGroup/WindowGroup";
-import WindowGroupBuilder from "../model/windowGroup/WindowGroupBuilder";
+import WindowGroupDAO from "../model/windowGroup/WindowGroupDAO";
 
 class WindowGroupStore {
 
@@ -16,7 +16,7 @@ class WindowGroupStore {
 			deleteWindowGroup: action,
 		});
 
-		WindowGroupBuilder.getAll()
+		WindowGroupDAO.getAll()
 			.then(action(windowGroups => this.windowGroups = windowGroups));
 	}
 
@@ -28,7 +28,7 @@ class WindowGroupStore {
 
 	addWindowToNewGroup = (window: Window, groupName: string) => {
 		this.windowGroups.push(
-			WindowGroupBuilder.new(groupName)
+			WindowGroupDAO.new(groupName)
 				.withWindow(window)
 				.build()
 		);
@@ -49,7 +49,7 @@ class WindowGroupStore {
 	}
 
 	#persist() {
-		WindowGroupBuilder.storeAllWindowGroups(this.windowGroups);
+		WindowGroupDAO.storeAllWindowGroups(this.windowGroups);
 	}
 }
 

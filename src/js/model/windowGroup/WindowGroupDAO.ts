@@ -2,7 +2,7 @@ import WindowStore from "../../appState/WindowStore";
 import Window from "../window/Window";
 import WindowGroup, { SerializedWindowGroup } from "./WindowGroup";
 
-export default class WindowGroupBuilder {
+export default class WindowGroupDAO {
 
 	static async getAll(): Promise<WindowGroup[]> {
 		let data = await browser.storage.local.get("windowGroups");
@@ -40,7 +40,7 @@ export default class WindowGroupBuilder {
 
 	static async storeAllWindowGroups(windowGroups: WindowGroup[]) {
 		await browser.storage.local.set({
-			windowGroups: windowGroups.map(WindowGroupBuilder.flattenWindowGroup)
+			windowGroups: windowGroups.map(WindowGroupDAO.flattenWindowGroup)
 		});
 	}
 	
