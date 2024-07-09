@@ -15,7 +15,7 @@ declare type WindowData = {
     last_accessed?: number,
 };
 
-export default class WindowBuilder {
+export default class WindowDAO {
     /**
      * Get all Windows
      *
@@ -75,7 +75,7 @@ export default class WindowBuilder {
      * Performs the actual data storage
      */
     static storeWindow(window: Window): Promise<void> {
-        return browser.storage.local.set(WindowBuilder.flattenWindow(window));
+        return browser.storage.local.set(WindowDAO.flattenWindow(window));
     }
 
 }

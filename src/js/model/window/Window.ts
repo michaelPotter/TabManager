@@ -6,7 +6,7 @@
 
 import Tab from '../tab/Tab';
 import _ from 'lodash';
-import WindowBuilder from './WindowBuilder';
+import WindowDAO from './WindowDAO';
 
 // This is the extra data we can't get from the browser api.
 declare type WindowExtraData = {
@@ -126,13 +126,13 @@ export default class Window {
 	 */
 	set last_accessed(last_accessed: number) {
 		this._last_accessed = last_accessed;
-		WindowBuilder.storeWindow(this);
+		WindowDAO.storeWindow(this);
 	}
 
 	get name() { return this._name; }
 	set name(name: string) {
 		this._name = name;
-		WindowBuilder.storeWindow(this);
+		WindowDAO.storeWindow(this);
 	}
 
 	/**

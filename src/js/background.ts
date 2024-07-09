@@ -1,6 +1,6 @@
 'use strict';
 
-import WindowBuilder from './model/window/WindowBuilder';
+import WindowDAO from './model/window/WindowDAO';
 import Badge from './Badge';
 
 var badge = new Badge()
@@ -24,7 +24,7 @@ browser.tabs.onRemoved.addListener(function(tabid, removeInfo) {
  */
 browser.windows.onFocusChanged.addListener(function(id) {
 	if (id > 0) {
-		WindowBuilder.get(id).then(w => {
+		WindowDAO.get(id).then(w => {
 			w.last_accessed = Date.now()
 		});
 	}

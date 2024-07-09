@@ -3,7 +3,7 @@ import { observable, configure, action, flow, makeObservable, runInAction } from
 import Window from '../../js/model/window/Window';
 import BrowserWindowHooks from './BrowserWindowHooks';
 import _ from 'lodash';
-import WindowBuilder from "../model/window/WindowBuilder";
+import WindowDAO from "../model/window/WindowDAO";
 
 class WindowStore {
 
@@ -17,7 +17,7 @@ class WindowStore {
 		});
         BrowserWindowHooks.engageHooks();
 
-        WindowBuilder.getAll()
+        WindowDAO.getAll()
 			.then(action(windowsList => {
 				this._windowsObject = _.keyBy<Window>(windowsList, w => w.id);
 				this._makeThingsObservable();
