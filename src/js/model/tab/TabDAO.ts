@@ -10,7 +10,7 @@
 import _ from 'lodash';
 import Tab from './Tab';
 
-export default class TabBuilder {
+export default class TabDAO {
 
     /**
      * Returns a list of all Tab objects for a given windowId.

@@ -1,4 +1,4 @@
-import TabBuilder from '../model/tab/TabBuilder';
+import TabDAO from '../model/tab/TabDAO';
 import WindowStore from './WindowStore';
 
 import type WindowModel from '../model/window/Window';
@@ -16,7 +16,7 @@ class BrowserWindowHooks {
 
 	private _onTabCreated: Parameters<typeof browser.tabs.onCreated.addListener>[0]
 	= async (browserTab) => {
-		const tab = await TabBuilder.createFromBrowserTab(browserTab);
+		const tab = await TabDAO.createFromBrowserTab(browserTab);
 		if (tab.windowId) {
 			getWindowById(tab.windowId).addTab(tab);
 		} else {

@@ -6,7 +6,7 @@
 'use strict';
 
 import _ from 'lodash';
-import TabBuilder from '../tab/TabBuilder';
+import TabDAO from '../tab/TabDAO';
 import Window from './Window';
 
 // This is the extra data we can't get from the browser api.
@@ -28,7 +28,7 @@ export default class WindowBuilder {
         let keys = windowList.map(w => "win_" + w.id);
         let data = await browser.storage.local.get(keys)
 
-        let tabs = await TabBuilder.getAllForWindows(windowList.map(w => w.id ?? -1));
+        let tabs = await TabDAO.getAllForWindows(windowList.map(w => w.id ?? -1));
 
         let windows = windowList.map(w => {
             let key = winKey(w);
@@ -49,7 +49,7 @@ export default class WindowBuilder {
 
         let data = await browser.storage.local.get(key);
         let cwin = await browser.windows.get(id)
-        let tabs = await TabBuilder.getAllForWindow(id);
+        let tabs = await TabDAO.getAllForWindow(id);
 
         let w = new Window(cwin, tabs, data[key])
         return w;
