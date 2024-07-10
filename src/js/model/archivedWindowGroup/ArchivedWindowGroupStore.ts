@@ -1,5 +1,6 @@
 import { observable, action, makeObservable } from "mobx";
 import { ArchivedWindowGroup } from "./ArchivedWindowGroup";
+import ArchivedWindowGroupDAO from "./ArchivedWindowGroupDAO";
 
 class ArchivedWindowGroupStore {
 	archivedWindowGroups: ArchivedWindowGroup[] = [];
@@ -9,10 +10,9 @@ class ArchivedWindowGroupStore {
 			archivedWindowGroups: observable,
 			addAWG: action,
 		});
-	}
 
-	async _init() {
-		// TODO read from storage
+		ArchivedWindowGroupDAO.getAll()
+			.then(action(awgs => this.archivedWindowGroups = awgs));
 	}
 
 	addAWG = (awg: ArchivedWindowGroup) => {
@@ -20,9 +20,8 @@ class ArchivedWindowGroupStore {
 		this.#persist();
 	}
 
-
 	#persist() {
-		// TODO
+		ArchivedWindowGroupDAO.storeAllArchivedWindowGroups(this.archivedWindowGroups);
 	}
 }
 
