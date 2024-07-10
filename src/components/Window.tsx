@@ -76,9 +76,6 @@ const Window = (
 
 					<Col xs='auto' className="p-0">
 						{/* TODO size/align the ellipse a lil better */}
-						{/* TODO look at this...
-								https://mdbootstrap.com/docs/react/extended/dropdown-multilevel/#
-								it'd be nice if there was an "add to group" option, that would open a sub-menu with all the groups and/or an option to add a new group. */}
 						<Dropdown align="end">
 							<CustomDropdownToggle
 								// id="actions-for-window"
@@ -88,12 +85,30 @@ const Window = (
 								<Dropdown.Menu
 									renderOnMount={true}
 									className="shadow-sm"
-									>
-										<EditWindowModalButton window={props.window}/>
+								>
+									<EditWindowModalButton window={props.window}/>
+									<Dropdown drop="start">
+										<Dropdown.Toggle variant="outline-primary">Add to Group</Dropdown.Toggle>
+										{/* TODO maybe look at this for a better implementation...
+										https://mdbootstrap.com/docs/react/extended/dropdown-multilevel/#
+										*/}
+										<Dropdown.Menu>
+											{WindowGroupStore.windowGroups.map((windowGroup) => (
+												<Dropdown.Item
+													key={windowGroup.name}
+													onClick={() => WindowGroupStore.addWindowToGroup(props.window, windowGroup.name)}
+												>
+													{windowGroup.name}
+												</Dropdown.Item>
+											))}
+											<Dropdown.Divider />
+											<Dropdown.Item>TODO New Group</Dropdown.Item>
+										</Dropdown.Menu>
+									</Dropdown>
 								</Dropdown.Menu>
 							}
-						</Dropdown>
-					</Col>
+							</Dropdown>
+							</Col>
 
 					<Col xs='auto' className="p-0">
 					{/* For safety, don't allow deleting rolled up windows */}
