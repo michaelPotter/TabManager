@@ -2,12 +2,21 @@ import { ArchivedWindowGroup } from "./ArchivedWindowGroup";
 
 const STORAGE_KEY = "archivedWindowGroups";
 
+type ArchivedWindowGroupDataV1 = {
+	"$schemaVersion": "v1",
+	archivedWindowGroups: ArchivedWindowGroup[];
+}
+
+type ArchivedWindowGroupData = ArchivedWindowGroupDataV1;
+
 export default class ArchivedWindowGroupDAO {
 
 	static async getAll(): Promise<ArchivedWindowGroup[]> {
-		let data = await browser.storage.local.get(STORAGE_KEY);
+		let data = await browser.storage.local.get(STORAGE_KEY) as {
+			[STORAGE_KEY]: ArchivedWindowGroupData;
+		}
 
-		return data.archivedWindowGroups ?? [];
+		return data[STORAGE_KEY]?.archivedWindowGroups ?? [];
 	}
 
 	/**
@@ -33,8 +42,12 @@ export default class ArchivedWindowGroupDAO {
 	}
 
 	static async storeAllArchivedWindowGroups(archivedWindowGroups: ArchivedWindowGroup[]) {
+		let data: ArchivedWindowGroupData = {
+			"$schemaVersion": "v1",
+			archivedWindowGroups: archivedWindowGroups.map(this.flattenAWG)
+		}
 		await browser.storage.local.set({
-			[STORAGE_KEY]: archivedWindowGroups.map(this.flattenAWG)
+			[STORAGE_KEY]: data
 		});
 	}
 	
