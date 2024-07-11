@@ -19,21 +19,22 @@ import { Button } from 'react-bootstrap';
 
 const App = observer(() => {
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
-		<a onClick={() => PopupStore.setPage(key)}>
+		<Button variant="simple" onClick={() => PopupStore.setPage(key)}>
 			{PopupStore.page === key && <b>{text}</b> || text}
-		</a>
+		</Button>
 	)
 
 	return (
 		<>
-			<div id="header">
+			<div id="header" style={{display: "flex"}}>
 				<QuickLink page="alltabs" text="All Tabs"/>
-				{" | "}
+				{"|"}
 				<QuickLink page="active_groups" text="Active Groups"/>
-				{" | "}
+				{"|"}
 				<QuickLink page="archive" text="Archive"/>
-				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
+				<div style={{flexGrow: 1}}/>
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
+				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
 			</div>
 			<div id="body">
 			{ PopupStore.page == "alltabs" && <AllTabs/> }

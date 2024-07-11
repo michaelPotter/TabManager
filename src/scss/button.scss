@@ -1,0 +1,12 @@
+
+/**
+ * A simple button variant; no background color and slim padding.
+ */
+.btn-simple {
+  @extend .btn-light;
+  --bs-btn-bg: unset;
+  --bs-btn-border-color: unset;
+  --bs-border-radius: var(--bs-border-radius-sm);
+  --bs-btn-padding-x: 0.25rem;
+  --bs-btn-padding-y: 0.15rem;
+}

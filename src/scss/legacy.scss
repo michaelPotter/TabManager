@@ -30,13 +30,16 @@ body {
     margin: 4px;
     clear:both;
 }
+
 #refresh_button {
-    float:right;
-    padding:5px
+    padding:5px;
+    cursor: pointer;
+    min-height: 1em;
 }
 #popout_button {
-    float:right;
-    padding:5px
+    padding:5px;
+    cursor: pointer;
+    min-height: 1em;
 }
 
 i {
