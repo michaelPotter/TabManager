@@ -11,7 +11,11 @@ export default (
 	}
 ) => {
 	let RollupArrow = props.closed ? MdArrowRight : MdArrowDropDown;
-	return <RollupArrow onClick={props.onClick} />
+	return <RollupArrow
+		style={{fontSize: '1.3rem'}}
+		className='btn btn-simple p-0'
+		onClick={props.onClick}
+	/>
 
 }
 
