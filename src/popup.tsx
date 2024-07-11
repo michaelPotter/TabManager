@@ -14,6 +14,8 @@ import type WindowModel from './js/model/window/Window';
 // Pull in the styles ...
 import './scss/root.scss';
 import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
+import Downloader from './components/lib/Downloader';
+import { Button } from 'react-bootstrap';
 
 const App = observer(() => {
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
@@ -71,10 +73,18 @@ const ActiveGroups = observer(() => {
 const TheArchive = observer(() => {
 	return (
 		<div>
-			<p> The Archive </p>
-			<p>{ "len: " +
-				ArchivedWindowGroupStore.archivedWindowGroups.length
-			}</p>
+			<div style={{display: "flex"}}>
+				<p style={{flexGrow: 1}}> The Archive </p>
+				<Downloader
+					data={() => ArchivedWindowGroupStore.getExportData()}
+					filename={`windowgroup-archive-${new Date().toISOString()}.json`}
+				>
+					<Button variant="simple">export</Button>
+				</Downloader>
+				{" | "}
+				<div> <Button variant="simple">import</Button> </div>
+			</div>
+
 			{ArchivedWindowGroupStore.archivedWindowGroups.map(g => (
 				<ArchivedWindowGroup key={g.name} archivedWindowGroup={g}/>
 			))}

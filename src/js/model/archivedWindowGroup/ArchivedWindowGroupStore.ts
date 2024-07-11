@@ -20,6 +20,10 @@ class ArchivedWindowGroupStore {
 		this.#persist();
 	}
 
+	getExportData = () => {
+		return ArchivedWindowGroupDAO.toExportFormat(this.archivedWindowGroups);
+	}
+
 	#persist() {
 		ArchivedWindowGroupDAO.storeAllArchivedWindowGroups(this.archivedWindowGroups);
 	}

@@ -42,13 +42,30 @@ export default class ArchivedWindowGroupDAO {
 	}
 
 	static async storeAllArchivedWindowGroups(archivedWindowGroups: ArchivedWindowGroup[]) {
+		await browser.storage.local.set({
+			[STORAGE_KEY]: this.toStorageFormat(archivedWindowGroups)
+		});
+	}
+
+	static toStorageFormat(archivedWindowGroups: ArchivedWindowGroup[]): ArchivedWindowGroupData {
 		let data: ArchivedWindowGroupData = {
 			"$schemaVersion": "v1",
 			archivedWindowGroups: archivedWindowGroups.map(this.flattenAWG)
 		}
-		await browser.storage.local.set({
-			[STORAGE_KEY]: data
+		return data
+	}
+
+	static toExportFormat(archivedWindowGroups: ArchivedWindowGroup[]): ArchivedWindowGroupData {
+		let data = this.toStorageFormat(archivedWindowGroups);
+		// Delete favicons cuz they take up a lot of space and aren't important
+		data.archivedWindowGroups.forEach(awg => {
+			awg.windows.forEach(w => {
+				w.tabs.forEach(t => {
+					delete t.favIconUrl;
+				})
+			});
 		});
+		return data
 	}
 	
 }

@@ -37,11 +37,7 @@ export default observer((
 							</span>
 						</Col>
 						<Col sm="auto" className='p-0'>
-							<div className="float-end"
-								// Without this, the icon buttons increase the size of the tab line
-								style={{ maxHeight: "24px" }} >
-								{/* TODO size/align the ellipse a lil better */}
-								{/* FIXME the dropdown hangs off the side */}
+							<div >
 								<Dropdown style={{ display: "inline-block" }} id={`windowgroup-actions-${props.archivedWindowGroup.name}`} align="end">
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>
