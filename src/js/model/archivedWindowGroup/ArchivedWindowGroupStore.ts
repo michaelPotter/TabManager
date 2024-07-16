@@ -9,6 +9,7 @@ class ArchivedWindowGroupStore {
 		makeObservable(this, {
 			archivedWindowGroups: observable,
 			addAWG: action,
+			renameAWG: action,
 			importFromData: action,
 		});
 
@@ -23,6 +24,16 @@ class ArchivedWindowGroupStore {
 
 	getExportData = () => {
 		return ArchivedWindowGroupDAO.toExportFormat(this.archivedWindowGroups);
+	}
+
+	renameAWG = (oldName: string, newName: string) => {
+		let wg = this.archivedWindowGroups.find(wg => wg.name === oldName);
+		if (wg) {
+			wg.name = newName;
+			this.#persist();
+		} else {
+			console.warn("Could not find window group to rename: ", oldName);
+		}
 	}
 
 	deleteAWG = (name: string) => {

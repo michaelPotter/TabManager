@@ -13,6 +13,7 @@ class WindowGroupStore {
 			windowGroups: observable,
 			addWindowToGroup: action,
 			addWindowToNewGroup: action,
+			renameWindowGroup: action,
 			deleteWindowGroup: action,
 		});
 
@@ -33,6 +34,16 @@ class WindowGroupStore {
 				.build()
 		);
 		this.#persist();
+	}
+
+	renameWindowGroup = (oldName: string, newName: string) => {
+		let wg = this.windowGroups.find(wg => wg.name === oldName);
+		if (wg) {
+			wg.name = newName;
+			this.#persist();
+		} else {
+			console.warn("Could not find window group to rename: ", oldName);
+		}
 	}
 
 	deleteWindowGroup = (groupName: string) => {

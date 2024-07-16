@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { observer } from "mobx-react";
 
 import Card from 'react-bootstrap/Card';
@@ -12,6 +12,7 @@ import RollupArrow from '../lib/RollupArrow';
 import { ArchivedWindowGroup } from '../../js/model/archivedWindowGroup/ArchivedWindowGroup';
 import ArchivedWindow from './ArchivedWindow';
 import ArchivedWindowGroupStore from '../../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
+import { wrapWithConfirm, wrapWithInput } from '../util/ModalWrappers';
 
 /**
  * WindowGroup
@@ -43,15 +44,14 @@ export default observer((
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>
 									<Dropdown.Menu className="shadow-sm">
-										<Dropdown.Item>TODO Rename group</Dropdown.Item>
+										<Dropdown.Item onClick={wrapWithInput("Rename Window Group", (input: string) => {
+											ArchivedWindowGroupStore.renameAWG(props.archivedWindowGroup.name, input)
+										})}>Rename group</Dropdown.Item>
 										<Dropdown.Item>TODO Unarchive</Dropdown.Item>
 										<Dropdown.Item
-											onClick={() => {
-												let result = window.confirm("Are you sure you want to delete this window group?");
-												if (result) {
+											onClick={wrapWithConfirm("Are you sure you want to delete this window group?", () => {
 													ArchivedWindowGroupStore.deleteAWG(props.archivedWindowGroup.name)
-												}
-											}}
+											})}
 										>Delete Group</Dropdown.Item>
 									</Dropdown.Menu>
 								</Dropdown>

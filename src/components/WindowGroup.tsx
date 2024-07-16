@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { observer } from "mobx-react";
 
 import Card from 'react-bootstrap/Card';
@@ -53,7 +53,9 @@ export default observer((
 									<Dropdown.Menu className="shadow-sm">
 										<Dropdown.Header>Window Group Actions</Dropdown.Header>
 
-										<Dropdown.Item>TODO Rename group</Dropdown.Item>
+										<Dropdown.Item onClick={wrapWithInput("Rename Window Group", (input: string) => {
+											WindowGroupStore.renameWindowGroup(props.windowGroup.name, input)
+										})}>Rename group</Dropdown.Item>
 
 										<Dropdown.Item onClick={() => {
 											let awg = createWindowGroupArchive(props.windowGroup);
