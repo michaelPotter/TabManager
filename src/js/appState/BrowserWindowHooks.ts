@@ -3,6 +3,7 @@ import WindowStore from './WindowStore';
 
 import type WindowModel from '../model/window/Window';
 
+// TODO add a hook such that if a current tab (or group of tabs) gets split off of a window in a window group, the newly created window should be added to the window group.
 class BrowserWindowHooks {
 
 	public engageHooks() {
