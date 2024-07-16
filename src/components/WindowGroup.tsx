@@ -14,7 +14,7 @@ import RollupArrow from './lib/RollupArrow';
 import WindowGroupStore from '../js/appState/WindowGroupStore';
 import { createWindowGroupArchive } from '../js/model/windowGroup/WindowGroupArchiver';
 import ArchivedWindowGroupStore from '../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
-import { wrapWithConfirm } from './util/ModalWrappers';
+import { wrapWithConfirm, wrapWithInput } from './util/ModalWrappers';
 
 /**
  * WindowGroup
@@ -67,9 +67,16 @@ export default observer((
 
 										<Dropdown.Item onClick={wrapWithConfirm("Are you sure you want to perform that action?", () =>
 											window.alert("Action performed!")
-									  )}>
-											TEST MODAL
+										)}>
+											TEST CONFIRM MODAL
 										</Dropdown.Item>
+
+										<Dropdown.Item onClick={wrapWithInput("Give me some input", (input: string) =>
+											window.alert("You entered: " + input)
+										)}>
+											TEST INPUT MODAL
+										</Dropdown.Item>
+
 
 										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
 											// TODO it might be better to open a confirm modal instead.

@@ -18,10 +18,42 @@ export const wrapWithConfirm = (
 ) => {
 	return function() {
 		tempRender(props => (
-			<MyModal onConfirm={onConfirm} onClose={props.onClose}>
+			<MyModal
+				onConfirm={onConfirm}
+				onClose={props.onClose}
+				title="Confirmation required"
+			>
 				<p>{text}</p>
 			</MyModal>
 		))
+	}
+}
+
+export const wrapWithInput = (
+	text: string,
+	onSubmit: (input: string) => void
+) => {
+	return function() {
+		tempRender(props => {
+			const [input, setInput] = useState("");
+			return (
+				<MyModal
+					onConfirm={() => onSubmit(input)}
+					onClose={props.onClose}
+					confirmButtonText="Submit"
+					confirmButtonVariant="primary"
+					confirmButtonDisabled={input === ""}
+					// TODO add a title
+				>
+					{/* TODO use a proper form here */}
+					<p>{text}</p>
+					<input
+						onChange={e => setInput(e.target.value)}
+						type="text"
+					/>
+				</MyModal>
+			)
+		})
 	}
 }
 
@@ -47,6 +79,10 @@ const tempRender = (Component: ClosableComponent) => {
 const MyModal = (props : {
 	onConfirm: (a?: any) => void,
 	onClose: () => void,
+	title?: string,
+	confirmButtonText?: string,
+	confirmButtonVariant?: string,
+	confirmButtonDisabled?: boolean,
 	children: React.ReactNode,
 }) => {
 	const [show, setShow] = useState(true);
@@ -63,7 +99,7 @@ const MyModal = (props : {
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title>Confirmation required</Modal.Title>
+					<Modal.Title>{props.title}</Modal.Title>
 				</Modal.Header>
 
 				<Modal.Body>
@@ -71,11 +107,12 @@ const MyModal = (props : {
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Button variant="outline-warning" onClick={() => {
-						props.onConfirm();
-						handleClose();
-					}}>
-						Confirm
+					<Button
+						variant={props.confirmButtonVariant ?? "outline-warning"}
+						disabled={(props.confirmButtonDisabled ?? false)}
+						onClick={() => { props.onConfirm(); handleClose(); }}
+					>
+						{props.confirmButtonText ?? "Confirm"}
 					</Button>
 					<Button variant="outline-secondary" onClick={handleClose}>
 						Cancel
