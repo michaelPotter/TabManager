@@ -14,6 +14,7 @@ import RollupArrow from './lib/RollupArrow';
 import WindowGroupStore from '../js/appState/WindowGroupStore';
 import { createWindowGroupArchive } from '../js/model/windowGroup/WindowGroupArchiver';
 import ArchivedWindowGroupStore from '../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
+import { wrapConfirm } from './util/ModalWrappers';
 
 /**
  * WindowGroup
@@ -63,6 +64,12 @@ export default observer((
 										{/* <Dropdown.Item onClick={() => {/1* TODO implement *1/}}> */}
 										{/* 	TODO Move to Archive */}
 										{/* </Dropdown.Item> */}
+
+										<Dropdown.Item onClick={wrapConfirm("Are you sure you want to perform that action?", () =>
+											window.alert("Action performed!")
+									  )}>
+											TEST MODAL
+										</Dropdown.Item>
 
 										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
 											// TODO it might be better to open a confirm modal instead.
