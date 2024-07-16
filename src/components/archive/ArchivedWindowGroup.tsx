@@ -11,6 +11,7 @@ import CustomDropdownToggle from '../lib/CustomDropdownToggle';
 import RollupArrow from '../lib/RollupArrow';
 import { ArchivedWindowGroup } from '../../js/model/archivedWindowGroup/ArchivedWindowGroup';
 import ArchivedWindow from './ArchivedWindow';
+import ArchivedWindowGroupStore from '../../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
 
 /**
  * WindowGroup
@@ -44,6 +45,14 @@ export default observer((
 									<Dropdown.Menu className="shadow-sm">
 										<Dropdown.Item>TODO Rename group</Dropdown.Item>
 										<Dropdown.Item>TODO Unarchive</Dropdown.Item>
+										<Dropdown.Item
+											onClick={() => {
+												let result = window.confirm("Are you sure you want to delete this window group?");
+												if (result) {
+													ArchivedWindowGroupStore.deleteAWG(props.archivedWindowGroup.name)
+												}
+											}}
+										>Delete Group</Dropdown.Item>
 									</Dropdown.Menu>
 								</Dropdown>
 							</div>

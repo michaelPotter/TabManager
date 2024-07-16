@@ -9,6 +9,7 @@ class ArchivedWindowGroupStore {
 		makeObservable(this, {
 			archivedWindowGroups: observable,
 			addAWG: action,
+			importFromData: action,
 		});
 
 		ArchivedWindowGroupDAO.getAll()
@@ -22,6 +23,16 @@ class ArchivedWindowGroupStore {
 
 	getExportData = () => {
 		return ArchivedWindowGroupDAO.toExportFormat(this.archivedWindowGroups);
+	}
+
+	deleteAWG = (name: string) => {
+		this.archivedWindowGroups = this.archivedWindowGroups.filter(awg => awg.name !== name);
+		this.#persist();
+	}
+
+	importFromData = (data: any) => {
+		this.archivedWindowGroups = ArchivedWindowGroupDAO.fromExportFormat(data);
+		this.#persist();
 	}
 
 	#persist() {

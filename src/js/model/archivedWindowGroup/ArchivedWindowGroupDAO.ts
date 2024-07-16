@@ -67,5 +67,12 @@ export default class ArchivedWindowGroupDAO {
 		});
 		return data
 	}
+
+	static fromExportFormat(archivedWindowGroups: ArchivedWindowGroupData): ArchivedWindowGroup[] {
+		if (archivedWindowGroups["$schemaVersion"] === "v1") {
+			return archivedWindowGroups.archivedWindowGroups;
+		}
+		throw new Error("Unsupported schema version: " + archivedWindowGroups["$schemaVersion"]);
+	}
 	
 }

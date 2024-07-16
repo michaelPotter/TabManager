@@ -16,6 +16,7 @@ import './scss/root.scss';
 import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
 import Downloader from './components/lib/Downloader';
 import { Button } from 'react-bootstrap';
+import Uploader from './components/lib/Uploader';
 
 const App = observer(() => {
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
@@ -83,7 +84,11 @@ const TheArchive = observer(() => {
 					<Button variant="simple">export</Button>
 				</Downloader>
 				{" | "}
-				<div> <Button variant="simple">import</Button> </div>
+				<Uploader
+					onUpload={(data) => ArchivedWindowGroupStore.importFromData(data)}
+				>
+					<Button variant="simple">import</Button>
+				</Uploader>
 			</div>
 
 			{ArchivedWindowGroupStore.archivedWindowGroups.map(g => (
