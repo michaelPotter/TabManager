@@ -12,32 +12,42 @@ import Modal from 'react-bootstrap/Modal';
  *
  * Currently takes one string arg that shows as the body of the modal, but maybe a method overload that takes a title for the modal would be nice.
  */
-export const wrapConfirm = (
+export const wrapWithConfirm = (
 	text: string,
 	onConfirm: (a?: any) => void
 ) => {
 	return function() {
-		// This is a little hacky... create a div element on the page, to render a
-		// separate react tree. Remove after the modal closes.
-		const div = document.createElement('div');
-		document.body.appendChild(div);
-
-		let modal = (
-			<MyModal
-				text={text}
-				onConfirm={onConfirm}
-				onClose={() => document.body.removeChild(div)}
-				/>
-		)
-
-		ReactDOM.render(modal, div);
+		tempRender(props => (
+			<MyModal onConfirm={onConfirm} onClose={props.onClose}>
+				<p>{text}</p>
+			</MyModal>
+		))
 	}
 }
 
+type ClosableComponent = React.FC<{onClose: () => void}>
+
+/**
+ * Internal helper, render the given component temporarily. It should take an
+ * onClose prop, which will be a callback to remove the component from the DOM.
+ */
+const tempRender = (Component: ClosableComponent) => {
+	// This is a little hacky... create a div element on the page, to render a
+	// separate react tree. Remove after the modal closes.
+	const div = document.createElement('div');
+	document.body.appendChild(div);
+
+	let modal = (
+		<Component onClose={() => document.body.removeChild(div)} />
+	)
+
+	ReactDOM.render(modal, div);
+}
+
 const MyModal = (props : {
-	text: string,
 	onConfirm: (a?: any) => void,
 	onClose: () => void,
+	children: React.ReactNode,
 }) => {
 	const [show, setShow] = useState(true);
 
@@ -57,7 +67,7 @@ const MyModal = (props : {
 				</Modal.Header>
 
 				<Modal.Body>
-					<p>{props.text}</p>
+					{props.children}
 				</Modal.Body>
 
 				<Modal.Footer>

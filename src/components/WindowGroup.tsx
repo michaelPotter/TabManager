@@ -14,7 +14,7 @@ import RollupArrow from './lib/RollupArrow';
 import WindowGroupStore from '../js/appState/WindowGroupStore';
 import { createWindowGroupArchive } from '../js/model/windowGroup/WindowGroupArchiver';
 import ArchivedWindowGroupStore from '../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
-import { wrapConfirm } from './util/ModalWrappers';
+import { wrapWithConfirm } from './util/ModalWrappers';
 
 /**
  * WindowGroup
@@ -65,7 +65,7 @@ export default observer((
 										{/* 	TODO Move to Archive */}
 										{/* </Dropdown.Item> */}
 
-										<Dropdown.Item onClick={wrapConfirm("Are you sure you want to perform that action?", () =>
+										<Dropdown.Item onClick={wrapWithConfirm("Are you sure you want to perform that action?", () =>
 											window.alert("Action performed!")
 									  )}>
 											TEST MODAL
