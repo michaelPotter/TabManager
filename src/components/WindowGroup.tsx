@@ -50,6 +50,7 @@ export default observer((
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>
 									<Dropdown.Menu className="shadow-sm">
+										<Dropdown.Header>Window Group Actions</Dropdown.Header>
 
 										<Dropdown.Item>TODO Rename group</Dropdown.Item>
 
@@ -87,6 +88,7 @@ export default observer((
 							key={w.id}
 							dropdownMenu={
 								<Dropdown.Menu className="shadow-sm">
+									<Dropdown.Header>Window Actions</Dropdown.Header>
 									{/* TODO should we still include the edit option here? */}
 									<Dropdown.Item onClick={() => WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)}>
 										Remove window from group

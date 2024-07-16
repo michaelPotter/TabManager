@@ -66,6 +66,7 @@ const ArchivedWindow = (
 							{/* 		title={`Actions for window`}/> */}
 							{/* 	{props.dropdownMenu || */}
 							{/* 		<Dropdown.Menu className="shadow-sm"> */}
+											{/* <Dropdown.Header>Window Group Actions</Dropdown.Header> */}
 							{/* 			<EditWindowModalButton window={props.window}/> */}
 							{/* 		</Dropdown.Menu> */}
 							{/* 	} */}

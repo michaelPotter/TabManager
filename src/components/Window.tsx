@@ -86,6 +86,7 @@ const Window = (
 									renderOnMount={true}
 									className="shadow-sm"
 								>
+									<Dropdown.Header>Window Actions</Dropdown.Header>
 									<EditWindowModalButton window={props.window}/>
 									<Dropdown drop="start">
 										<Dropdown.Toggle variant="outline-primary">Add to Group</Dropdown.Toggle>
