@@ -103,7 +103,11 @@ const Window = (
 												</Dropdown.Item>
 											))}
 											<Dropdown.Divider />
-											<Dropdown.Item>TODO New Group</Dropdown.Item>
+											<Dropdown.Item onClick={
+												wrapWithInput("New Group Name", (newGroupName) => {
+													WindowGroupStore.addWindowToNewGroup(props.window, newGroupName);
+												})
+											}>New Group</Dropdown.Item>
 										</Dropdown.Menu>
 									</Dropdown>
 								</Dropdown.Menu>
@@ -264,6 +268,7 @@ const EditWindowForm = observer((props : {
 
 import { observable, action, makeObservable } from "mobx";
 import WindowStore from '../js/appState/WindowStore';
+import { wrapWithInput } from './util/ModalWrappers';
 
 type FormStoreInitArgs = Omit<
 	typeof FormStore.prototype.formData,

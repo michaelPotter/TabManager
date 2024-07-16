@@ -43,10 +43,10 @@ export const wrapWithInput = (
 					confirmButtonText="Submit"
 					confirmButtonVariant="primary"
 					confirmButtonDisabled={input === ""}
+					title={text}
 					// TODO add a title
 				>
 					{/* TODO use a proper form here */}
-					<p>{text}</p>
 					<input
 						onChange={e => setInput(e.target.value)}
 						type="text"
@@ -87,17 +87,17 @@ const MyModal = (props : {
 }) => {
 	const [show, setShow] = useState(true);
 
-	const handleClose = () => {
-		setShow(false)
-		props.onClose();
-	};
-
 	return (
 		<>
-			{/* <p>Testing for leaks! Uncomment me to make sure the component
-				gets cleaned up.</p> */}
 
-			<Modal show={show} onHide={handleClose}>
+			{/* <p>Testing for leaks! Uncomment me to make sure the component */}
+			{/* gets cleaned up.</p> */}
+
+			<Modal
+				show={show}
+				onHide={() => setShow(false)}
+				onExited={props.onClose}
+			>
 				<Modal.Header closeButton>
 					<Modal.Title>{props.title}</Modal.Title>
 				</Modal.Header>
@@ -110,11 +110,11 @@ const MyModal = (props : {
 					<Button
 						variant={props.confirmButtonVariant ?? "outline-warning"}
 						disabled={(props.confirmButtonDisabled ?? false)}
-						onClick={() => { props.onConfirm(); handleClose(); }}
+						onClick={() => { props.onConfirm(); setShow(false); }}
 					>
 						{props.confirmButtonText ?? "Confirm"}
 					</Button>
-					<Button variant="outline-secondary" onClick={handleClose}>
+					<Button variant="outline-secondary" onClick={() => setShow(false)}>
 						Cancel
 					</Button>
 				</Modal.Footer>
