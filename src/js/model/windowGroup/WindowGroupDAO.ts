@@ -18,6 +18,7 @@ export default class WindowGroupDAO {
 						console.warn(`Window with id [${wid}] was expected in window group [${wg.name}] but not found`);
 						return [];
 					}
+					window.addWindowGroup(wg.name);
 					return [window];
 				})
 			}

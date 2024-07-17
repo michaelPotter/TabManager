@@ -65,6 +65,8 @@ class WindowStore {
 				removeTab: action,
 				addTab: action,
 				moveTab: action,
+				windowGroups: observable,
+				addWindowGroup: action,
 			});
 			(w as Window).tabs.forEach(t => {
 				makeObservable(t, {

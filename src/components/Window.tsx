@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import Badge from 'react-bootstrap/Badge';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ReactSortable } from 'react-sortablejs';
 
@@ -72,6 +73,11 @@ const Window = (
 						<span className="text-muted">
 							{props.window.tabs.length} tabs
 						</span>
+						{props.window.windowGroups.map((windowGroup) => (
+							<Badge bg="secondary" className="ms-2">
+							{windowGroup}
+							</Badge>
+						))}
 					</Col>
 
 					<Col xs='auto' className="p-0">

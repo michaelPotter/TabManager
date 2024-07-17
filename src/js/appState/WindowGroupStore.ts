@@ -24,6 +24,7 @@ class WindowGroupStore {
 	// FIXME we should prevent the same window from being added twice
 	addWindowToGroup = (window: Window, groupName: string) => {
 		this.windowGroups.find(wg => wg.name === groupName)?.windows.push(window)
+		window.addWindowGroup(groupName);
 		this.#persist();
 	}
 
@@ -56,6 +57,7 @@ class WindowGroupStore {
 		if (group) {
 			group.windows = group.windows.filter(w => w.id !== window.id);
 		}
+		window.removeWindowGroup(groupName);
 		this.#persist();
 	}
 

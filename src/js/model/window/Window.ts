@@ -19,6 +19,7 @@ export default class Window {
 	private _last_accessed: number;
 	private _name: string;
 	private window: browser.windows.Window;
+	windowGroups: string[] = [];
 	tabs: Tab[] = [];
 
 	/**
@@ -50,6 +51,14 @@ export default class Window {
 		if (tab.id) {
 			this.getTabById(tab.id)?.updateTab(tab);
 		}
+	}
+
+	addWindowGroup(name: string) {
+		this.windowGroups.push(name);
+	}
+
+	removeWindowGroup(name: string) {
+		this.windowGroups = this.windowGroups.filter(wg => wg !== name);
 	}
 
 	/**
