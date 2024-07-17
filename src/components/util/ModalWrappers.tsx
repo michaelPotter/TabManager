@@ -107,15 +107,15 @@ const MyModal = (props : {
 				</Modal.Body>
 
 				<Modal.Footer>
+					<Button variant="outline-secondary" onClick={() => setShow(false)}>
+						Cancel
+					</Button>
 					<Button
-						variant={props.confirmButtonVariant ?? "outline-warning"}
+						variant={props.confirmButtonVariant ?? "outline-danger"}
 						disabled={(props.confirmButtonDisabled ?? false)}
 						onClick={() => { props.onConfirm(); setShow(false); }}
 					>
 						{props.confirmButtonText ?? "Confirm"}
-					</Button>
-					<Button variant="outline-secondary" onClick={() => setShow(false)}>
-						Cancel
 					</Button>
 				</Modal.Footer>
 

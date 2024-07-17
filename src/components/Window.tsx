@@ -197,11 +197,11 @@ const EditWindowModalButton = (props : {
 					/>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="danger" onClick={() => onSubmit() && handleClose()}>
-						Confirm
-					</Button>
 					<Button variant="secondary" onClick={handleClose}>
 						Cancel
+					</Button>
+					<Button variant="danger" onClick={() => onSubmit() && handleClose()}>
+						Confirm
 					</Button>
 				</Modal.Footer>
 			</Modal>
