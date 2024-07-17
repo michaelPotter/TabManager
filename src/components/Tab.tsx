@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 import classnames from 'classnames';
 
 import TabModel from '../js/model/tab/Tab';
@@ -25,10 +26,13 @@ export default observer(function Tab(
 ) {
 	const [isBookmarked, setBookmarked] = useState(false);
 	const [tabContext, setTabContext] = useState({});
+	const [isFaviconHover, setIsFaviconHover] = useState(false);
 	props.tab.isBookmarked().then(setBookmarked);
 	// TODO things get reaally slow with this enabled...
 	// props.tab.get_container().then(setTabContext);
 	return (
+		// FIXME middle click doesn't work
+		// FIXME the star button doesn't work
 		<div
 			id={(props.tab.id ?? -1).toString()}
 			className={classnames("tab", {"activeTab":props.tab.active})}
@@ -39,7 +43,18 @@ export default observer(function Tab(
 				<Col className='p-0'>
 					<ContextMarker context={tabContext} />
 					{/* TODO here's an idea... when the favicon is hovered, show a checkbox. Once one tab is clicked, the entire page goes into "multi-select" mode until none are selected again. */}
-					<Favicon src={props.tab.favIconUrl}/>
+					<div
+						// onMouseEnter={() => setIsFaviconHover(true)}
+						// onMouseLeave={() => setIsFaviconHover(false)}
+						style={{display: 'inline'}}
+					>
+						{isFaviconHover
+							?
+							<Form.Check type={'checkbox'} inline className="m-0"/>
+							:
+							<Favicon src={props.tab.favIconUrl}/>
+						}
+					</div>
 					{" " + props.tab.title}
 				</Col>
 				<Col sm="auto" className='p-0'>
@@ -59,11 +74,9 @@ export default observer(function Tab(
 	)
 });
 
-function Star(
-	props : {
-		filled: boolean,
-	}
-) {
+function Star(props : {
+		filled: boolean;
+}) {
 	if (props.filled) {
 		return <i className="material-icons star star_filled">star</i>
 	} else {
