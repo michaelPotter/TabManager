@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 
 /**
@@ -36,6 +37,7 @@ export const wrapWithInput = (
 	return function() {
 		tempRender(props => {
 			const [input, setInput] = useState("");
+			let closeModal = () => {};
 			return (
 				<MyModal
 					onConfirm={() => onSubmit(input)}
@@ -43,14 +45,25 @@ export const wrapWithInput = (
 					confirmButtonText="Submit"
 					confirmButtonVariant="primary"
 					confirmButtonDisabled={input === ""}
+					setCloseModal={f => closeModal = f}
 					title={text}
-					// TODO add a title
 				>
-					{/* TODO use a proper form here */}
-					<input
-						onChange={e => setInput(e.target.value)}
-						type="text"
-					/>
+
+					<Form
+						onSubmit={(e: any) => {
+							e.preventDefault();
+							onSubmit(input);
+							closeModal();
+					}}>
+						<Form.Label>{text}</Form.Label>
+						<Form.Control
+							autoFocus
+							name="input"
+							type="text"
+							onChange={e => setInput(e.target.value)}
+						/>
+					</Form>
+
 				</MyModal>
 			)
 		})
@@ -83,9 +96,11 @@ const MyModal = (props : {
 	confirmButtonText?: string,
 	confirmButtonVariant?: string,
 	confirmButtonDisabled?: boolean,
+	setCloseModal?: (cb: () => void) => void,
 	children: React.ReactNode,
 }) => {
 	const [show, setShow] = useState(true);
+	props.setCloseModal?.(() => setShow(false));
 
 	return (
 		<>

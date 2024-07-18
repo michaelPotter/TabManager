@@ -74,7 +74,7 @@ const Window = (
 							{props.window.tabs.length} tabs
 						</span>
 						{props.window.windowGroups.map((windowGroup) => (
-							<Badge bg="secondary" className="ms-2">
+							<Badge bg="secondary" className="ms-2" key={windowGroup}>
 							{windowGroup}
 							</Badge>
 						))}

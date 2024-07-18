@@ -34,6 +34,7 @@ class WindowGroupStore {
 				.withWindow(window)
 				.build()
 		);
+		window.addWindowGroup(groupName);
 		this.#persist();
 	}
 
