@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -52,7 +52,7 @@ export const wrapWithInput = (
 		}
 		tempRender(props => {
 			const [input, setInput] = useState("");
-			let closeModal = () => {};
+			const closeModalRef = useRef(() => {});
 			return (
 				<MyModal
 					onConfirm={() => onSubmit(input)}
@@ -60,7 +60,7 @@ export const wrapWithInput = (
 					confirmButtonText="Submit"
 					confirmButtonVariant="primary"
 					confirmButtonDisabled={(!opts.allowEmpty) && input === ""}
-					setCloseModal={f => closeModal = f}
+					closeModalRef={closeModalRef}
 					title={opts.title}
 				>
 
@@ -68,7 +68,7 @@ export const wrapWithInput = (
 						onSubmit={(e: any) => {
 							e.preventDefault();
 							onSubmit(input);
-							closeModal();
+							closeModalRef.current?.();
 					}}>
 						<Form.Label>{opts.text}</Form.Label>
 						<Form.Control
@@ -111,11 +111,13 @@ const MyModal = (props : {
 	confirmButtonText?: string,
 	confirmButtonVariant?: string,
 	confirmButtonDisabled?: boolean,
-	setCloseModal?: (cb: () => void) => void,
+	closeModalRef?: React.MutableRefObject<any>
 	children: React.ReactNode,
 }) => {
 	const [show, setShow] = useState(true);
-	props.setCloseModal?.(() => setShow(false));
+	if (props.closeModalRef) {
+		props.closeModalRef.current = () => setShow(false);
+	}
 
 	return (
 		<>
