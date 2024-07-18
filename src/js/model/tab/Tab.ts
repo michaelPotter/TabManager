@@ -65,7 +65,6 @@ export default class Tab {
 		// searching for certain sites causes errors
 		const avoid_these_sites = [
 			/^about:.*/,
-			/^file:.*/,
 			/view-source:moz-extension:.*/
 		]
 
@@ -77,8 +76,13 @@ export default class Tab {
 		}
 
 		if (! bad_site) {
-			let bookmarks = await browser.bookmarks.search({"url":this.tab.url});
-			return bookmarks.length > 0;
+			try {
+				// NOTE: you can also go ... search({url: this.tab.url}) ... but doesn't seem to work for some things like file:// or moz-extension://
+				let bookmarks = await browser.bookmarks.search(this.tab.url);
+				return bookmarks.length > 0;
+			} catch (e) {
+				console.warn(`Cannot check bookmark for url ${this.tab.url}`, e);
+			}
 		}
 		return false;
 	}
