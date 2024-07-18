@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import WindowComponent from './Window';
+import WindowComponent, { RenameWindowDropdownItem } from './Window';
 import WindowGroup from '../js/model/windowGroup/WindowGroup';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
@@ -107,8 +107,10 @@ export default observer((
 							dropdownMenu={
 								<Dropdown.Menu className="shadow-sm">
 									<Dropdown.Header>Window Actions</Dropdown.Header>
-									{/* TODO should we still include the edit option here? */}
-									<Dropdown.Item onClick={() => WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)}>
+									<RenameWindowDropdownItem window={w}/>
+									<Dropdown.Item onClick={() =>
+										WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)
+									}>
 										Remove window from group
 									</Dropdown.Item>
 								</Dropdown.Menu>

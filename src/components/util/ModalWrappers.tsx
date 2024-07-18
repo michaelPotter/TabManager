@@ -30,11 +30,26 @@ export const wrapWithConfirm = (
 	}
 }
 
+type WrapWithInputOptions = {
+	text: string;
+	title?: string;
+	allowEmpty?: boolean;
+}
+
 export const wrapWithInput = (
-	text: string,
+	textOrOpts: string | WrapWithInputOptions,
 	onSubmit: (input: string) => void
 ) => {
 	return function() {
+		let opts = typeof textOrOpts == 'string' ? {
+			text: textOrOpts,
+			title: textOrOpts,
+			allowEmpty: false,
+		} : {
+			text: textOrOpts.text,
+			title: textOrOpts.title ?? textOrOpts.text,
+			allowEmpty: textOrOpts.allowEmpty ?? false
+		}
 		tempRender(props => {
 			const [input, setInput] = useState("");
 			let closeModal = () => {};
@@ -44,9 +59,9 @@ export const wrapWithInput = (
 					onClose={props.onClose}
 					confirmButtonText="Submit"
 					confirmButtonVariant="primary"
-					confirmButtonDisabled={input === ""}
+					confirmButtonDisabled={(!opts.allowEmpty) && input === ""}
 					setCloseModal={f => closeModal = f}
-					title={text}
+					title={opts.title}
 				>
 
 					<Form
@@ -55,7 +70,7 @@ export const wrapWithInput = (
 							onSubmit(input);
 							closeModal();
 					}}>
-						<Form.Label>{text}</Form.Label>
+						<Form.Label>{opts.text}</Form.Label>
 						<Form.Control
 							autoFocus
 							name="input"

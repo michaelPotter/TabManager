@@ -17,7 +17,7 @@ declare type WindowExtraData = {
 
 export default class Window {
 	private _last_accessed: number;
-	private _name: string;
+	name: string;
 	private window: browser.windows.Window;
 	windowGroups: string[] = [];
 	tabs: Tab[] = [];
@@ -31,7 +31,7 @@ export default class Window {
 	constructor(window: browser.windows.Window, tabs: Tab[], data?: WindowExtraData) {
 		this.window = window;
 		this._last_accessed = data?.last_accessed ?? -1;
-		this._name = data?.name ?? "";
+		this.name = data?.name ?? "";
 		this.tabs = tabs;
 	}
 
@@ -138,9 +138,8 @@ export default class Window {
 		WindowDAO.storeWindow(this);
 	}
 
-	get name() { return this._name; }
-	set name(name: string) {
-		this._name = name;
+	setName(name: string) {
+		this.name = name;
 		WindowDAO.storeWindow(this);
 	}
 
