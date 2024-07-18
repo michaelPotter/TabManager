@@ -65,6 +65,7 @@ export default class Tab {
 		// searching for certain sites causes errors
 		const avoid_these_sites = [
 			/^about:.*/,
+			/^file:.*/,
 			/view-source:moz-extension:.*/
 		]
 
