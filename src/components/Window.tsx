@@ -49,7 +49,8 @@ function onDragEnd(
 const Window = (
 	props : {
 		window: WindowModel,
-		dropdownMenu?: JSX.Element
+		dropdownMenu?: JSX.Element,
+		showGroupBadge?: boolean,
 	}
 ) => {
 	const [isHover, setIsHover] = useState(false);
@@ -73,7 +74,7 @@ const Window = (
 						<span className="text-muted">
 							{props.window.tabs.length} tabs
 						</span>
-						{props.window.windowGroups.map((windowGroup) => (
+						{(props.showGroupBadge ?? true) && props.window.windowGroups.map((windowGroup) => (
 							<Badge bg="secondary" className="ms-2" key={windowGroup}>
 							{windowGroup}
 							</Badge>

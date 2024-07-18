@@ -96,12 +96,14 @@ export default observer((
 					</Row>
 				</Container>
 			</Card.Header>
+
 			{ isRolledUp ||
 				<Card.Body>
 					{props.windowGroup.windows.map(w => (
 						<WindowComponent
 							window={w}
 							key={w.id}
+							showGroupBadge={false}
 							dropdownMenu={
 								<Dropdown.Menu className="shadow-sm">
 									<Dropdown.Header>Window Actions</Dropdown.Header>
