@@ -18,10 +18,10 @@ export const wrapWithConfirm = (
 	onConfirm: (a?: any) => void
 ) => {
 	return function() {
-		tempRender(props => (
+		tempRender(removeTempRenderTree => () => (
 			<MyModal
 				onConfirm={onConfirm}
-				onClose={props.onClose}
+				onClose={removeTempRenderTree}
 				title="Confirmation required"
 			>
 				<p>{text}</p>
@@ -55,7 +55,7 @@ export const wrapWithInput = (
 			defaultValue: textOrOpts.defaultValue ?? "",
 		}
 
-		tempRender(props => {
+		tempRender(removeTempRenderTree => () => {
 			const [input, setInput] = useState(opts.defaultValue);
 			const inputRef: React.MutableRefObject<any> = useRef(null);
 			useEffect(() => {
@@ -66,7 +66,7 @@ export const wrapWithInput = (
 			return (
 				<MyModal
 					onConfirm={() => onSubmit(input)}
-					onClose={props.onClose}
+					onClose={removeTempRenderTree}
 					confirmButtonText="Submit"
 					confirmButtonVariant="primary"
 					confirmButtonDisabled={(!opts.allowEmpty) && input === ""}
@@ -100,22 +100,21 @@ export const wrapWithInput = (
 type ClosableComponent = React.FC<{onClose: () => void}>
 
 /**
- * Internal helper, render the given component temporarily. It should take an
- * onClose prop, which will be a callback to remove the component from the DOM.
+ * Internal helper to render a component in a separate, temporary React tree.
  *
- * Maybe it'd be better if this took a function f which returns a react component ... like ... f: (onClose: () => {}) => ReactFC
+ * This function requires as input a "component builder function". The builder
+ * function should take a callback and return a React component. The callback
+ * will remove the temporary render tree when called.
  */
-const tempRender = (Component: ClosableComponent) => {
+const tempRender = (buildComponent: (removeTempRenderTree: () => void) => React.FC) => {
 	// This is a little hacky... create a div element on the page, to render a
 	// separate react tree. Remove after the modal closes.
 	const div = document.createElement('div');
 	document.body.appendChild(div);
 
-	let modal = (
-		<Component onClose={() => document.body.removeChild(div)} />
-	)
+	let Component = buildComponent(() => document.body.removeChild(div));
 
-	ReactDOM.render(modal, div);
+	ReactDOM.render(<Component/>, div);
 }
 
 const MyModal = (props : {
