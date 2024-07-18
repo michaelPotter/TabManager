@@ -168,7 +168,11 @@ export const RenameWindowDropdownItem = observer((
 	let text = props.window.name == "" ? "Name Window" : "Rename Window";
 	return (
 		<Dropdown.Item onClick={
-			wrapWithInput({ text, allowEmpty: true }, (newWindowName) => {
+			wrapWithInput({
+				text,
+				allowEmpty: true,
+				defaultValue: props.window.name,
+			}, (newWindowName) => {
 				props.window.setName(newWindowName);
 			})
 		}>{text}</Dropdown.Item>

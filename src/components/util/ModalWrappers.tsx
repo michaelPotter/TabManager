@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -34,6 +34,7 @@ type WrapWithInputOptions = {
 	text: string;
 	title?: string;
 	allowEmpty?: boolean;
+	defaultValue?: string;
 }
 
 export const wrapWithInput = (
@@ -41,18 +42,27 @@ export const wrapWithInput = (
 	onSubmit: (input: string) => void
 ) => {
 	return function() {
+
 		let opts = typeof textOrOpts == 'string' ? {
 			text: textOrOpts,
 			title: textOrOpts,
 			allowEmpty: false,
+			defaultValue: "",
 		} : {
 			text: textOrOpts.text,
 			title: textOrOpts.title ?? textOrOpts.text,
-			allowEmpty: textOrOpts.allowEmpty ?? false
+			allowEmpty: textOrOpts.allowEmpty ?? false,
+			defaultValue: textOrOpts.defaultValue ?? "",
 		}
+
 		tempRender(props => {
-			const [input, setInput] = useState("");
+			const [input, setInput] = useState(opts.defaultValue);
+			const inputRef: React.MutableRefObject<any> = useRef(null);
+			useEffect(() => {
+				inputRef.current.select();
+			}, []);
 			const closeModalRef = useRef(() => {});
+
 			return (
 				<MyModal
 					onConfirm={() => onSubmit(input)}
@@ -73,8 +83,10 @@ export const wrapWithInput = (
 						<Form.Label>{opts.text}</Form.Label>
 						<Form.Control
 							autoFocus
+							ref={inputRef}
 							name="input"
 							type="text"
+							value={input}
 							onChange={e => setInput(e.target.value)}
 						/>
 					</Form>
@@ -90,6 +102,8 @@ type ClosableComponent = React.FC<{onClose: () => void}>
 /**
  * Internal helper, render the given component temporarily. It should take an
  * onClose prop, which will be a callback to remove the component from the DOM.
+ *
+ * Maybe it'd be better if this took a function f which returns a react component ... like ... f: (onClose: () => {}) => ReactFC
  */
 const tempRender = (Component: ClosableComponent) => {
 	// This is a little hacky... create a div element on the page, to render a
