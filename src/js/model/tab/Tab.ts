@@ -6,6 +6,8 @@
  */
 'use strict';
 
+import { observable, action, makeObservable } from "mobx";
+
 import _ from 'lodash';
 
 // This is the extra data we can't get from the browser api.
@@ -29,6 +31,12 @@ export default class Tab {
 		this.tab = tab;
 		if (tab.active) this.setActive(true);
 
+		makeObservable(this, {
+			tab: observable,
+			active: observable,
+			updateTab: action,
+			setActive: action,
+		});
 	}
 
 	/**

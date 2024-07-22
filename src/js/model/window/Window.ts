@@ -4,8 +4,10 @@
  * Create instances of this class by using WindowBuilder.
  */
 
-import Tab from '../tab/Tab';
 import _ from 'lodash';
+import { observable, action, makeObservable } from "mobx";
+
+import Tab from '../tab/Tab';
 import WindowDAO from './WindowDAO';
 
 // This is the extra data we can't get from the browser api.
@@ -33,6 +35,19 @@ export default class Window {
 		this._last_accessed = data?.last_accessed ?? -1;
 		this.name = data?.name ?? "";
 		this.tabs = tabs;
+
+		makeObservable(this, {
+			tabs: observable,
+			removeTab: action,
+			addTab: action,
+			moveTab: action,
+
+			windowGroups: observable,
+			addWindowGroup: action,
+
+			name: observable,
+			setName: action,
+		});
 	}
 
 	removeTab(tabid: number) {

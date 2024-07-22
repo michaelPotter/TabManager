@@ -1,4 +1,4 @@
-import { observable, configure, action, flow, makeObservable, runInAction } from "mobx";
+import { observable, action, makeObservable } from "mobx";
 
 import Window from '../../js/model/window/Window';
 import BrowserWindowHooks from './BrowserWindowHooks';
@@ -20,7 +20,6 @@ class WindowStore {
         WindowDAO.getAll()
 			.then(action(windowsList => {
 				this._windowsObject = _.keyBy<Window>(windowsList, w => w.id);
-				this._makeThingsObservable();
 				this.state = "finished"
 			}));
 	}
@@ -51,37 +50,6 @@ class WindowStore {
         delete this._windowsObject[windowId];
         browser.windows.remove(windowId);
     }
-
-	/**
-	 * This function reaches deep into the models structure to add observable
-	 * hooks to things that need it. I'm not sure this is the best way to do it
-	 * or even that this is the best place, but it'll be easier to try it here
-	* first.
-	 */
-	_makeThingsObservable() {
-		Object.values(this._windowsObject).forEach(w => {
-			makeObservable(w as Window, {
-				tabs: observable,
-				removeTab: action,
-				addTab: action,
-				moveTab: action,
-
-				windowGroups: observable,
-				addWindowGroup: action,
-
-				name: observable,
-				setName: action,
-			});
-			(w as Window).tabs.forEach(t => {
-				makeObservable(t, {
-					tab: observable,
-					active: observable,
-					updateTab: action,
-					setActive: action,
-				});
-			});
-		});
-	}
 
 	get windows() {
 		return Object.values(this._windowsObject);

@@ -45,6 +45,7 @@ export default class ArchivedWindowGroupDAO {
 	 * This method seems pretty redundant (it just copies properties over), but
 	 * the input object has mobx hooks that prevent it from being serialized,
 	 * so we copy props over to remove them.
+	 * TODO consider using mobx toJS() instead?
 	 */
 	static flattenAWG(awg: ArchivedWindowGroup): ArchivedWindowGroup {
 		return {
