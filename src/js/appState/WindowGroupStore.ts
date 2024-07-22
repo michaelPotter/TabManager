@@ -42,6 +42,7 @@ class WindowGroupStore {
 		let wg = this.windowGroups.find(wg => wg.name === oldName);
 		if (wg) {
 			wg.name = newName;
+			wg.windows.forEach(w => w.renameWindowGroup(oldName, newName));
 			this.#persist();
 		} else {
 			console.warn("Could not find window group to rename: ", oldName);

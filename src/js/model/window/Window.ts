@@ -44,6 +44,7 @@ export default class Window {
 
 			windowGroups: observable,
 			addWindowGroup: action,
+			renameWindowGroup: action,
 
 			name: observable,
 			setName: action,
@@ -70,6 +71,10 @@ export default class Window {
 
 	addWindowGroup(name: string) {
 		this.windowGroups.push(name);
+	}
+
+	renameWindowGroup(oldName: string, newName: string) {
+		this.windowGroups = this.windowGroups.map(wg => wg == oldName ? newName : wg);
 	}
 
 	removeWindowGroup(name: string) {
