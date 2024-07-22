@@ -59,8 +59,10 @@ class _windowGroupBuilder {
 		this.windowGroup.name = name;
 	}
 
-	withWindow(window: Window): _windowGroupBuilder {
-		this.windowGroup.windows.push(window);
+	withWindows(windows: Window[]): _windowGroupBuilder {
+		windows.forEach(w => {
+			this.windowGroup.windows.push(w);
+		});
 		return this;
 	}
 

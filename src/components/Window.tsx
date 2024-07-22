@@ -98,7 +98,7 @@ const Window = (
 											{WindowGroupStore.windowGroups.map((windowGroup) => (
 												<Dropdown.Item
 													key={windowGroup.name}
-													onClick={() => WindowGroupStore.addWindowToGroup(props.window, windowGroup.name)}
+													onClick={() => WindowGroupStore.addWindowsToGroup([props.window], windowGroup.name)}
 												>
 													{windowGroup.name}
 												</Dropdown.Item>
@@ -106,7 +106,7 @@ const Window = (
 											<Dropdown.Divider />
 											<Dropdown.Item onClick={
 												wrapWithInput("New Group Name", (newGroupName) => {
-													WindowGroupStore.addWindowToNewGroup(props.window, newGroupName);
+													WindowGroupStore.addWindowsToNewGroup([props.window], newGroupName);
 												})
 											}>New Group</Dropdown.Item>
 										</Dropdown.Menu>

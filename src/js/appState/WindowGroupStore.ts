@@ -22,19 +22,23 @@ class WindowGroupStore {
 	}
 
 	// FIXME we should prevent the same window from being added twice
-	addWindowToGroup = (window: Window, groupName: string) => {
-		this.windowGroups.find(wg => wg.name === groupName)?.windows.push(window)
-		window.addWindowGroup(groupName);
+	addWindowsToGroup = (windows: Window[], groupName: string) => {
+		windows.forEach(w => {
+			this.windowGroups.find(wg => wg.name === groupName)?.windows.push(w)
+			w.addWindowGroup(groupName);
+		});
 		this.#persist();
 	}
 
-	addWindowToNewGroup = (window: Window, groupName: string) => {
+	addWindowsToNewGroup = (windows: Window[], groupName: string) => {
 		this.windowGroups.push(
 			WindowGroupDAO.new(groupName)
-				.withWindow(window)
+				.withWindows(windows)
 				.build()
 		);
-		window.addWindowGroup(groupName);
+		windows.forEach(w => {
+			w.addWindowGroup(groupName);
+		});
 		this.#persist();
 	}
 
