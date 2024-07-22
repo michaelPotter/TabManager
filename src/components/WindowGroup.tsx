@@ -53,6 +53,7 @@ export default observer((
 									<Dropdown.Menu className="shadow-sm">
 										<Dropdown.Header>Window Group Actions</Dropdown.Header>
 
+										{/* // TODO add the old name as default value */}
 										<Dropdown.Item onClick={wrapWithInput("Rename Window Group", (input: string) => {
 											WindowGroupStore.renameWindowGroup(props.windowGroup.name, input)
 										})}>Rename group</Dropdown.Item>
