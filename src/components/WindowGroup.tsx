@@ -45,16 +45,16 @@ export default observer((
 							<div className="float-end"
 								// Without this, the icon buttons increase the size of the tab line
 								style={{ maxHeight: "24px" }} >
-								{/* TODO size/align the ellipse a lil better */}
-								{/* FIXME the dropdown hangs off the side */}
 								<Dropdown style={{ display: "inline-block" }} id={`windowgroup-actions-${props.windowGroup.name}`} align="end">
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>
 									<Dropdown.Menu className="shadow-sm">
 										<Dropdown.Header>Window Group Actions</Dropdown.Header>
 
-										{/* // TODO add the old name as default value */}
-										<Dropdown.Item onClick={wrapWithInput("Rename Window Group", (input: string) => {
+										<Dropdown.Item onClick={wrapWithInput({
+											text: "Rename Window Group",
+											defaultValue: props.windowGroup.name,
+										}, (input: string) => {
 											WindowGroupStore.renameWindowGroup(props.windowGroup.name, input)
 										})}>Rename group</Dropdown.Item>
 
