@@ -13,6 +13,10 @@ import { ArchivedWindowGroup } from '../../js/model/archivedWindowGroup/Archived
 import ArchivedWindow from './ArchivedWindow';
 import ArchivedWindowGroupStore from '../../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
 import { wrapWithConfirm, wrapWithInput } from '../util/ModalWrappers';
+import WindowGroupStore from '../../js/appState/WindowGroupStore';
+import WindowStore from '../../js/appState/WindowStore';
+import WindowModel from '../../js/model/window/Window';
+import { unarchiveWindowGroup } from '../../js/model/windowGroup/WindowGroupArchiver';
 
 /**
  * WindowGroup
@@ -47,7 +51,9 @@ export default observer((
 										<Dropdown.Item onClick={wrapWithInput("Rename Window Group", (input: string) => {
 											ArchivedWindowGroupStore.renameAWG(props.archivedWindowGroup.name, input)
 										})}>Rename group</Dropdown.Item>
-										<Dropdown.Item>TODO Unarchive</Dropdown.Item>
+										<Dropdown.Item onClick={() => unarchiveWindowGroup(props.archivedWindowGroup)}>
+											Unarchive
+										</Dropdown.Item>
 										<Dropdown.Item
 											onClick={wrapWithConfirm("Are you sure you want to delete this window group?", () => {
 													ArchivedWindowGroupStore.deleteAWG(props.archivedWindowGroup.name)

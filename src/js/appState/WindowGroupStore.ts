@@ -11,14 +11,21 @@ class WindowGroupStore {
 	constructor() {
 		makeObservable(this, {
 			windowGroups: observable,
-			addWindowToGroup: action,
-			addWindowToNewGroup: action,
+			addWindowsToGroup: action,
+			addWindowsToNewGroup: action,
 			renameWindowGroup: action,
 			deleteWindowGroup: action,
 		});
 
 		WindowGroupDAO.getAll()
 			.then(action(windowGroups => this.windowGroups = windowGroups));
+	}
+
+	createWindowGroup = (groupName: string) => {
+		let windowGroup = WindowGroupDAO.new(groupName).build();
+		this.windowGroups.push(windowGroup);
+		this.#persist();
+		return windowGroup;
 	}
 
 	// FIXME we should prevent the same window from being added twice

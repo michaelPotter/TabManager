@@ -12,9 +12,8 @@ import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';
 import WindowGroupStore from '../js/appState/WindowGroupStore';
-import { createWindowGroupArchive } from '../js/model/windowGroup/WindowGroupArchiver';
-import ArchivedWindowGroupStore from '../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
-import { wrapWithConfirm, wrapWithInput } from './util/ModalWrappers';
+import { archiveWindowGroup } from '../js/model/windowGroup/WindowGroupArchiver';
+import { wrapWithInput } from './util/ModalWrappers';
 
 /**
  * WindowGroup
@@ -58,34 +57,15 @@ export default observer((
 											WindowGroupStore.renameWindowGroup(props.windowGroup.name, input)
 										})}>Rename group</Dropdown.Item>
 
-										<Dropdown.Item onClick={() => {
-											let awg = createWindowGroupArchive(props.windowGroup);
-											ArchivedWindowGroupStore.addAWG(awg);
-											// TODO remove window group when we're sure everythign works
-										}}>TEMP Copy to Archive</Dropdown.Item>
-
-										{/* <Dropdown.Item onClick={() => {/1* TODO implement *1/}}> */}
-										{/* 	TODO Move to Archive */}
-										{/* </Dropdown.Item> */}
-
-										<Dropdown.Item onClick={wrapWithConfirm("Are you sure you want to perform that action?", () =>
-											window.alert("Action performed!")
-										)}>
-											TEST CONFIRM MODAL
+										<Dropdown.Item onClick={() => archiveWindowGroup(props.windowGroup)}>
+											Move to Archive
 										</Dropdown.Item>
-
-										<Dropdown.Item onClick={wrapWithInput("Give me some input", (input: string) =>
-											window.alert("You entered: " + input)
-										)}>
-											TEST INPUT MODAL
-										</Dropdown.Item>
-
 
 										<Dropdown.Item onClick={() => props.windowGroup.windows.length > 0 ?
 											// TODO it might be better to open a confirm modal instead.
 											window.alert("Cannot delete a window group with windows in it. Please close or remove them.") :
 											WindowGroupStore.deleteWindowGroup(props.windowGroup.name)}>
-											Delete this window group
+											Delete group
 										</Dropdown.Item>
 
 									</Dropdown.Menu>

@@ -1,7 +1,10 @@
+import WindowGroupStore from "../../appState/WindowGroupStore";
+import WindowStore from "../../appState/WindowStore";
 import { ArchivedWindowGroup } from "../archivedWindowGroup/ArchivedWindowGroup";
+import ArchivedWindowGroupStore from "../archivedWindowGroup/ArchivedWindowGroupStore";
 import WindowGroup from "./WindowGroup";
 
-export function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
+function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 	return {
 		name: wg.name,
 		archiveDate: new Date(),
@@ -14,4 +17,26 @@ export function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 			})),
 		})),
 	}
+}
+
+export function archiveWindowGroup(wg: WindowGroup) {
+	let awg = createWindowGroupArchive(wg);
+	ArchivedWindowGroupStore.addAWG(awg);
+	wg.windows.forEach(w => {
+		WindowStore.closeWindow(w.id);
+	});
+	WindowGroupStore.deleteWindowGroup(wg.name);
+}
+
+export async function unarchiveWindowGroup(awg: ArchivedWindowGroup) {
+	let promises = awg.windows.map(w =>
+		WindowStore.createWindow({
+			name: w.name,
+			tabs: w.tabs.map(t => t.url),
+			windowGroup: awg.name,
+		}).then(w => w ? [w] : [])
+	);
+	let windows = await Promise.all(promises);
+	WindowGroupStore.addWindowsToNewGroup(windows.flat(), awg.name);
+	ArchivedWindowGroupStore.deleteAWG(awg.name);
 }

@@ -21,6 +21,7 @@ export default class Window {
 	private _last_accessed: number;
 	name: string;
 	private window: browser.windows.Window;
+	// This data is not stored with window data; it is updated dynamically based on stored WindowGroups.
 	windowGroups: string[] = [];
 	tabs: Tab[] = [];
 
