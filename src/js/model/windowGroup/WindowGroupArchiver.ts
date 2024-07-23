@@ -3,6 +3,7 @@ import WindowStore from "../../appState/WindowStore";
 import { ArchivedWindowGroup } from "../archivedWindowGroup/ArchivedWindowGroup";
 import ArchivedWindowGroupStore from "../archivedWindowGroup/ArchivedWindowGroupStore";
 import WindowGroup from "./WindowGroup";
+import type WindowModel from '../window/Window';
 
 function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 	return {
@@ -28,15 +29,38 @@ export function archiveWindowGroup(wg: WindowGroup) {
 	WindowGroupStore.deleteWindowGroup(wg.name);
 }
 
+const allowed_urls = /^http(s)?/
+
 export async function unarchiveWindowGroup(awg: ArchivedWindowGroup) {
-	let promises = awg.windows.map(w =>
-		WindowStore.createWindow({
+	let promises = awg.windows.map(async w => {
+
+		// Create the new window
+		let win = await WindowStore.createWindow({
 			name: w.name,
-			tabs: w.tabs.map(t => t.url),
+			tabs: w.tabs.map(t => t.url)
+				.filter(t => t.match(allowed_urls))
+				,
 			windowGroup: awg.name,
-		}).then(w => w ? [w] : [])
-	);
-	let windows = await Promise.all(promises);
-	WindowGroupStore.addWindowsToNewGroup(windows.flat(), awg.name);
+		})
+
+		// Manually create placeholders for tabs we don't have perms to create
+		// TODO right now this supports newtabs, but to support other things, we should create a new extension page,
+		// e.g. faketab.jsx that we can open instead. This placeholder tab page should have a message explaining why the
+		// real url can't be opened, and a clickable link to the real url.
+		if (win?.id) {
+			w.tabs.forEach((t, i) => {
+				if (t.url.startsWith("about:newtab")) {
+					browser.tabs.create({
+						windowId: (win as WindowModel).id,
+						index: i,
+					});
+				}
+			});
+		}
+
+		return win ? [win] : [];
+	});
+	let windows = (await Promise.all(promises)).flat();
+	WindowGroupStore.addWindowsToNewGroup(windows, awg.name);
 	ArchivedWindowGroupStore.deleteAWG(awg.name);
 }
