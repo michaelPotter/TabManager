@@ -31,6 +31,7 @@ export function archiveWindowGroup(wg: WindowGroup) {
 
 const allowed_urls = /^http(s)?/
 
+// TODO have all the tabs start as disabled, so they don't all load at once.
 export async function unarchiveWindowGroup(awg: ArchivedWindowGroup) {
 	let promises = awg.windows.map(async w => {
 
