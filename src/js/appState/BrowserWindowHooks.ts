@@ -7,12 +7,14 @@ import type WindowModel from '../model/window/Window';
 class BrowserWindowHooks {
 
 	public engageHooks() {
-        // Set up callbacks
-        browser.tabs.onCreated.addListener(this._onTabCreated);
-        browser.tabs.onActivated.addListener(this._onTabActivated);
-        browser.tabs.onUpdated.addListener(this._onTabUpdated);
-        browser.tabs.onMoved.addListener(this._onTabMoved);
-        browser.tabs.onRemoved.addListener(this._onTabRemoved);
+		// Set up callbacks
+		browser.tabs.onCreated.addListener(this._onTabCreated);
+		browser.tabs.onActivated.addListener(this._onTabActivated);
+		browser.tabs.onUpdated.addListener(this._onTabUpdated);
+		browser.tabs.onMoved.addListener(this._onTabMoved);
+		browser.tabs.onRemoved.addListener(this._onTabRemoved);
+		// browser.windows.onCreated.addListener(this._onWindowCreated);
+		browser.windows.onRemoved.addListener(this._onWindowRemoved);
 	}
 
 	private _onTabCreated: Parameters<typeof browser.tabs.onCreated.addListener>[0]
@@ -51,6 +53,11 @@ class BrowserWindowHooks {
 	private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
 	= async (tabId, removeInfo) => {
 		getWindowById(removeInfo.windowId)?.removeTab(tabId)
+	}
+
+	private _onWindowRemoved: Parameters<typeof browser.windows.onRemoved.addListener>[0]
+	= async (windowId) => {
+		WindowStore.markWindowAsDeleted(windowId);
 	}
 }
 
