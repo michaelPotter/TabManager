@@ -7,7 +7,6 @@ module.exports = {
 		popup: './src/popup.tsx',
 		background: './src/js/background.ts'
 	},
-	mode: 'development',
 	devtool: 'source-map',
 	output: {
 		filename: '[name].js',
