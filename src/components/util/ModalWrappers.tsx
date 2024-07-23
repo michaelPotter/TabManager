@@ -143,7 +143,7 @@ const MyModal = (props : {
 				onHide={() => setShow(false)}
 				onExited={props.onClose}
 			>
-				<Modal.Header closeButton>
+				<Modal.Header>
 					<Modal.Title>{props.title}</Modal.Title>
 				</Modal.Header>
 
