@@ -8,8 +8,6 @@
 
 import { observable, action, makeObservable } from "mobx";
 
-import _ from 'lodash';
-
 // This is the extra data we can't get from the browser api.
 // ... There isn't anything yet, but that could change.
 declare type TabExtraData = {

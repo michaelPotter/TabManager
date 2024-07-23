@@ -4,7 +4,6 @@
  * Create instances of this class by using WindowBuilder.
  */
 
-import _ from 'lodash';
 import { observable, action, makeObservable } from "mobx";
 
 import Tab from '../tab/Tab';

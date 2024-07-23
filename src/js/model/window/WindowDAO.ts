@@ -5,7 +5,6 @@
  */
 'use strict';
 
-import _ from 'lodash';
 import TabDAO from '../tab/TabDAO';
 import Window from './Window';
 
