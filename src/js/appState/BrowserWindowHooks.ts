@@ -13,7 +13,7 @@ class BrowserWindowHooks {
 		browser.tabs.onUpdated.addListener(this._onTabUpdated);
 		browser.tabs.onMoved.addListener(this._onTabMoved);
 		browser.tabs.onRemoved.addListener(this._onTabRemoved);
-		// browser.windows.onCreated.addListener(this._onWindowCreated);
+		browser.windows.onCreated.addListener(this.browserWindow);
 		browser.windows.onRemoved.addListener(this._onWindowRemoved);
 	}
 
@@ -21,7 +21,7 @@ class BrowserWindowHooks {
 	= async (browserTab) => {
 		const tab = await TabDAO.createFromBrowserTab(browserTab);
 		if (tab.windowId) {
-			getWindowById(tab.windowId).addTab(tab);
+			this.getWindowById(tab.windowId).addTab(tab);
 		} else {
 			console.warn(`Invariant failure: tab.windowId unexpectedly undefined: ${tab}`)
 		}
@@ -30,7 +30,7 @@ class BrowserWindowHooks {
 	private _onTabActivated: Parameters<typeof browser.tabs.onActivated.addListener>[0]
 	= async (activeInfo) => {
 		let windowId = activeInfo.windowId;
-		const window = getWindowById(windowId);
+		const window = this.getWindowById(windowId);
 		window?.getActiveTab()?.setActive(false);
 		window?.getTabById(activeInfo.tabId)?.setActive(true);
 	}
@@ -38,7 +38,7 @@ class BrowserWindowHooks {
 	private _onTabUpdated: Parameters<typeof browser.tabs.onUpdated.addListener>[0]
 	= async (tabId, changeInfo, tab) => {
 		if (tab.windowId) {
-			getWindowById(tab.windowId)?.updateTab(tab);
+			this.getWindowById(tab.windowId)?.updateTab(tab);
 		}
 	}
 
@@ -47,28 +47,36 @@ class BrowserWindowHooks {
 	 */
 	private _onTabMoved: Parameters<typeof browser.tabs.onMoved.addListener>[0]
 	= async (tabId, {windowId, fromIndex, toIndex}) => {
-		getWindowById(windowId)?.moveTab(tabId, fromIndex, toIndex);
+		this.getWindowById(windowId)?.moveTab(tabId, fromIndex, toIndex);
 	}
 
 	private _onTabRemoved: Parameters<typeof browser.tabs.onRemoved.addListener>[0]
 	= async (tabId, removeInfo) => {
-		getWindowById(removeInfo.windowId)?.removeTab(tabId)
+		this.getWindowById(removeInfo.windowId)?.removeTab(tabId)
+	}
+
+	private browserWindow: Parameters<typeof browser.windows.onCreated.addListener>[0]
+	= async (window) => {
+		if (window.id) {
+			WindowStore.trackNewWindow(window.id);
+		}
 	}
 
 	private _onWindowRemoved: Parameters<typeof browser.windows.onRemoved.addListener>[0]
 	= async (windowId) => {
 		WindowStore.markWindowAsDeleted(windowId);
 	}
-}
 
-function getWindowById(windowId: number): WindowModel {
-	let window = WindowStore.getWindowById(windowId);
-	if (window == undefined) {
-		let err = `Invariant failure: Window not found for WindowId: [${windowId}]`
-		console.trace(err)
-		throw err;
+	getWindowById(windowId: number): WindowModel {
+		let window = WindowStore.getWindowById(windowId);
+		if (window == undefined) {
+			let err = `Invariant failure: Window not found for WindowId: [${windowId}]`
+			console.trace(err)
+			throw err;
+		}
+		return window;
 	}
-	return window;
+
 }
 
 export default new BrowserWindowHooks();

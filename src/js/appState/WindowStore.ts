@@ -55,6 +55,14 @@ class WindowStore {
 		delete this._windowsObject[windowId];
 	}
 
+	async trackNewWindow(windowId: number) {
+		let window = await WindowDAO.get(windowId);
+		runInAction(() => {
+			this._windowsObject[window.id] = window
+		})
+		return window
+	}
+
 	async createWindow(data: {
 		tabs: string[],
 		name?: string,
@@ -64,10 +72,7 @@ class WindowStore {
 			url: data.tabs,
 		});
 		if (win.id) {
-			let window = await WindowDAO.get(win.id);
-			runInAction(() => {
-				this._windowsObject[window.id] = window
-			})
+			let window = await this.trackNewWindow(win.id);
 			return window;
 		} else {
 			console.warn("Invariant failure: newly created window has missing id");
