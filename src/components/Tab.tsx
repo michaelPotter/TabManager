@@ -38,9 +38,11 @@ export default observer(function Tab(
 			className={classnames("tab", {"activeTab":props.tab.active})}
 		>
 
-			<Container fluid onClick={props.mainClick}>
+			<Container fluid>
 			<Row className='p-0'>
-				<Col className='p-0'>
+
+				{/* Tab icon + title */}
+				<Col className='p-0' onClick={props.mainClick}>
 					<ContextMarker context={tabContext} />
 					{/* TODO here's an idea... when the favicon is hovered, show a checkbox. Once one tab is clicked, the entire page goes into "multi-select" mode until none are selected again. */}
 					<div
@@ -57,6 +59,8 @@ export default observer(function Tab(
 					</div>
 					{" " + props.tab.title}
 				</Col>
+
+				{/* Icons at the end */}
 				<Col sm="auto" className='p-0'>
 					<div
 						className="float-end"
@@ -68,6 +72,7 @@ export default observer(function Tab(
 						<Trash onClick={props.trashClick}/>
 					</div>
 				</Col>
+
 			</Row>
 			</Container>
 		</div>
