@@ -23,7 +23,8 @@ class WindowGroupStore {
 
 	createWindowGroup = (groupName: string) => {
 		let windowGroup = WindowGroupDAO.new(groupName).build();
-		this.windowGroups.push(windowGroup);
+		this.windowGroups.unshift(windowGroup);
+		this._moveGroupToTop(groupName);
 		this.#persist();
 		return windowGroup;
 	}
@@ -34,11 +35,12 @@ class WindowGroupStore {
 			this.windowGroups.find(wg => wg.name === groupName)?.windows.push(w)
 			w.addWindowGroup(groupName);
 		});
+		this._moveGroupToTop(groupName);
 		this.#persist();
 	}
 
 	addWindowsToNewGroup = (windows: Window[], groupName: string) => {
-		this.windowGroups.push(
+		this.windowGroups.unshift(
 			WindowGroupDAO.new(groupName)
 				.withWindows(windows)
 				.build()
@@ -72,6 +74,14 @@ class WindowGroupStore {
 		}
 		window.removeWindowGroup(groupName);
 		this.#persist();
+	}
+
+	_moveGroupToTop(groupName: string) {
+		const group = this.windowGroups.find(wg => wg.name === groupName);
+		if (group) {
+			this.windowGroups = this.windowGroups.filter(wg => wg.name !== groupName);
+			this.windowGroups.unshift(group);
+		}
 	}
 
 	#persist() {
