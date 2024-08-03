@@ -1,33 +1,7 @@
-import { ArchivedTab, ArchivedWindow, ArchivedWindowGroup } from "./ArchivedWindowGroup";
+import { ArchivedTab, ArchivedWindow, ArchivedWindowGroup, ArchivedWindowGroupData } from "./ArchivedWindowGroup";
+import { ArchivedWindowGroupExport, ExportedArchivedWindowGroup, ExportedTab, ExportedWindow } from "./ExportedArchivedWindowGroup";
 
 const STORAGE_KEY = "archivedWindowGroups";
-
-type ArchivedWindowGroupDataV1 = {
-	"$schemaVersion": "v1",
-	"$schemaName": "ArchivedWindowGroupsInternal",
-	archivedWindowGroups: ArchivedWindowGroup[];
-}
-type ArchivedWindowGroupData = ArchivedWindowGroupDataV1;
-
-
-type ArchivedWindowGroupExportV1 = {
-	"$schemaVersion": "v1",
-	"$schemaName": "ArchivedWindowGroups",
-	archivedWindowGroups: ExportedWindowGroup[];
-	favicons: Record<string, string>;
-}
-type ArchivedWindowGroupExport = ArchivedWindowGroupExportV1;
-
-type ExportedWindowGroup = Omit<ArchivedWindowGroup, 'windows'> & {
-	windows: ExportedWindow[];
-}
-type ExportedWindow = Omit<ArchivedWindow, 'tabs'> & {
-	tabs: ExportedTab[];
-}
-type ExportedTab = Omit<ArchivedTab, 'favIconUrl'> & {
-	favIconUrl: number|undefined;
-}
-
 
 export default class ArchivedWindowGroupDAO {
 
@@ -56,6 +30,7 @@ export default class ArchivedWindowGroupDAO {
 					title: t.title,
 					favIconUrl: t.favIconUrl,
 					url: t.url,
+					active: t.active,
 				})),
 			})),
 			archiveDate: awg.archiveDate,
@@ -84,20 +59,26 @@ export default class ArchivedWindowGroupDAO {
 			"$schemaName": "ArchivedWindowGroups",
 			archivedWindowGroups: archivedWindowGroups
 				.map(this.flattenAWG)
-				.map((awg: ArchivedWindowGroup): ExportedWindowGroup => ({
+				.map((awg: ArchivedWindowGroup): ExportedArchivedWindowGroup => ({
 					...awg,
 					windows: awg.windows.map((w): ExportedWindow => ({
-						...w,
+						name: w.name,
+						activeTabIndex: w.tabs.findIndex(t => t.active),
 						tabs: w.tabs.map((t): ExportedTab => {
 							if (typeof t.favIconUrl == 'string') {
 								let hash = cyrb53(t.favIconUrl);
 								favicons[hash] = t.favIconUrl;
 								return {
-									...t,
+									title: t.title,
+									url: t.url,
 									favIconUrl: hash,
 								}
 							} else {
-								return t as ExportedTab
+								return {
+									title: t.title,
+									url: t.url,
+									favIconUrl: undefined,
+								}
 							}
 						})
 					}))
@@ -111,13 +92,15 @@ export default class ArchivedWindowGroupDAO {
 	static fromExportFormat(archivedWindowGroups: ArchivedWindowGroupExport): ArchivedWindowGroup[] {
 		if (archivedWindowGroups["$schemaVersion"] === "v1") {
 			return archivedWindowGroups.archivedWindowGroups
-				.map((awg: ExportedWindowGroup): ArchivedWindowGroup => ({
+				.map((awg: ExportedArchivedWindowGroup): ArchivedWindowGroup => ({
 					...awg,
 					windows: awg.windows.map((w): ArchivedWindow => ({
 						...w,
-						tabs: w.tabs.map((t): ArchivedTab => ({
-							...t,
+						tabs: w.tabs.map((t, i): ArchivedTab => ({
+							title: t.title,
+							url: t.url,
 							favIconUrl: typeof t.favIconUrl == 'number' ? archivedWindowGroups.favicons[t.favIconUrl] : t.favIconUrl,
+							active: w.activeTabIndex === i,
 						}))
 					}))
 				}))

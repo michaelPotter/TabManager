@@ -15,6 +15,7 @@ function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 				title: t.title ?? t.url ?? "",
 				favIconUrl: t.favIconUrl,
 				url: t.url ?? (() => { throw new Error("Cannot archive a tab without a url"); })(),
+				active: t.active,
 			})),
 		})),
 	}
@@ -31,16 +32,14 @@ export function archiveWindowGroup(wg: WindowGroup) {
 
 const allowed_urls = /^http(s)?/
 
-// TODO have all the tabs start as disabled, so they don't all load at once.
 export async function unarchiveWindowGroup(awg: ArchivedWindowGroup) {
 	let promises = awg.windows.map(async w => {
 
 		// Create the new window
 		let win = await WindowStore.createWindow({
 			name: w.name,
-			tabs: w.tabs.map(t => t.url)
-				.filter(t => t.match(allowed_urls))
-				,
+			// Start with a newtab
+			tabs: [],
 			windowGroup: awg.name,
 		})
 
@@ -49,14 +48,29 @@ export async function unarchiveWindowGroup(awg: ArchivedWindowGroup) {
 		// e.g. faketab.jsx that we can open instead. This placeholder tab page should have a message explaining why the
 		// real url can't be opened, and a clickable link to the real url.
 		if (win?.id) {
+			let placeholderTab = (await browser.tabs.query({windowId: win.id}))[0];
 			w.tabs.forEach((t, i) => {
 				if (t.url.startsWith("about:newtab")) {
 					browser.tabs.create({
 						windowId: (win as WindowModel).id,
+						active: t.active,
+						index: i,
+					});
+				} else {
+					browser.tabs.create({
+						windowId: (win as WindowModel).id,
+						url: t.url,
+						active: t.active,
+						discarded: ! t.active,
 						index: i,
 					});
 				}
 			});
+
+			// Remove the default tab from the new window.
+			if (placeholderTab.id) {
+				await browser.tabs.remove(placeholderTab.id);
+			}
 		}
 
 		return win ? [win] : [];
