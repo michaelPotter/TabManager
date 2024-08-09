@@ -74,7 +74,6 @@ const Window = (
 					</Col>
 
 					<Col xs='auto' className="p-0">
-						{/* TODO size/align the ellipse a lil better */}
 						<Dropdown align="end">
 							<CustomDropdownToggle
 								// id="actions-for-window"

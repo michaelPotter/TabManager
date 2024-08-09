@@ -62,6 +62,7 @@ export async function unarchiveWindowGroup(awg: ArchivedWindowGroup) {
 						url: t.url,
 						active: t.active,
 						discarded: ! t.active,
+						title: t.active ? undefined : t.title,
 						index: i,
 					});
 				}
