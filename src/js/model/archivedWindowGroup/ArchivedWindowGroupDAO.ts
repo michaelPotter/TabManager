@@ -3,7 +3,8 @@ import { ArchivedWindowGroupExport, ExportedArchivedWindowGroup, ExportedTab, Ex
 
 const STORAGE_KEY = "archivedWindowGroups";
 // TODO this should have a setting or something. Maybe we should show an error in the UI when we can't contact the server? idk
-const USE_EXTERNAL_STORAGE = true;
+// FIXME: there's an issue - we can't persist the whole object all at once so will have to break it down into chunks before using this strategy...
+const USE_EXTERNAL_STORAGE = false;
 const externalStorageUrl = "http://localhost:7435";
 
 let hasCheckedLocalToExternalMigration = false;
