@@ -2,15 +2,66 @@ import { ArchivedTab, ArchivedWindow, ArchivedWindowGroup, ArchivedWindowGroupDa
 import { ArchivedWindowGroupExport, ExportedArchivedWindowGroup, ExportedTab, ExportedWindow } from "./ExportedArchivedWindowGroup";
 
 const STORAGE_KEY = "archivedWindowGroups";
+// TODO this should have a setting or something. Maybe we should show an error in the UI when we can't contact the server? idk
+const USE_EXTERNAL_STORAGE = true;
+const externalStorageUrl = "http://localhost:7435";
 
+let hasCheckedLocalToExternalMigration = false;
+
+type KeyedArchiveData = {
+	[STORAGE_KEY]?: ArchivedWindowGroupData;
+}
 export default class ArchivedWindowGroupDAO {
 
 	static async getAll(): Promise<ArchivedWindowGroup[]> {
-		let data = await browser.storage.local.get(STORAGE_KEY) as {
-			[STORAGE_KEY]: ArchivedWindowGroupData;
+		let data: KeyedArchiveData;
+		if (USE_EXTERNAL_STORAGE) {
+			// Run this on the read, so that we migrate on startup, if it hasn't been done yet.
+			this.migrateLocalToExternal();
+			data = await this.getAllExternal();
+		} else {
+			data = await this.getAllLocal();
 		}
 
 		return data[STORAGE_KEY]?.archivedWindowGroups ?? [];
+	}
+
+	private static async getAllLocal(): Promise<KeyedArchiveData> {
+		return await browser.storage.local.get(STORAGE_KEY) as KeyedArchiveData;
+	}
+
+	private static async getAllExternal(): Promise<KeyedArchiveData> {
+		let res = await fetch(`${externalStorageUrl}/key/${STORAGE_KEY}`);
+		if (res.status === 404) {
+			return {};
+		} else if (!res.ok) {
+			console.warn("Error fetching archived window groups from external storage:", res.statusText);
+			return {};
+		}
+		return await res.json();
+	}
+
+	static async storeAllArchivedWindowGroups(archivedWindowGroups: ArchivedWindowGroup[]) {
+		if (USE_EXTERNAL_STORAGE) {
+			await this.storeAllExternal(archivedWindowGroups);
+		} else {
+			await this.storeAllLocal(archivedWindowGroups);
+		}
+	}
+
+	private static async storeAllLocal(archivedWindowGroups: ArchivedWindowGroup[]) {
+		await browser.storage.local.set({
+			[STORAGE_KEY]: this.toStorageFormat(archivedWindowGroups)
+		});
+	}
+	private static async storeAllExternal(archivedWindowGroups: ArchivedWindowGroup[]) {
+		await fetch(`${externalStorageUrl}/key/${STORAGE_KEY}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(this.toStorageFormat(archivedWindowGroups)),
+		});
 	}
 
 	/**
@@ -35,12 +86,6 @@ export default class ArchivedWindowGroupDAO {
 			})),
 			archiveDate: awg.archiveDate,
 		}
-	}
-
-	static async storeAllArchivedWindowGroups(archivedWindowGroups: ArchivedWindowGroup[]) {
-		await browser.storage.local.set({
-			[STORAGE_KEY]: this.toStorageFormat(archivedWindowGroups)
-		});
 	}
 
 	static toStorageFormat(archivedWindowGroups: ArchivedWindowGroup[]): ArchivedWindowGroupData {
@@ -106,6 +151,22 @@ export default class ArchivedWindowGroupDAO {
 				}))
 		}
 		throw new Error("Unsupported schema version: " + archivedWindowGroups["$schemaVersion"]);
+	}
+
+	private static async migrateLocalToExternal() {
+		if (hasCheckedLocalToExternalMigration) {
+			return;
+		}
+		hasCheckedLocalToExternalMigration = true;
+
+		let localData = await this.getAllLocal();
+		if (localData?.[STORAGE_KEY]) {
+			console.log("migrating local data to external");
+			await this.storeAllExternal(localData[STORAGE_KEY].archivedWindowGroups);
+			browser.storage.local.remove(STORAGE_KEY);
+		} else {
+			// console.log(`no local data`);
+		}
 	}
 
 }
