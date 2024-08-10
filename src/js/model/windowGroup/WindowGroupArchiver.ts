@@ -22,7 +22,9 @@ function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 }
 
 export function archiveWindowGroup(wg: WindowGroup) {
+	// FIXME confirm that the current window is NOT in the group to be archived... that results in a partial archive
 	let awg = createWindowGroupArchive(wg);
+	// FIXME make sure this doesn't throw before closing windows
 	ArchivedWindowGroupStore.addAWG(awg);
 	wg.windows.forEach(w => {
 		WindowStore.closeWindow(w.id);

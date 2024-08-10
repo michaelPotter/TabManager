@@ -1,11 +1,11 @@
 import { cyrb53 } from "../../util";
 import { ArchivedTab, ArchivedWindow, ArchivedWindowGroup, ArchivedWindowGroupData } from "./ArchivedWindowGroup";
+import type ArchivedWindowGroupStore from "./ArchivedWindowGroupStore";
 import { ArchivedWindowGroupExport, ExportedArchivedWindowGroup, ExportedTab, ExportedWindow } from "./ExportedArchivedWindowGroup";
 
 const STORAGE_KEY = "archivedWindowGroups";
 // TODO this should have a setting or something. Maybe we should show an error in the UI when we can't contact the server? idk
-// FIXME: there's an issue - we can't persist the whole object all at once so will have to break it down into chunks before using this strategy...
-const USE_EXTERNAL_STORAGE = false;
+const USE_EXTERNAL_STORAGE = true;
 const externalStorageUrl = "http://localhost:7435";
 
 let hasCheckedLocalToExternalMigration = false;
@@ -13,90 +13,53 @@ let hasCheckedLocalToExternalMigration = false;
 type KeyedArchiveData = {
 	[STORAGE_KEY]?: ArchivedWindowGroupData;
 }
-export default class ArchivedWindowGroupDAO {
 
-	static async getAll(): Promise<ArchivedWindowGroup[]> {
-		let data: KeyedArchiveData;
+interface _AWGDAO {
+	getAllGroups(): Promise<ArchivedWindowGroup[]>;
+	listGroups(): Promise<string[]>;
+	createOrUpdateGroup(awg: ArchivedWindowGroup): Promise<void>;
+	deleteGroup(name: string): Promise<void>;
+	getGroup(name: string): Promise<ArchivedWindowGroup | undefined>;
+	renameGroup(oldName: string, newName: string): Promise<void>;
+}
+
+// Handles persisting the data. 
+// Persists to local storage or external storage, depending on USE_EXTERNAL_STORAGE
+export default class ArchivedWindowGroupDAO implements _AWGDAO {
+
+	dao: _AWGDAO;
+
+	constructor(awgStore: typeof ArchivedWindowGroupStore) {
 		if (USE_EXTERNAL_STORAGE) {
-			// Run this on the read, so that we migrate on startup, if it hasn't been done yet.
-			this.migrateLocalToExternal();
-			data = await this.getAllExternal();
+			this.dao = new ExternalWindowGroupDAO();
+			this.migrateLocalToExternal(awgStore);
 		} else {
-			data = await this.getAllLocal();
-		}
-
-		return data[STORAGE_KEY]?.archivedWindowGroups ?? [];
-	}
-
-	private static async getAllLocal(): Promise<KeyedArchiveData> {
-		return await browser.storage.local.get(STORAGE_KEY) as KeyedArchiveData;
-	}
-
-	private static async getAllExternal(): Promise<KeyedArchiveData> {
-		let res = await fetch(`${externalStorageUrl}/key/${STORAGE_KEY}`);
-		if (res.status === 404) {
-			return {};
-		} else if (!res.ok) {
-			console.warn("Error fetching archived window groups from external storage:", res.statusText);
-			return {};
-		}
-		return await res.json();
-	}
-
-	static async storeAllArchivedWindowGroups(archivedWindowGroups: ArchivedWindowGroup[]) {
-		if (USE_EXTERNAL_STORAGE) {
-			await this.storeAllExternal(archivedWindowGroups);
-		} else {
-			await this.storeAllLocal(archivedWindowGroups);
+			this.dao = new LocalWindowGroupDAO(awgStore);
 		}
 	}
 
-	private static async storeAllLocal(archivedWindowGroups: ArchivedWindowGroup[]) {
-		await browser.storage.local.set({
-			[STORAGE_KEY]: this.toStorageFormat(archivedWindowGroups)
-		});
-	}
-	private static async storeAllExternal(archivedWindowGroups: ArchivedWindowGroup[]) {
-		await fetch(`${externalStorageUrl}/key/${STORAGE_KEY}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(this.toStorageFormat(archivedWindowGroups)),
-		});
+	async getAllGroups(): Promise<ArchivedWindowGroup[]> {
+		return this.dao.getAllGroups();
 	}
 
-	/**
-	 * Flattens an ArchivedWindowGroup.
-	 *
-	 * This method seems pretty redundant (it just copies properties over), but
-	 * the input object has mobx hooks that prevent it from being serialized,
-	 * so we copy props over to remove them.
-	 * TODO consider using mobx toJS() instead?
-	 */
-	static flattenAWG(awg: ArchivedWindowGroup): ArchivedWindowGroup {
-		return {
-			name: awg.name,
-			windows: awg.windows.map(w => ({
-				name: w.name,
-				tabs: w.tabs.map(t => ({
-					title: t.title,
-					favIconUrl: t.favIconUrl,
-					url: t.url,
-					active: t.active,
-				})),
-			})),
-			archiveDate: awg.archiveDate,
-		}
-	}
+    async listGroups(): Promise<string[]> {
+		return this.dao.listGroups();
+    }
 
-	static toStorageFormat(archivedWindowGroups: ArchivedWindowGroup[]): ArchivedWindowGroupData {
-		let data: ArchivedWindowGroupData = {
-			"$schemaVersion": "v1",
-			"$schemaName": "ArchivedWindowGroupsInternal",
-			archivedWindowGroups: archivedWindowGroups.map(this.flattenAWG)
-		}
-		return data
+    async createOrUpdateGroup(awg: ArchivedWindowGroup): Promise<void> {
+		return this.dao.createOrUpdateGroup(awg);
+    }
+
+    async deleteGroup(name: string): Promise<void> {
+		return this.dao.deleteGroup(name);
+    }
+
+    async getGroup(name: string): Promise<ArchivedWindowGroup | undefined> {
+		return this.dao.getGroup(name);
+    }
+
+	async renameGroup(oldName: string, newName: string): Promise<void> {
+		return this.dao.renameGroup(oldName, newName);
 	}
 
 	static toExportFormat(archivedWindowGroups: ArchivedWindowGroup[]): ArchivedWindowGroupExport {
@@ -105,7 +68,7 @@ export default class ArchivedWindowGroupDAO {
 			"$schemaVersion": "v1",
 			"$schemaName": "ArchivedWindowGroups",
 			archivedWindowGroups: archivedWindowGroups
-				.map(this.flattenAWG)
+				.map(DAOUtils.flattenAWG)
 				.map((awg: ArchivedWindowGroup): ExportedArchivedWindowGroup => ({
 					...awg,
 					windows: awg.windows.map((w): ExportedWindow => ({
@@ -155,20 +118,170 @@ export default class ArchivedWindowGroupDAO {
 		throw new Error("Unsupported schema version: " + archivedWindowGroups["$schemaVersion"]);
 	}
 
-	private static async migrateLocalToExternal() {
+	private async migrateLocalToExternal(awgStore: typeof ArchivedWindowGroupStore) {
 		if (hasCheckedLocalToExternalMigration) {
 			return;
 		}
 		hasCheckedLocalToExternalMigration = true;
 
-		let localData = await this.getAllLocal();
-		if (localData?.[STORAGE_KEY]) {
+		let localDAO = new LocalWindowGroupDAO(awgStore);
+		let localData = await localDAO.getAllGroups();
+		if (localData.length > 0) {
 			console.log("migrating local data to external");
-			await this.storeAllExternal(localData[STORAGE_KEY].archivedWindowGroups);
-			browser.storage.local.remove(STORAGE_KEY);
+			for (let awg of localData) {
+				await this.createOrUpdateGroup(awg);
+			}
+			// Wait until we've successfully imported them all to delete any
+			for (let awg of localData) {
+				await localDAO.deleteGroup(awg.name);
+			}
 		} else {
 			// console.log(`no local data`);
 		}
 	}
 
+}
+
+////////////////////////////////////////////////////////////////////////
+//                             DAO UTILS                              //
+////////////////////////////////////////////////////////////////////////
+
+class DAOUtils {
+
+	/**
+	 * Flattens an ArchivedWindowGroup.
+	 *
+	 * This method seems pretty redundant (it just copies properties over), but
+	 * the input object has mobx hooks that prevent it from being serialized,
+	 * so we copy props over to remove them.
+	 * TODO consider using mobx toJS() instead?
+	 */
+	static flattenAWG(awg: ArchivedWindowGroup): ArchivedWindowGroup {
+		return {
+			name: awg.name,
+			windows: awg.windows.map(w => ({
+				name: w.name,
+				tabs: w.tabs.map(t => ({
+					title: t.title,
+					favIconUrl: t.favIconUrl,
+					url: t.url,
+					active: t.active,
+				})),
+			})),
+			archiveDate: awg.archiveDate,
+		}
+	}
+
+	static toStorageFormat(archivedWindowGroups: ArchivedWindowGroup[]): ArchivedWindowGroupData {
+		let data: ArchivedWindowGroupData = {
+			"$schemaVersion": "v1",
+			"$schemaName": "ArchivedWindowGroupsInternal",
+			archivedWindowGroups: archivedWindowGroups.map(this.flattenAWG)
+		}
+		return data
+	}
+
+}
+
+////////////////////////////////////////////////////////////////////////
+//                             DAO IMPLS                              //
+////////////////////////////////////////////////////////////////////////
+
+class ExternalWindowGroupDAO implements _AWGDAO {
+	async getAllGroups(): Promise<ArchivedWindowGroup[]> {
+		let promises = (await this.listGroups()).map(name => this.getGroup(name));
+		let all = await Promise.all(promises);
+		return all.flatMap(awg => awg ? [awg] : []);
+	}
+    async listGroups(): Promise<string[]> {
+		let res = await fetch(`${externalStorageUrl}/archiveGroup`);
+		if (!res.ok) {
+			throw new Error("Error fetching archived window groups from external storage: " + res.statusText);
+		}
+		return res.json();
+    }
+    async createOrUpdateGroup(awg: ArchivedWindowGroup): Promise<void> {
+		let res = await fetch(`${externalStorageUrl}/archiveGroup`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(awg),
+		});
+		if (!res.ok) {
+			throw new Error("Error creating or updating archived window group: " + res.statusText);
+		}
+    }
+    async deleteGroup(name: string): Promise<void> {
+		let res = await fetch(`${externalStorageUrl}/archiveGroup/${name}`, {
+			method: 'DELETE',
+		});
+		if (!res.ok) {
+			throw new Error("Error deleting archived window group: " + res.statusText);
+		}
+    }
+    async getGroup(name: string): Promise<ArchivedWindowGroup | undefined> {
+		let res = await fetch(`${externalStorageUrl}/archiveGroup/${name}`);
+		if (res.status === 404) {
+			return undefined;
+		} else if (!res.ok) {
+			throw new Error("Error fetching archived window group: " + res.statusText);
+		}
+		return res.json();
+    }
+	async renameGroup(oldName: string, newName: string): Promise<void> {
+		// Clunky way to do this, but it works
+		let oldGroup = await this.getGroup(oldName);
+		if (!oldGroup) {
+			throw new Error("Group not found: " + oldName);
+		}
+		await this.deleteGroup(oldName);
+		await this.createOrUpdateGroup({
+			...oldGroup,
+			name: newName,
+		});
+	}
+}
+
+// This impl is a bit weird... historically we just stored everything in local
+// storage as a big blob. But since the DAO interface is more granular, we need
+// to implement that interface but still store the data in the same blob. Since
+// the old blob was based on the data stored in the store, we'll actually just
+// use that data directly too. It's basically the same as how it used to work,
+// just with the granular interface in the middle. Feels a bit weird and
+// circular but it should work.
+class LocalWindowGroupDAO implements _AWGDAO {
+	awgStore: typeof ArchivedWindowGroupStore;
+	constructor(awgStore: typeof ArchivedWindowGroupStore) {
+		this.awgStore = awgStore;
+	}
+
+	async getAllGroups(): Promise<ArchivedWindowGroup[]> {
+		let data = await LocalWindowGroupDAO.getAll();
+		return data[STORAGE_KEY]?.archivedWindowGroups ?? [];
+	}
+    async listGroups(): Promise<string[]> {
+		return this.awgStore.archivedWindowGroups.map(awg => awg.name);
+    }
+    async createOrUpdateGroup(awg: ArchivedWindowGroup): Promise<void> {
+		await this.storeAll(this.awgStore.archivedWindowGroups);
+    }
+    async deleteGroup(name: string): Promise<void> {
+		await this.storeAll(this.awgStore.archivedWindowGroups);
+    }
+    async getGroup(name: string): Promise<ArchivedWindowGroup | undefined> {
+		return this.awgStore.archivedWindowGroups.find(awg => awg.name === name);
+    }
+	async renameGroup(oldName: string, newName: string): Promise<void> {
+		await this.storeAll(this.awgStore.archivedWindowGroups);
+	}
+
+	private static async getAll(): Promise<KeyedArchiveData> {
+		return await browser.storage.local.get(STORAGE_KEY) as KeyedArchiveData;
+	}
+	private async storeAll(archivedWindowGroups: ArchivedWindowGroup[]) {
+		await browser.storage.local.set({
+			[STORAGE_KEY]: DAOUtils.toStorageFormat(archivedWindowGroups)
+		});
+	}
 }
