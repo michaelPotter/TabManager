@@ -1,0 +1,15 @@
+[Unit]
+Description=Server for tabmanager browser plugin
+
+[Service]
+Type=exec
+WorkingDirectory=%h/src/tabmanager/tabmanager-server
+; TODO improve this
+ExecStart=%h/src/tabmanager/tabmanager-server/node_modules/.bin/tsx %h/src/tabmanager/tabmanager-server/src/server.ts
+Restart=always
+RestartSec=1
+; TODO this too
+Environment=PATH=%h/.local/opt/nvm/versions/node/v18.20.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin
+
+[Install]
+WantedBy=default.target

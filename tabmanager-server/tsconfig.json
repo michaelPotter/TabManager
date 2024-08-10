@@ -1,0 +1,13 @@
+{
+	"include": [
+		// Only check files under src/
+		"src/**/*",
+	],
+	"compilerOptions": {
+		"strict": true,
+		"esModuleInterop": true,
+		"lib": [
+			"ES2022"
+		],
+	}
+}
