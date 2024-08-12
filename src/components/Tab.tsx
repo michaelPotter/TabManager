@@ -52,7 +52,7 @@ export default observer(function Tab(
 					<Favicon src={props.tab.favIconUrl}/>
 				}
 			</div>
-			<div className="tabTitle">
+			<div onClick={props.mainClick} className="tabTitle">
 				{props.tab.title}
 			</div>
 
