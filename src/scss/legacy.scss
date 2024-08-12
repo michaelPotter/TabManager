@@ -62,10 +62,6 @@ div.window_hover {
     display:block;
     overflow: hidden;
 }
-.tab:hover {
-    background: lightblue;
-    cursor: pointer;
-}
 .contextMarker {
     float:left;
     vertical-align: middle;
@@ -100,8 +96,21 @@ div.window_hover {
     color: rgba(0, 0, 0, 1.0);
 }
 
+.tab {
+    display: flex;
+}
+.tab:hover {
+    background: lightblue;
+    cursor: pointer;
+}
 .activeTab {
     font-weight:bold;
+}
+.tabTitle {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sortable-ghost,
