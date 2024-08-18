@@ -3,6 +3,11 @@ export type AppConfig = {
 	dataDir: string;
 }
 
+export type ActiveWindowGroup = {
+	name: string;
+	windowIds: number[];
+}
+
 export type ArchivedWindowGroup = {
 	name: string;
 	windows: any[];

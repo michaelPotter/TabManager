@@ -1,71 +1,31 @@
-import * as fs from 'node:fs';
-
 import { ArchivedWindowGroup } from './types';
-import { config } from './config';
+import FileDAO from './fileDAO';
 
 export default class ArchiveWindowGroupDAO {
 
-	dir: string;
-
-	/**
-	 * Keep a copy in memory for speed. We'll just keep the disk in sync.
-	 */
-	data: {
-		[name: string]: ArchivedWindowGroup;
-	} = {};
+	dao: FileDAO<ArchivedWindowGroup>;
 
 	constructor() {
-		this.dir = config().dataDir + "/archiveGroups";
-		fs.mkdirSync(this.dir, { recursive: true });
-		this.loadFromDisk();
-	}
-
-	private async loadFromDisk() {
-		let files = await fs.promises.readdir(this.dir);
-
-		let promises = files.map(async file => {
-			let name = file.replace(/\.json$/, '');
-			let fileData = await fs.promises.readFile(`${this.dir}/${file}`, 'utf8')
-			try {
-				this.data[name] = JSON.parse(fileData);
-			} catch (e) {
-				throw new Error(`Error parsing ${file}`, {cause: e});
-			}
-		});
-
-		await Promise.all(promises);
-	}
-
-	private async writeGroup(group: ArchivedWindowGroup) {
-		let file = `${this.dir}/${group.name}.json`;
-		fs.promises.writeFile(file, JSON.stringify(group), 'utf8');
+		this.dao = new FileDAO<ArchivedWindowGroup>('archiveGroups');
 	}
 
 	listGroups(): string[] {
-		return Object.keys(this.data);
+		return this.dao.listEntities();
 	}
 
 	async createOrUpdateGroup(group: ArchivedWindowGroup) {
-		this.data[group.name] = group;
-		await this.writeGroup(group);
+		return await this.dao.createOrUpdateEntity(group);
 	}
 
 	async updateGroup(name: string, group: ArchivedWindowGroup) {
-		if (name !== group.name) {
-			// This is a rename
-			await this.deleteGroup(name);
-			await this.createOrUpdateGroup(group);
-		} else {
-			await this.createOrUpdateGroup(group);
-		}
+		return await this.dao.updateEntity(name, group);
 	}
 
 	async deleteGroup(groupName: string) {
-		delete this.data[groupName];
-		await fs.promises.unlink(`${this.dir}/${groupName}.json`);
+		return await this.dao.deleteEntity(groupName);
 	}
 
 	getGroup(groupName: string): ArchivedWindowGroup|null {
-		return this.data[groupName];
+		return this.dao.getEntity(groupName);
 	}
 }
