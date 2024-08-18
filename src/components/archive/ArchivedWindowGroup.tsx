@@ -43,7 +43,7 @@ export default observer((
 							</span>
 						</Col>
 						<Col sm="auto" className='p-0'>
-							<div >
+							<div>
 								<Dropdown style={{ display: "inline-block" }} id={`windowgroup-actions-${props.archivedWindowGroup.name}`} align="end">
 									<CustomDropdownToggle
 										title={`Actions for window-group`}/>

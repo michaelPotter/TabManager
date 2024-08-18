@@ -25,9 +25,12 @@ const App = observer(() => {
 		</Button>
 	)
 
+	let params = new URLSearchParams(document.location.search);
+	let popStyle = params.get("type") ?? "popup";
+
 	return (
 		<>
-			<div id="header" style={{display: "flex"}}>
+			<div id={`header-${popStyle}`}>
 				<QuickLink page="alltabs" text="All Tabs"/>
 				{"|"}
 				<QuickLink page="active_groups" text="Active Groups"/>
