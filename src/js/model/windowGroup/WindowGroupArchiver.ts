@@ -2,7 +2,7 @@ import WindowGroupStore from "../../appState/WindowGroupStore";
 import WindowStore from "../../appState/WindowStore";
 import { ArchivedWindowGroup } from "../archivedWindowGroup/ArchivedWindowGroup";
 import ArchivedWindowGroupStore from "../archivedWindowGroup/ArchivedWindowGroupStore";
-import WindowGroup from "./WindowGroup";
+import type { WindowGroup } from "./WindowGroup";
 import type WindowModel from '../window/Window';
 
 function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {

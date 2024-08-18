@@ -1,12 +1,13 @@
 import { observable, action, makeObservable } from "mobx";
 
 import Window from "../model/window/Window";
-import WindowGroup from "../model/windowGroup/WindowGroup";
+import { WindowGroup } from "../model/windowGroup/WindowGroup";
 import WindowGroupDAO from "../model/windowGroup/WindowGroupDAO";
 
 class WindowGroupStore {
 
 	windowGroups: WindowGroup[] = [];
+	dao: WindowGroupDAO;
 
 	constructor() {
 		makeObservable(this, {
@@ -17,46 +18,50 @@ class WindowGroupStore {
 			deleteWindowGroup: action,
 		});
 
-		WindowGroupDAO.getAll()
+		this.dao = new WindowGroupDAO(this);
+		this.dao.getAllGroups()
 			.then(action(windowGroups => this.windowGroups = windowGroups));
 	}
 
 	createWindowGroup = (groupName: string) => {
-		let windowGroup = WindowGroupDAO.new(groupName).build();
+		let windowGroup = this.dao.newWindowGroup(groupName).build();
 		this.windowGroups.unshift(windowGroup);
 		this._moveGroupToTop(groupName);
-		this.#persist();
+		this.dao.createOrUpdateGroup(windowGroup);
 		return windowGroup;
 	}
 
 	// FIXME we should prevent the same window from being added twice
 	addWindowsToGroup = (windows: Window[], groupName: string) => {
-		windows.forEach(w => {
-			this.windowGroups.find(wg => wg.name === groupName)?.windows.push(w)
-			w.addWindowGroup(groupName);
-		});
-		this._moveGroupToTop(groupName);
-		this.#persist();
+		let wg = this._findByName(groupName);
+		if (wg) {
+			wg.windows.push(...windows);
+			windows.forEach(w => {
+				w.addWindowGroup(groupName);
+			});
+			this._moveGroupToTop(groupName);
+			this.dao.createOrUpdateGroup(wg);
+		}
 	}
 
 	addWindowsToNewGroup = (windows: Window[], groupName: string) => {
 		this.windowGroups.unshift(
-			WindowGroupDAO.new(groupName)
+			this.dao.newWindowGroup(groupName)
 				.withWindows(windows)
 				.build()
 		);
 		windows.forEach(w => {
 			w.addWindowGroup(groupName);
 		});
-		this.#persist();
+		this.dao.createOrUpdateGroup(this.windowGroups[0]);
 	}
 
 	renameWindowGroup = (oldName: string, newName: string) => {
-		let wg = this.windowGroups.find(wg => wg.name === oldName);
+		let wg = this._findByName(oldName);
 		if (wg) {
 			wg.name = newName;
 			wg.windows.forEach(w => w.renameWindowGroup(oldName, newName));
-			this.#persist();
+			this.dao.renameGroup(oldName, newName);
 		} else {
 			console.warn("Could not find window group to rename: ", oldName);
 		}
@@ -64,16 +69,16 @@ class WindowGroupStore {
 
 	deleteWindowGroup = (groupName: string) => {
 		this.windowGroups = this.windowGroups.filter(wg => wg.name !== groupName);
-		this.#persist();
+		this.dao.deleteGroup(groupName);
 	}
 
 	removeWindowFromGroup = (window: Window, groupName: string) => {
-		const group = this.windowGroups.find(wg => wg.name === groupName);
-		if (group) {
-			group.windows = group.windows.filter(w => w.id !== window.id);
+		let wg = this._findByName(groupName);
+		if (wg) {
+			wg.windows = wg.windows.filter(w => w.id !== window.id);
+			this.dao.createOrUpdateGroup(wg);
 		}
 		window.removeWindowGroup(groupName);
-		this.#persist();
 	}
 
 	_moveGroupToTop(groupName: string) {
@@ -84,9 +89,10 @@ class WindowGroupStore {
 		}
 	}
 
-	#persist() {
-		WindowGroupDAO.storeAllWindowGroups(this.windowGroups);
+	_findByName(groupName: string) {
+		return this.windowGroups.find(wg => wg.name === groupName);
 	}
+
 }
 
 export default new WindowGroupStore();

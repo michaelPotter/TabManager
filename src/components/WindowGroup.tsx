@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import WindowComponent, { RenameWindowDropdownItem } from './Window';
-import WindowGroup from '../js/model/windowGroup/WindowGroup';
+import type { WindowGroup } from '../js/model/windowGroup/WindowGroup';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import CustomDropdownToggle from './lib/CustomDropdownToggle';
 import RollupArrow from './lib/RollupArrow';

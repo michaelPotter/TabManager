@@ -1,12 +1,12 @@
 import { cyrb53 } from "../../util";
+import { config } from "../../config";
 import { ArchivedTab, ArchivedWindow, ArchivedWindowGroup, ArchivedWindowGroupData } from "./ArchivedWindowGroup";
 import type ArchivedWindowGroupStore from "./ArchivedWindowGroupStore";
 import { ArchivedWindowGroupExport, ExportedArchivedWindowGroup, ExportedTab, ExportedWindow } from "./ExportedArchivedWindowGroup";
 
 const STORAGE_KEY = "archivedWindowGroups";
-// TODO this should have a setting or something. Maybe we should show an error in the UI when we can't contact the server? idk
-const USE_EXTERNAL_STORAGE = true;
-const externalStorageUrl = "http://localhost:7435";
+// TODO external storage should be configurable somehow. Maybe we should show
+// an error in the UI when we can't contact the server? idk
 
 let hasCheckedLocalToExternalMigration = false;
 
@@ -30,11 +30,11 @@ export default class ArchivedWindowGroupDAO implements _AWGDAO {
 	dao: _AWGDAO;
 
 	constructor(awgStore: typeof ArchivedWindowGroupStore) {
-		if (USE_EXTERNAL_STORAGE) {
+		if (config().useExternalStorage) {
 			this.dao = new ExternalWindowGroupDAO();
 			this.migrateLocalToExternal(awgStore);
 		} else {
-			this.dao = new LocalWindowGroupDAO(awgStore);
+			this.dao = new LocalArchiveWindowGroupDAO(awgStore);
 		}
 	}
 
@@ -124,7 +124,7 @@ export default class ArchivedWindowGroupDAO implements _AWGDAO {
 		}
 		hasCheckedLocalToExternalMigration = true;
 
-		let localDAO = new LocalWindowGroupDAO(awgStore);
+		let localDAO = new LocalArchiveWindowGroupDAO(awgStore);
 		let localData = await localDAO.getAllGroups();
 		if (localData.length > 0) {
 			console.log("migrating local data to external");
@@ -194,14 +194,14 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 		return all.flatMap(awg => awg ? [awg] : []);
 	}
     async listGroups(): Promise<string[]> {
-		let res = await fetch(`${externalStorageUrl}/archiveGroup`);
+		let res = await fetch(`${config().externalStorageUrl}/archiveGroup`);
 		if (!res.ok) {
 			throw new Error("Error fetching archived window groups from external storage: " + res.statusText);
 		}
 		return res.json();
     }
     async createOrUpdateGroup(awg: ArchivedWindowGroup): Promise<void> {
-		let res = await fetch(`${externalStorageUrl}/archiveGroup`, {
+		let res = await fetch(`${config().externalStorageUrl}/archiveGroup`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 		}
     }
     async deleteGroup(name: string): Promise<void> {
-		let res = await fetch(`${externalStorageUrl}/archiveGroup/${name}`, {
+		let res = await fetch(`${config().externalStorageUrl}/archiveGroup/${name}`, {
 			method: 'DELETE',
 		});
 		if (!res.ok) {
@@ -221,7 +221,7 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 		}
     }
     async getGroup(name: string): Promise<ArchivedWindowGroup | undefined> {
-		let res = await fetch(`${externalStorageUrl}/archiveGroup/${name}`);
+		let res = await fetch(`${config().externalStorageUrl}/archiveGroup/${name}`);
 		if (res.status === 404) {
 			return undefined;
 		} else if (!res.ok) {
@@ -250,14 +250,14 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 // use that data directly too. It's basically the same as how it used to work,
 // just with the granular interface in the middle. Feels a bit weird and
 // circular but it should work.
-class LocalWindowGroupDAO implements _AWGDAO {
+class LocalArchiveWindowGroupDAO implements _AWGDAO {
 	awgStore: typeof ArchivedWindowGroupStore;
 	constructor(awgStore: typeof ArchivedWindowGroupStore) {
 		this.awgStore = awgStore;
 	}
 
 	async getAllGroups(): Promise<ArchivedWindowGroup[]> {
-		let data = await LocalWindowGroupDAO.getAll();
+		let data = await LocalArchiveWindowGroupDAO.getAll();
 		return data[STORAGE_KEY]?.archivedWindowGroups ?? [];
 	}
     async listGroups(): Promise<string[]> {
