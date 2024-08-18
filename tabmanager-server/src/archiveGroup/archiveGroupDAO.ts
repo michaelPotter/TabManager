@@ -1,5 +1,5 @@
-import { ArchivedWindowGroup } from './types';
-import FileDAO from './fileDAO';
+import { ArchivedWindowGroup } from '../types';
+import FileDAO from '../fileDAO';
 
 export default class ArchiveWindowGroupDAO {
 

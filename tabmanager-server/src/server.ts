@@ -4,7 +4,7 @@
 import express from 'express';
 import { mkdirSync } from 'fs';
 import { config } from './config';
-import ArchiveWindowGroupController from './archiveGroupController';
+import ArchiveWindowGroupController from './archiveGroup/archiveGroupController';
 import ActiveWindowGroupController from './activeGroup/activeGroupController';
 
 mkdirSync(config().dataDir, { recursive: true });
