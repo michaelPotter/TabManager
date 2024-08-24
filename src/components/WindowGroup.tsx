@@ -38,6 +38,7 @@ export default observer((
 							{props.windowGroup.name} {" - "}
 							<span className="text-muted">
 							{props.windowGroup.windows.length} windows
+							{" - "} {props.windowGroup.windows.reduce((acc, w) => acc + w.tabs.length, 0)} tabs
 							</span>
 						</Col>
 						<Col sm="auto" className='p-0'>
