@@ -7,6 +7,7 @@
 'use strict';
 
 import { observable, action, makeObservable } from "mobx";
+import { cyrb53 } from "../../util";
 
 // This is the extra data we can't get from the browser api.
 // ... There isn't anything yet, but that could change.
@@ -17,6 +18,7 @@ declare type TabExtraData = {
 
 export default class Tab {
 	tab: browser.tabs.Tab;
+	tabHash: number;
 	// This is tracked differently from other properties for mobx support.
 	active: boolean = false;
 
@@ -27,6 +29,7 @@ export default class Tab {
 	 */
 	constructor(tab: browser.tabs.Tab, data?: TabExtraData) {
 		this.tab = tab;
+		this.tabHash = cyrb53(tab.url || "");
 		if (tab.active) this.setActive(true);
 
 		makeObservable(this, {
@@ -61,6 +64,7 @@ export default class Tab {
 	 */
 	updateTab(tab: browser.tabs.Tab) {
 		this.tab = tab;
+		this.tabHash = cyrb53(tab.url || "");
 	}
 
 	async isBookmarked(): Promise<boolean> {

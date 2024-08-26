@@ -14,6 +14,10 @@ export type WindowGroup = {
 export type SerializedWindowGroup = {
 	name: string;
 	/** A list of window IDs. */
-	windows: number[];
+	windows: SerializedWindow[];
 }
 
+export type SerializedWindow = {
+	id: number;
+	tabsHash: number;
+}

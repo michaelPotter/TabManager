@@ -21,6 +21,7 @@ class WindowGroupStore {
 		this.dao = new WindowGroupDAO(this);
 		this.dao.getAllGroups()
 			.then(action(windowGroups => this.windowGroups = windowGroups));
+		window.localStorage.setItem('hasLoaded', 'true');
 	}
 
 	createWindowGroup = (groupName: string) => {

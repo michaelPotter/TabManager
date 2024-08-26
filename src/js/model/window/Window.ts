@@ -5,6 +5,7 @@
  */
 
 import { observable, action, makeObservable } from "mobx";
+import { cyrb53 } from "../../util";
 
 import Tab from '../tab/Tab';
 import WindowDAO from './WindowDAO';
@@ -23,6 +24,7 @@ export default class Window {
 	// This data is not stored with window data; it is updated dynamically based on stored WindowGroups.
 	windowGroups: string[] = [];
 	tabs: Tab[] = [];
+	tabsHash: number;
 
 	/**
 	 * Synchronously create a Window.
@@ -35,6 +37,7 @@ export default class Window {
 		this._last_accessed = data?.last_accessed ?? -1;
 		this.name = data?.name ?? "";
 		this.tabs = tabs;
+		this.tabsHash = this.computeTabsHash();
 
 		makeObservable(this, {
 			tabs: observable,
@@ -53,10 +56,12 @@ export default class Window {
 
 	removeTab(tabid: number) {
 		this.tabs = this.tabs.filter(t => t.id != tabid);
+		this.computeTabsHash();
 	}
 
 	addTab(tab: Tab) {
 		this.tabs.push(tab);
+		this.computeTabsHash();
 	}
 
 	/**
@@ -66,6 +71,7 @@ export default class Window {
 	updateTab(tab: browser.tabs.Tab) {
 		if (tab.id) {
 			this.getTabById(tab.id)?.updateTab(tab);
+			this.computeTabsHash();
 		}
 	}
 
@@ -97,6 +103,11 @@ export default class Window {
 			const c = this.tabs.slice(toIndex + 1, this.tabs.length);
 			this.tabs = a.concat(b).concat([tab]).concat(c)
 		}
+		this.computeTabsHash();
+	}
+
+	computeTabsHash() {
+		return this.tabsHash = cyrb53(JSON.stringify(this.tabs.map(t => t.tabHash), null, 2));
 	}
 
 	/**

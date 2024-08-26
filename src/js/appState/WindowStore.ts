@@ -43,6 +43,10 @@ class WindowStore {
 		return this._windowsObject[windowId];
 	}
 
+	getWindowByHash(windowHash: number): Window|undefined {
+		return _.find(this._windowsObject, (window) => window?.tabsHash === windowHash);
+	}
+
 	/**
 	 * Closes the given window.
 	 */

@@ -67,19 +67,34 @@ export default class CompositeWindowGroupDAO implements _WGDAO {
 ////////////////////////////////////////////////////////////////////////
 
 class DAOUtils {
+	// Bit messy, but WindowGroupStore sets this to true when it's done loading.
+	static isFirstLoadOnInstall = window.localStorage.getItem('hasLoaded') !== 'true';
+
+	/** Flatten the WindowGroup for persistence */
 	static flattenWindowGroup(windowGroup: WindowGroup): SerializedWindowGroup {
 		return {
 			name: windowGroup.name,
-			windows: windowGroup.windows.map(w => w.id),
+			windows: windowGroup.windows.map(w => ({
+				id: w.id,
+				tabsHash: w.tabsHash,
+			})),
 		};
 	}
 
 	static inflateWindowGroup(wg: SerializedWindowGroup): WindowGroup {
 		return new _windowGroupBuilder(wg.name)
-			.withWindows(wg.windows.flatMap(wid => {
-				let window = WindowStore.getWindowById(wid)
+			.withWindows(wg.windows.flatMap(w => {
+				// If this is the first time inflating since the boot, find windows by hash instead
+				let window;
+
+				if (DAOUtils.isFirstLoadOnInstall && w.tabsHash) {
+					window = WindowStore.getWindowByHash(w.tabsHash);
+				} else {
+					window = WindowStore.getWindowById(w.id);
+				}
+
 				if (window == undefined) {
-					console.warn(`Window with id [${wid}] was expected in window group [${wg.name}] but not found`);
+					console.warn(`Window with id [${w.id}] was expected in window group [${wg.name}] but not found`);
 					return [];
 				}
 				window.addWindowGroup(wg.name);
@@ -88,6 +103,7 @@ class DAOUtils {
 			.build();
 	}
 
+	/** Safe cuz we'll make sure tab data is populated */
 	static async inflateWindowGroupSafe(wg: SerializedWindowGroup): Promise<WindowGroup> {
 		await WindowStore.waitForPopulated();
 		return this.inflateWindowGroup(wg);
