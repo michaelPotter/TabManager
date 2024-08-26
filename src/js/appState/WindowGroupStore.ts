@@ -1,4 +1,5 @@
 import { observable, action, makeObservable } from "mobx";
+import { ComponentState } from "react";
 
 import Window from "../model/window/Window";
 import { WindowGroup } from "../model/windowGroup/WindowGroup";
@@ -8,6 +9,7 @@ class WindowGroupStore {
 
 	windowGroups: WindowGroup[] = [];
 	dao: WindowGroupDAO;
+	state: ComponentState = "init";
 
 	constructor() {
 		makeObservable(this, {
@@ -20,8 +22,11 @@ class WindowGroupStore {
 
 		this.dao = new WindowGroupDAO(this);
 		this.dao.getAllGroups()
-			.then(action(windowGroups => this.windowGroups = windowGroups));
-		window.localStorage.setItem('hasLoaded', 'true');
+			.then(action(windowGroups => {
+				this.windowGroups = windowGroups
+				window.localStorage.setItem('hasLoaded', 'true');
+				this.state = "loaded";
+			}));
 	}
 
 	createWindowGroup = (groupName: string) => {

@@ -69,7 +69,9 @@ const AllTabs = observer(() => {
 const ActiveGroups = observer(() => {
 	return (
 		<div>
-			{WindowGroupStore.windowGroups.length == 0 && <p>(no groups)</p>}
+			{
+				WindowGroupStore.state == "loaded" &&
+				WindowGroupStore.windowGroups.length == 0 && <p>(no groups)</p>}
 			{WindowGroupStore.windowGroups.map(g => (
 				<WindowGroupComponent key={g.name} windowGroup={g}/>
 			))}
