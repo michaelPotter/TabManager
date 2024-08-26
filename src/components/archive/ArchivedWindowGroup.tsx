@@ -17,6 +17,7 @@ import WindowGroupStore from '../../js/appState/WindowGroupStore';
 import WindowStore from '../../js/appState/WindowStore';
 import WindowModel from '../../js/model/window/Window';
 import { unarchiveWindowGroup } from '../../js/model/windowGroup/WindowGroupArchiver';
+import { Join } from '../lib/Join';
 
 /**
  * WindowGroup
@@ -69,9 +70,12 @@ export default observer((
 			</Card.Header>
 			{ isRolledUp ||
 				<Card.Body>
-					{props.archivedWindowGroup.windows.map((w, i) => (
-						<ArchivedWindow key={i} window={w}/>
-					))}
+					<Join
+						separator={<hr/>}
+						items={props.archivedWindowGroup.windows}
+						keyBy={w => w.name}
+						renderItem={w => <ArchivedWindow window={w}/>}
+						/>
 				</Card.Body>
 			}
 		</Card>

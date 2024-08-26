@@ -97,7 +97,6 @@ const ArchivedWindow = (
 								/>
 						))}
 					{/* </ReactSortable> */}
-				<hr/>
 				</>
 			}
 		</div>

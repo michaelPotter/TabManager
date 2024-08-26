@@ -17,6 +17,7 @@ import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
 import Downloader from './components/lib/Downloader';
 import { Button } from 'react-bootstrap';
 import Uploader from './components/lib/Uploader';
+import { Join } from './components/lib/Join';
 
 const App = observer(() => {
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
@@ -56,11 +57,12 @@ const AllTabs = observer(() => {
 				.value();
 
 	return (
-		<>
-			{windows.map(w =>
-				<WindowComponent window={w} key={w.id}/>
-			)}
-		</>
+		<Join
+			separator={<hr/>}
+			items={windows}
+			keyBy={w => w.id}
+			renderItem={w => <WindowComponent window={w}/>}
+			/>
 	)
 })
 

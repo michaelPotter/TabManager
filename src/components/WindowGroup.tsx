@@ -14,6 +14,7 @@ import RollupArrow from './lib/RollupArrow';
 import WindowGroupStore from '../js/appState/WindowGroupStore';
 import { archiveWindowGroup } from '../js/model/windowGroup/WindowGroupArchiver';
 import { wrapWithInput } from './util/ModalWrappers';
+import { Join } from './lib/Join';
 
 /**
  * WindowGroup
@@ -81,24 +82,27 @@ export default observer((
 
 			{ isRolledUp ||
 				<Card.Body>
-					{props.windowGroup.windows.map(w => (
-						<WindowComponent
-							window={w}
-							key={w.id}
-							showGroupBadge={false}
-							dropdownMenu={
-								<Dropdown.Menu className="shadow-sm">
-									<Dropdown.Header>Window Actions</Dropdown.Header>
-									<RenameWindowDropdownItem window={w}/>
-									<Dropdown.Item onClick={() =>
-										WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)
-									}>
-										Remove window from group
-									</Dropdown.Item>
-								</Dropdown.Menu>
-							}
-						/>
-					))}
+					<Join
+						separator={<hr/>}
+						items={props.windowGroup.windows}
+						keyBy={w => w.id}
+						renderItem={w => (
+							<WindowComponent
+								window={w}
+								key={w.id}
+								showGroupBadge={false}
+								dropdownMenu={
+									<Dropdown.Menu className="shadow-sm">
+										<Dropdown.Header>Window Actions</Dropdown.Header>
+										<RenameWindowDropdownItem window={w}/>
+										<Dropdown.Item onClick={() =>
+											WindowGroupStore.removeWindowFromGroup(w, props.windowGroup.name)
+										}>
+											Remove window from group
+										</Dropdown.Item>
+									</Dropdown.Menu>
+								}/>
+						)}/>
 				</Card.Body>
 			}
 		</Card>

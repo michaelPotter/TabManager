@@ -144,7 +144,6 @@ const Window = (
 								/>
 						))}
 					</ReactSortable>
-				<hr/>
 				</>
 			}
 		</div>
