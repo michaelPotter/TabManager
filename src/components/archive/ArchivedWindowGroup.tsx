@@ -32,7 +32,7 @@ export default observer((
 
 	return (
 		// TODO There's a lot of padding inside the card, seems like it'd be better with more padding around the card instead.
-		<Card className="mb-3">
+		<Card className="my-1">
 			<Card.Header>
 				<Container fluid>
 					<Row>

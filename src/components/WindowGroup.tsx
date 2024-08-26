@@ -30,7 +30,7 @@ export default observer((
 	return (
 		// TODO do window ids persist between browser reboots? I'm not sure if they come back the same or we'd need some sort of heuristic to re-associate the persisted WGs with the rebuilt/recovered windows
 		// TODO There's a lot of padding inside the card, seems like it'd be better with more padding around the card instead.
-		<Card className="mb-3">
+		<Card className="my-1">
 			<Card.Header>
 				<Container fluid>
 					<Row>

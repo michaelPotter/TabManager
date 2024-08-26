@@ -69,7 +69,7 @@ const AllTabs = observer(() => {
 const ActiveGroups = observer(() => {
 	return (
 		<div>
-			<p>{WindowGroupStore.windowGroups.length == 0 && "(no groups)" || "Groups:"}</p>
+			{WindowGroupStore.windowGroups.length == 0 && <p>(no groups)</p>}
 			{WindowGroupStore.windowGroups.map(g => (
 				<WindowGroupComponent key={g.name} windowGroup={g}/>
 			))}
@@ -81,7 +81,7 @@ const TheArchive = observer(() => {
 	return (
 		<div>
 			<div style={{display: "flex"}}>
-				<p style={{flexGrow: 1}}> The Archive </p>
+				<div style={{flexGrow: 1}}/>
 				<Downloader
 					data={() => ArchivedWindowGroupStore.getExportData()}
 					filename={`windowgroup-archive-${new Date().toISOString()}.json`}
