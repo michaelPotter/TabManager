@@ -23,19 +23,19 @@ class ArchivedWindowGroupStore {
 
 	addAWG = (awg: ArchivedWindowGroup) => {
 		this.archivedWindowGroups.push(awg);
-		this.dao.createOrUpdateGroup(awg);
+		return this.dao.createOrUpdateGroup(awg);
 	}
 
 	deleteAWG = (name: string) => {
 		this.archivedWindowGroups = this.archivedWindowGroups.filter(awg => awg.name !== name);
-		this.dao.deleteGroup(name);
+		return this.dao.deleteGroup(name);
 	}
 
 	renameAWG = (oldName: string, newName: string) => {
 		let wg = this.archivedWindowGroups.find(wg => wg.name === oldName);
 		if (wg) {
 			wg.name = newName;
-			this.dao.renameGroup(oldName, newName);
+			return this.dao.renameGroup(oldName, newName);
 		} else {
 			console.warn("Could not find window group to rename: ", oldName);
 		}

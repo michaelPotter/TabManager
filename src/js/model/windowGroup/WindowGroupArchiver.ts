@@ -4,6 +4,8 @@ import { ArchivedWindowGroup } from "../archivedWindowGroup/ArchivedWindowGroup"
 import ArchivedWindowGroupStore from "../archivedWindowGroup/ArchivedWindowGroupStore";
 import type { WindowGroup } from "./WindowGroup";
 import type WindowModel from '../window/Window';
+import PopupStore from "../../appState/PopupStore";
+import { action } from "mobx";
 
 function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 	return {
@@ -24,12 +26,17 @@ function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 export function archiveWindowGroup(wg: WindowGroup) {
 	// FIXME confirm that the current window is NOT in the group to be archived... that results in a partial archive
 	let awg = createWindowGroupArchive(wg);
-	// FIXME make sure this doesn't throw before closing windows
-	ArchivedWindowGroupStore.addAWG(awg);
-	wg.windows.forEach(w => {
-		WindowStore.closeWindow(w.id);
-	});
-	WindowGroupStore.deleteWindowGroup(wg.name);
+	ArchivedWindowGroupStore.addAWG(awg)
+		.then(action(() => {
+			wg.windows.forEach(w => {
+				WindowStore.closeWindow(w.id);
+			});
+		}))
+		.then(() => WindowGroupStore.deleteWindowGroup(wg.name))
+		.catch(e => {
+			PopupStore.setErrorMessage(`Failed to archive window group: ${e}`);
+		})
+		;
 }
 
 const allowed_urls = /^http(s)?/
