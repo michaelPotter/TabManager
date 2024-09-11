@@ -15,7 +15,7 @@ import type WindowModel from './js/model/window/Window';
 import './scss/root.scss';
 import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
 import Downloader from './components/lib/Downloader';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import Uploader from './components/lib/Uploader';
 import { Join } from './components/lib/Join';
 
@@ -42,9 +42,19 @@ const App = observer(() => {
 				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
 			</div>
 			<div id="body">
-			{ PopupStore.page == "alltabs" && <AllTabs/> }
-			{ PopupStore.page == "active_groups" && <ActiveGroups/> }
-			{ PopupStore.page == "archive" && <TheArchive/> }
+				{/* Error */}
+				{ PopupStore.errorMessage &&
+					<Alert
+						variant="danger"
+						dismissible
+						onClose={() => PopupStore.setErrorMessage(undefined)}
+					>{PopupStore.errorMessage}</Alert>
+				}
+
+				{/* App page */}
+				{ PopupStore.page == "alltabs" && <AllTabs/> }
+				{ PopupStore.page == "active_groups" && <ActiveGroups/> }
+				{ PopupStore.page == "archive" && <TheArchive/> }
 			</div>
 		</>
 	)
