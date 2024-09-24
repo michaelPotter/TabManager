@@ -15,6 +15,7 @@ import WindowGroupStore from '../js/appState/WindowGroupStore';
 import { archiveWindowGroup } from '../js/model/windowGroup/WindowGroupArchiver';
 import { wrapWithInput } from './util/ModalWrappers';
 import { Join } from './lib/Join';
+import WindowStore from '../js/appState/WindowStore';
 
 /**
  * WindowGroup
@@ -59,7 +60,14 @@ export default observer((
 											WindowGroupStore.renameWindowGroup(props.windowGroup.name, input)
 										})}>Rename group</Dropdown.Item>
 
-										<Dropdown.Item onClick={() => archiveWindowGroup(props.windowGroup)}>
+										<Dropdown.Item onClick={() => {
+											let activeWindow = WindowStore.windows.find(w => w?.focused);
+											if (activeWindow && props.windowGroup.windows.some(w => w.id === activeWindow?.id)) {
+												window.alert("Cannot archive a window group that contains the currently active window.")
+												return;
+											}
+											archiveWindowGroup(props.windowGroup)
+										}}>
 											Move to Archive
 										</Dropdown.Item>
 

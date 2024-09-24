@@ -24,7 +24,6 @@ function createWindowGroupArchive(wg: WindowGroup): ArchivedWindowGroup {
 }
 
 export function archiveWindowGroup(wg: WindowGroup) {
-	// FIXME confirm that the current window is NOT in the group to be archived... that results in a partial archive
 	let awg = createWindowGroupArchive(wg);
 	ArchivedWindowGroupStore.addAWG(awg)
 		.then(action(() => {
