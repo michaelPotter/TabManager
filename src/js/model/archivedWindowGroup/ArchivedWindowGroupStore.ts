@@ -3,6 +3,7 @@ import { ArchivedWindowGroup } from "./ArchivedWindowGroup";
 import ArchivedWindowGroupDAO from "./ArchivedWindowGroupDAO";
 import { ArchivedWindowGroupExport } from "./ExportedArchivedWindowGroup";
 import { cyrb53 } from "../../util";
+import _ from 'lodash';
 
 class ArchivedWindowGroupStore {
 	archivedWindowGroups: ArchivedWindowGroup[] = [];
@@ -14,15 +15,18 @@ class ArchivedWindowGroupStore {
 			addAWG: action,
 			deleteAWG: action,
 			renameAWG: action,
+			sortAWGS: action
 		});
 
 		this.dao = new ArchivedWindowGroupDAO(this);
 		this.dao.getAllGroups()
-			.then(action(awgs => this.archivedWindowGroups = awgs));
+			.then(action(awgs => this.archivedWindowGroups = awgs))
+			.then(this.sortAWGS);
 	}
 
 	addAWG = (awg: ArchivedWindowGroup) => {
 		this.archivedWindowGroups.push(awg);
+		this.sortAWGS();
 		return this.dao.createOrUpdateGroup(awg);
 	}
 
@@ -73,6 +77,17 @@ class ArchivedWindowGroupStore {
 			}
 			this.addAWG(group);
 		});
+	}
+
+	/**
+	 * Sorts the archived window groups by archive date, most recent first
+	 */
+	sortAWGS = () => {
+		this.archivedWindowGroups = _.chain(this.archivedWindowGroups)
+			.sortBy('archiveDate')
+			.reverse()
+			.value();
+
 	}
 
 }
