@@ -10,6 +10,7 @@ body {
     min-width: 200px;
     display: block;
     margin: 0px;
+    height: 100vh;
 }
 
 #status {
@@ -20,18 +21,19 @@ body {
     min-width: 400px;
 }
 
-#header {
-    display:flex;
+.nav-base {
     height:32px;
     background:#eee;
     box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.75)
 }
-#header-popup {
-    @extend #header;
+.nav-popup {
+    @extend .nav-base;
+    // Set a large width in the popup to try and force it as large as the
+    // browser will let us.
     min-width: 800px;
 }
-#header-popout {
-    @extend #header;
+.nav-popout {
+    @extend .nav-base;
     width:100%;
 }
 
@@ -41,12 +43,12 @@ body {
 }
 
 #refresh_button {
-    padding:5px;
+    padding: 0px 5px;
     cursor: pointer;
     min-height: 1em;
 }
 #popout_button {
-    padding:5px;
+    padding: 0px 5px;
     cursor: pointer;
     min-height: 1em;
 }

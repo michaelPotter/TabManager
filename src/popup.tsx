@@ -15,7 +15,7 @@ import type WindowModel from './js/model/window/Window';
 import './scss/root.scss';
 import ArchivedWindowGroup from './components/archive/ArchivedWindowGroup';
 import Downloader from './components/lib/Downloader';
-import { Button, Alert } from 'react-bootstrap';
+import { Button, Alert, Navbar } from 'react-bootstrap';
 import Uploader from './components/lib/Uploader';
 import { Join } from './components/lib/Join';
 
@@ -33,7 +33,7 @@ const App = observer(() => {
 
 	return (
 		<>
-			<div id={`header-${popStyle}`}>
+			<Navbar sticky="top" className={`nav-${popStyle}`}>
 				<QuickLink page="alltabs" text="All Tabs"/>
 				{"|"}
 				<QuickLink page="active_groups" text="Active Groups"/>
@@ -44,7 +44,7 @@ const App = observer(() => {
 				<div style={{flexGrow: 1}}/>
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
-			</div>
+			</Navbar>
 			<div id="body">
 				{/* Error */}
 				{ PopupStore.errorMessage &&
