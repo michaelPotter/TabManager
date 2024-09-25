@@ -17,7 +17,7 @@ export function Join<T>({
 	return (
 		<>
 			{items.map((item, i) => (
-				<Fragment key={keyBy(item)}>
+				<Fragment key={keyBy(item) || i}>
 					{i != 0 && separator}
 					{renderItem(item)}
 				</Fragment>
