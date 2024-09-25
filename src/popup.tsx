@@ -32,7 +32,7 @@ const App = observer(() => {
 	let popStyle = params.get("type") ?? "popup";
 
 	return (
-		<>
+		<div className="d-flex flex-column h-100">
 			<Navbar sticky="top" className={`nav-${popStyle}`}>
 				<QuickLink page="alltabs" text="All Tabs"/>
 				{"|"}
@@ -61,7 +61,7 @@ const App = observer(() => {
 				{ PopupStore.page == "archive" && <TheArchive/> }
 				{ PopupStore.page == "archive2" && <TheArchive2/> }
 			</div>
-		</>
+		</div>
 	)
 })
 

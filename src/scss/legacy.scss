@@ -13,6 +13,10 @@ body {
     height: 100vh;
 }
 
+#main {
+    height: 100%;
+}
+
 #status {
     /* avoid an excessively wide status text */
     white-space: pre;
@@ -40,6 +44,10 @@ body {
 #body {
     margin: 4px;
     clear:both;
+    // Just something smaller than the screen
+    min-height: 100px;
+    // This lets the scrollbar only affect the body without including the navbar
+    overflow: auto;
 }
 
 #refresh_button {

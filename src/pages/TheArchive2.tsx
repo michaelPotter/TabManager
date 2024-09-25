@@ -10,9 +10,9 @@ import ArchivedWindowGroup from "../components/archive/ArchivedWindowGroup";
 
 const TheArchive2 = observer(() => {
 	return (
-		<div style={{display: 'flex'}}>
+		<div className="d-flex h-100">
 			{/* LEFT COLUMN */}
-			<div style={{flexGrow: 1}} className="theArchive2List overflow-scroll">
+			<div className="flex-grow-1 theArchive2List overflow-scroll">
 				<ListGroup>
 					{ArchivedWindowGroupStore.archivedWindowGroups.map((g, i) => (
 						<ListGroup.Item
