@@ -19,6 +19,8 @@ import { Button, Alert } from 'react-bootstrap';
 import Uploader from './components/lib/Uploader';
 import { Join } from './components/lib/Join';
 
+import TheArchive2 from './pages/TheArchive2';
+
 const App = observer(() => {
 	let QuickLink = ({page: key, text}: {page:Page, text:string}) => (
 		<Button variant="simple" onClick={() => PopupStore.setPage(key)}>
@@ -37,6 +39,8 @@ const App = observer(() => {
 				<QuickLink page="active_groups" text="Active Groups"/>
 				{"|"}
 				<QuickLink page="archive" text="Archive"/>
+				{"|"}
+				<QuickLink page="archive2" text="Archive2"/>
 				<div style={{flexGrow: 1}}/>
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
@@ -55,6 +59,7 @@ const App = observer(() => {
 				{ PopupStore.page == "alltabs" && <AllTabs/> }
 				{ PopupStore.page == "active_groups" && <ActiveGroups/> }
 				{ PopupStore.page == "archive" && <TheArchive/> }
+				{ PopupStore.page == "archive2" && <TheArchive2/> }
 			</div>
 		</>
 	)

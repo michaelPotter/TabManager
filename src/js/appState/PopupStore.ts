@@ -1,6 +1,6 @@
 import { observable, action, makeObservable } from "mobx";
 
-export type Page = "alltabs" | "archive" | "active_groups"
+export type Page = "alltabs" | "active_groups" | "archive" | "archive2";
 
 class PopupStore {
 	page: Page = window.sessionStorage.getItem("popup-tab") as Page ?? "alltabs";
