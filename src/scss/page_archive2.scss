@@ -1,4 +1,9 @@
 .theArchive2List {
-    // TODO make this prettier
-    border-right: 1px solid #000;
+    // // TODO make this prettier
+    // border-right: 1px solid #000;
+}
+
+.archive_group_metadata {
+    @extend .text-muted;
+    font-size: 14px;
 }

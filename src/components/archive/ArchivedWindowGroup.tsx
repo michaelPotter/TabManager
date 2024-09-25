@@ -13,9 +13,6 @@ import { ArchivedWindowGroup } from '../../js/model/archivedWindowGroup/Archived
 import ArchivedWindow from './ArchivedWindow';
 import ArchivedWindowGroupStore from '../../js/model/archivedWindowGroup/ArchivedWindowGroupStore';
 import { wrapWithConfirm, wrapWithInput } from '../util/ModalWrappers';
-import WindowGroupStore from '../../js/appState/WindowGroupStore';
-import WindowStore from '../../js/appState/WindowStore';
-import WindowModel from '../../js/model/window/Window';
 import { unarchiveWindowGroup } from '../../js/model/windowGroup/WindowGroupArchiver';
 import { Join } from '../lib/Join';
 
@@ -32,7 +29,7 @@ export default observer((
 
 	return (
 		// TODO There's a lot of padding inside the card, seems like it'd be better with more padding around the card instead.
-		<Card className="my-1">
+		<Card className="mb-2">
 			<Card.Header>
 				<Container fluid>
 					<Row>
