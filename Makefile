@@ -1,5 +1,5 @@
 src_files = src/**
-webpack_output = dist/popup.js dist/background.js dist/tabmanager.css
+webpack_output = dist/app.js dist/background.js dist/tabmanager.css
 zip = TabManager.zip
 
 # Files that Make needs to copy over
