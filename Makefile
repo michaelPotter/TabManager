@@ -3,7 +3,7 @@ webpack_output = dist/app.js dist/background.js dist/tabmanager.css
 zip = TabManager.zip
 
 # Files that Make needs to copy over
-make_copy_files = dist/launching/popup.html dist/manifest.json dist/launching/direct_to_popout.html
+make_copy_files = dist/launching/popup.html dist/launching/popout.html dist/manifest.json dist/launching/direct_to_popout.html
 
 build_mode = production
 

@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 function open_in_window() {
 	var win: browser.windows._CreateCreateData = {
-		url:"popup.html?type=popout",
+		url:"popout.html?type=popout",
 		type:"popup"
 	}
 	browser.windows.create(win);
