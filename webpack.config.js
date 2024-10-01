@@ -6,7 +6,7 @@ module.exports = {
 	entry: {
 		app: './src/app.tsx',
 		background: './src/js/background.ts',
-		direct_to_popout: './src/direct_to_popout.ts',
+		direct_to_popout: './src/launching/direct_to_popout.ts',
 	},
 	devtool: 'source-map',
 	output: {
