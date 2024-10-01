@@ -10,9 +10,10 @@ body {
     min-width: 200px;
     display: block;
     margin: 0px;
+}
+
+.body-popout {
     height: 100vh;
-    // TODO this should only apply to the popup window, not the popout window.
-    min-height: 800px;
 }
 
 #main {
