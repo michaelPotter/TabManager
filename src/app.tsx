@@ -120,6 +120,10 @@ const TheArchive = observer(() => {
 	)
 });
 
+window.onerror = function(message, source, lineno, colno, error) {
+	PopupStore.setErrorMessage(message.toString());
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
 	// Render the app
 	ReactDOM.render(<App/>, document.getElementById('main'));
