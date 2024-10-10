@@ -39,8 +39,6 @@ const App = observer(() => {
 				<QuickLink page="active_groups" text="Active Groups"/>
 				{"|"}
 				<QuickLink page="archive" text="Archive"/>
-				{"|"}
-				<QuickLink page="archive2" text="Archive2"/>
 				<div style={{flexGrow: 1}}/>
 				<i id="refresh_button" onClick={() => location.reload()} className="material-icons">refresh</i>
 				<i id="popout_button" onClick={open_in_window} className="material-icons">open_in_new</i>
@@ -58,8 +56,7 @@ const App = observer(() => {
 				{/* App page */}
 				{ PopupStore.page == "alltabs" && <AllTabs/> }
 				{ PopupStore.page == "active_groups" && <ActiveGroups/> }
-				{ PopupStore.page == "archive" && <TheArchive/> }
-				{ PopupStore.page == "archive2" && <TheArchive2/> }
+				{ PopupStore.page == "archive" && <TheArchive2/> }
 			</div>
 		</div>
 	)
@@ -89,32 +86,6 @@ const ActiveGroups = observer(() => {
 				WindowGroupStore.windowGroups.length == 0 && <p>(no groups)</p>}
 			{WindowGroupStore.windowGroups.map(g => (
 				<WindowGroupComponent key={g.name} windowGroup={g}/>
-			))}
-		</div>
-	)
-});
-
-const TheArchive = observer(() => {
-	return (
-		<div>
-			<div style={{display: "flex"}}>
-				<div style={{flexGrow: 1}}/>
-				<Downloader
-					data={() => ArchivedWindowGroupStore.getExportData()}
-					filename={`windowgroup-archive-${new Date().toISOString()}.json`}
-				>
-					<Button variant="simple">export</Button>
-				</Downloader>
-				{" | "}
-				<Uploader
-					onUpload={(data) => ArchivedWindowGroupStore.importFromData(data)}
-				>
-					<Button variant="simple">import</Button>
-				</Uploader>
-			</div>
-
-			{ArchivedWindowGroupStore.archivedWindowGroups.map(g => (
-				<ArchivedWindowGroup key={g.name} archivedWindowGroup={g}/>
 			))}
 		</div>
 	)
