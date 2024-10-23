@@ -42,6 +42,16 @@ export default class FileDAO<T extends Nameable> {
 		await Promise.all(promises);
 	}
 
+	private async entityExists(entity: T): Promise<boolean> {
+		let file = `${this.dir}/${entity.name}.json`;
+		try {
+			await fs.promises.stat(file);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
 	private async writeEntity(entity: T) {
 		let file = `${this.dir}/${entity.name}.json`;
 		fs.promises.writeFile(file, JSON.stringify(entity), 'utf8');
@@ -53,6 +63,17 @@ export default class FileDAO<T extends Nameable> {
 
 	listEntities(): string[] {
 		return Object.keys(this.data);
+	}
+
+	/**
+	 * Create a new entity. If an entity with the same name already exists, an error will be thrown.
+	 */
+	async createEntity(entity: T) {
+		if (await this.entityExists(entity)) {
+			throw new Error(`Entity ${entity.name} already exists`);
+		}
+		this.data[entity.name] = entity;
+		await this.writeEntity(entity);
 	}
 
 	async createOrUpdateEntity(entity: T) {

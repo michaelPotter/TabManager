@@ -6,6 +6,7 @@ import { mkdirSync } from 'fs';
 import { config } from './config';
 import ArchiveWindowGroupController from './archiveGroup/archiveGroupController';
 import ActiveWindowGroupController from './activeGroup/activeGroupController';
+import IconController from './icons/iconController';
 
 mkdirSync(config().dataDir, { recursive: true });
 process.chdir(config().dataDir);
@@ -31,6 +32,7 @@ app.options('*', (req, res) => {
 
 new ArchiveWindowGroupController().addRoutes(app);
 new ActiveWindowGroupController().addRoutes(app);
+new IconController().addRoutes(app);
 
 app.listen(config().port, () => {
     console.log(`Server running on port ${config().port}`);

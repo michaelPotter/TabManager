@@ -9,6 +9,7 @@ const STORAGE_KEY = "archivedWindowGroups";
 // an error in the UI when we can't contact the server? idk
 
 let hasCheckedLocalToExternalMigration = false;
+let faviconCache: Record<string, string> = {};
 
 type KeyedArchiveData = {
 	[STORAGE_KEY]?: ArchivedWindowGroupData;
@@ -23,7 +24,7 @@ interface _AWGDAO {
 	renameGroup(oldName: string, newName: string): Promise<void>;
 }
 
-// Handles persisting the data. 
+// Handles persisting the data.
 // Persists to local storage or external storage, depending on USE_EXTERNAL_STORAGE
 export default class ArchivedWindowGroupDAO implements _AWGDAO {
 
@@ -201,6 +202,31 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 		return res.json();
     }
     async createOrUpdateGroup(awg: ArchivedWindowGroup): Promise<void> {
+
+		// NOTE: we're persisting icon data separately to reduce POST body size.
+
+		// Find all of the unique icons in this group
+		let icons = new Set<string>();
+		awg.windows.forEach(w => w.tabs.forEach(t => {
+			t.favIconUrl && icons.add(t.favIconUrl);
+		}));
+
+		// Persist each icon separately
+		let iconMap = new Map<string, string>();
+		for (let icon of icons) {
+			let res = await this._saveFavIcon(icon);
+			let hash = res.hash;
+			iconMap.set(icon, hash);
+		};
+
+		// Update the data to reference the icons by hash
+		awg.windows.forEach(w => w.tabs.forEach(t => {
+			if (t.favIconUrl) {
+				t.favIconUrl = 'hash:' + iconMap.get(t.favIconUrl);
+			}
+		}));
+
+		// Persist the main data
 		let res = await fetch(`${config().externalStorageUrl}/archiveGroup`, {
 			method: 'POST',
 			headers: {
@@ -208,6 +234,7 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 			},
 			body: JSON.stringify(awg),
 		});
+
 		if (!res.ok) {
 			throw new Error("Error creating or updating archived window group: " + res.statusText);
 		}
@@ -227,8 +254,52 @@ class ExternalWindowGroupDAO implements _AWGDAO {
 		} else if (!res.ok) {
 			throw new Error("Error fetching archived window group: " + res.statusText);
 		}
-		return res.json();
+
+		// Replace icon hashes with URLs
+		let awg = await res.json() as ArchivedWindowGroup;
+		for (let w of awg.windows) {
+			for (let t of w.tabs) {
+				if (t.favIconUrl?.startsWith('hash:')) {
+					let hash = t.favIconUrl.slice(5);
+					t.favIconUrl = await this._getFavIcon(hash);
+				}
+			}
+		}
+
+		return awg;
     }
+
+	/**
+	 * Get the favicon URL for a given hash.
+	 * TODO probably move this out into a separate service/DAO
+	 */
+	private async _getFavIcon(hash: string): Promise<string> {
+		if (faviconCache[hash]) {
+			return faviconCache[hash];
+		}
+
+		let res = await fetch(`${config().externalStorageUrl}/icon/${hash}`);
+		if (!res.ok) {
+			throw new Error("Error fetching archived window group icon: " + res.statusText);
+		}
+		let value = (await res.json()).favIconUrl;
+		faviconCache[hash] = value;
+		return value;
+	}
+
+	private async _saveFavIcon(favIconUrl: string): Promise<{hash: string, favIconUrl: string}> {
+		let res = await fetch(`${config().externalStorageUrl}/icon`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			// Don't hash it here, we'll do that on the server
+			body: JSON.stringify({ favIconUrl: favIconUrl }),
+		});
+		if (!res.ok) {
+			throw new Error("Error creating or updating archived window group icon: " + res.statusText);
+		}
+		return res.json();
+	}
+
 	async renameGroup(oldName: string, newName: string): Promise<void> {
 		// Clunky way to do this, but it works
 		let oldGroup = await this.getGroup(oldName);
